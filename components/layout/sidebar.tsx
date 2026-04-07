@@ -29,7 +29,7 @@ export function Sidebar() {
       <div className="px-4 py-5 border-b border-zinc-800">
         <span className="text-violet-400 font-semibold text-lg tracking-tight">teachIA</span>
       </div>
-      <nav className="flex-1 px-2 py-4 space-y-1">
+      <nav aria-label="Navigation principale" className="flex-1 px-2 py-4 space-y-1">
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => (
           <Link
             key={href}
