@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "db:seed": "npx tsx scripts/seed-exercises.ts",
+    "db:migrate": "npx dotenv -e .env.local -- node -e \"const { neon } = require('@neondatabase/serverless'); const fs = require('fs'); const sql = neon(process.env.DATABASE_URL); sql(fs.readFileSync('./scripts/migrate.sql', 'utf8')).then(() => { console.log('Migration complete'); process.exit(0); }).catch(err => { console.error(err); process.exit(1); })\""
   },
   "dependencies": {
     "@ai-sdk/react": "^3.0.151",
@@ -38,10 +40,12 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6.0.1",
+    "dotenv": "^17.4.1",
     "eslint": "^9",
     "eslint-config-next": "16.2.2",
     "jsdom": "^29.0.2",
     "tailwindcss": "^4",
+    "tsx": "^4.21.0",
     "typescript": "^5",
     "vitest": "^4.1.3"
   }
