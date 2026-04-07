@@ -1,0 +1,77 @@
+<h2>Scope & Phases — CAPESito</h2>
+<p class="subtitle">6 modules, 4 phases de développement. La communauté est retirée (usage solo).</p>
+
+<div class="section">
+  <span class="label">Phase 1 — MVP utilisable</span>
+  <div class="cards" style="margin-top:12px">
+    <div class="card" style="border-left: 4px solid #22c55e; cursor:default">
+      <div class="card-body">
+        <h3>🤖 Professeur IA</h3>
+        <p>Chat avec le prof expert CAPES. Pose des questions, reçois des explications guidées, génère des exercices à la demande sur n'importe quel thème.</p>
+        <p style="font-size:0.8rem;color:#666;margin-top:8px">Vercel AI SDK + AI Gateway → <code>anthropic/claude-sonnet-4-6</code></p>
+      </div>
+    </div>
+    <div class="card" style="border-left: 4px solid #22c55e; cursor:default">
+      <div class="card-body">
+        <h3>📝 Exercices tipos test</h3>
+        <p>QCM, vrai/faux, texte lacunaire, chronologie. Contenu curé + variations générées par IA. Feedback immédiat avec explication détaillée.</p>
+        <p style="font-size:0.8rem;color:#666;margin-top:8px">DB: Neon Postgres — table <code>exercises</code></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <span class="label">Phase 2 — Progression</span>
+  <div class="cards" style="margin-top:12px">
+    <div class="card" style="border-left: 4px solid #3b82f6; cursor:default">
+      <div class="card-body">
+        <h3>📅 Plan de révision</h3>
+        <p>Onboarding : test de niveau + date du concours → génération d'un calendrier semaine par semaine. Indicateur de progression par domaine (langue, civilisation, didactique).</p>
+        <p style="font-size:0.8rem;color:#666;margin-top:8px">DB: tables <code>study_plan</code>, <code>sessions</code>, <code>progress</code></p>
+      </div>
+    </div>
+    <div class="card" style="border-left: 4px solid #3b82f6; cursor:default">
+      <div class="card-body">
+        <h3>📊 Analytics dashboard</h3>
+        <p>Graphiques de progression par domaine, heatmap des sessions de travail, score "prêt pour le concours" mis à jour en temps réel.</p>
+        <p style="font-size:0.8rem;color:#666;margin-top:8px">DB: table <code>sessions</code> — agrégations côté serveur</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <span class="label">Phase 3 — Mémorisation</span>
+  <div class="cards" style="margin-top:12px">
+    <div class="card" style="border-left: 4px solid #a855f7; cursor:default">
+      <div class="card-body">
+        <h3>🃏 Flashcards (spaced repetition)</h3>
+        <p>Fiches par thème avec algorithme SM-2 (style Anki). Grammaire, histoire, littérature, arts, cinéma. Timeline cliquable, carte des pays hispanophones.</p>
+        <p style="font-size:0.8rem;color:#666;margin-top:8px">DB: tables <code>cards</code>, <code>card_reviews</code></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <span class="label">Phase 4 — Simulation examen</span>
+  <div class="cards" style="margin-top:12px">
+    <div class="card" style="border-left: 4px solid #f59e0b; cursor:default">
+      <div class="card-body">
+        <h3>🎯 Simulacros d'examen</h3>
+        <p>Reproduction des épreuves réelles (composition, traduction, explication de texte). Correction par IA avec notation et commentaires. Comparaison avec sessions précédentes.</p>
+        <p style="font-size:0.8rem;color:#666;margin-top:8px">DB: table <code>exam_sessions</code> — correction via AI SDK</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="background:#f9fafb;border-radius:8px;padding:16px;border:1px solid #e5e7eb">
+  <span class="label">❌ Hors scope (usage solo)</span>
+  <p style="margin-top:8px;color:#6b7280">Forum communautaire, classements, live quiz multijoueur — retirés. Pas pertinents pour un usage personnel.</p>
+</div>
+
+<div style="margin-top:24px;padding:16px;background:#eff6ff;border-radius:8px;border:1px solid #bfdbfe">
+  <strong>Ce scope te convient ?</strong> Réponds dans le terminal — on passe ensuite à l'architecture technique.
+</div>

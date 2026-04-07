@@ -1,0 +1,139 @@
+<h2>Architecture — teachIA</h2>
+<p class="subtitle">Next.js App Router + Neon Postgres + Vercel AI SDK</p>
+
+<div class="section">
+  <span class="label">Stack</span>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:12px">
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px">
+      <div style="font-weight:600;margin-bottom:6px">🖥️ Frontend</div>
+      <div style="font-size:0.85rem;color:#475569;line-height:1.6">
+        Next.js 16 App Router<br>
+        shadcn/ui + Tailwind<br>
+        Geist (font)<br>
+        Recharts (analytics)
+      </div>
+    </div>
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px">
+      <div style="font-weight:600;margin-bottom:6px">⚙️ Backend</div>
+      <div style="font-size:0.85rem;color:#475569;line-height:1.6">
+        Next.js Route Handlers<br>
+        Server Actions<br>
+        Vercel Functions<br>
+        proxy.ts (auth guard)
+      </div>
+    </div>
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px">
+      <div style="font-weight:600;margin-bottom:6px">🗄️ Data & AI</div>
+      <div style="font-size:0.85rem;color:#475569;line-height:1.6">
+        Neon Postgres<br>
+        Vercel AI Gateway<br>
+        AI SDK v6 (streaming)<br>
+        AI Elements (UI chat)
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <span class="label">Routes de l'application</span>
+  <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+    <div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:12px;display:flex;align-items:flex-start;gap:10px">
+      <span style="font-size:1.2rem">🏠</span>
+      <div>
+        <div style="font-weight:600;font-size:0.9rem">/</div>
+        <div style="font-size:0.8rem;color:#64748b">Dashboard — progression du jour, plan de la semaine, score global</div>
+      </div>
+    </div>
+    <div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:12px;display:flex;align-items:flex-start;gap:10px">
+      <span style="font-size:1.2rem">🤖</span>
+      <div>
+        <div style="font-weight:600;font-size:0.9rem">/chat</div>
+        <div style="font-size:0.8rem;color:#64748b">Professeur IA — chat streaming, génération d'exercices à la demande</div>
+      </div>
+    </div>
+    <div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:12px;display:flex;align-items:flex-start;gap:10px">
+      <span style="font-size:1.2rem">📝</span>
+      <div>
+        <div style="font-weight:600;font-size:0.9rem">/exercices</div>
+        <div style="font-size:0.8rem;color:#64748b">QCM, vrai/faux, lacunaire, chronologie — par thème et niveau</div>
+      </div>
+    </div>
+    <div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:12px;display:flex;align-items:flex-start;gap:10px">
+      <span style="font-size:1.2rem">📅</span>
+      <div>
+        <div style="font-weight:600;font-size:0.9rem">/plan</div>
+        <div style="font-size:0.8rem;color:#64748b">Calendrier de révision — semaines, objectifs, domaines</div>
+      </div>
+    </div>
+    <div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:12px;display:flex;align-items:flex-start;gap:10px">
+      <span style="font-size:1.2rem">🃏</span>
+      <div>
+        <div style="font-weight:600;font-size:0.9rem">/flashcards</div>
+        <div style="font-size:0.8rem;color:#64748b">Spaced repetition SM-2 — grammaire, histoire, littérature, arts</div>
+      </div>
+    </div>
+    <div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:12px;display:flex;align-items:flex-start;gap:10px">
+      <span style="font-size:1.2rem">🎯</span>
+      <div>
+        <div style="font-weight:600;font-size:0.9rem">/simulacros</div>
+        <div style="font-size:0.8rem;color:#64748b">Épreuves complètes + correction IA avec notation</div>
+      </div>
+    </div>
+    <div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:12px;display:flex;align-items:flex-start;gap:10px">
+      <span style="font-size:1.2rem">📊</span>
+      <div>
+        <div style="font-weight:600;font-size:0.9rem">/stats</div>
+        <div style="font-size:0.8rem;color:#64748b">Heatmap, graphiques par domaine, score "prêt pour le concours"</div>
+      </div>
+    </div>
+    <div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:12px;display:flex;align-items:flex-start;gap:10px">
+      <span style="font-size:1.2rem">⚙️</span>
+      <div>
+        <div style="font-weight:600;font-size:0.9rem">/onboarding</div>
+        <div style="font-size:0.8rem;color:#64748b">Test de niveau initial + date du concours → génération du plan</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <span class="label">Modèle de données (Neon Postgres)</span>
+  <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:0.8rem">
+    <div style="background:#fafafa;border:1px solid #e2e8f0;border-radius:6px;padding:10px;font-family:monospace">
+      <div style="color:#7c3aed;font-weight:600">exercises</div>
+      <div style="color:#64748b;line-height:1.8">id, theme, type, question,<br>options[], answer, explanation,<br>level (A|B|C), source</div>
+    </div>
+    <div style="background:#fafafa;border:1px solid #e2e8f0;border-radius:6px;padding:10px;font-family:monospace">
+      <div style="color:#7c3aed;font-weight:600">exercise_attempts</div>
+      <div style="color:#64748b;line-height:1.8">id, exercise_id, correct,<br>time_spent, timestamp</div>
+    </div>
+    <div style="background:#fafafa;border:1px solid #e2e8f0;border-radius:6px;padding:10px;font-family:monospace">
+      <div style="color:#7c3aed;font-weight:600">cards</div>
+      <div style="color:#64748b;line-height:1.8">id, front, back, theme,<br>ease_factor, interval,<br>next_review, created_at</div>
+    </div>
+    <div style="background:#fafafa;border:1px solid #e2e8f0;border-radius:6px;padding:10px;font-family:monospace">
+      <div style="color:#7c3aed;font-weight:600">study_sessions</div>
+      <div style="color:#64748b;line-height:1.8">id, date, domain,<br>duration_min, exercises_done,<br>correct_count</div>
+    </div>
+    <div style="background:#fafafa;border:1px solid #e2e8f0;border-radius:6px;padding:10px;font-family:monospace">
+      <div style="color:#7c3aed;font-weight:600">study_plan</div>
+      <div style="color:#64748b;line-height:1.8">id, week_number, domain,<br>objective, completed,<br>target_date</div>
+    </div>
+    <div style="background:#fafafa;border:1px solid #e2e8f0;border-radius:6px;padding:10px;font-family:monospace">
+      <div style="color:#7c3aed;font-weight:600">exam_sessions</div>
+      <div style="color:#64748b;line-height:1.8">id, type, content,<br>ai_feedback, score,<br>timestamp</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <span class="label">Auth (usage solo)</span>
+  <p style="margin-top:8px;font-size:0.9rem;color:#374151">
+    Simple <strong>mot de passe unique</strong> via <code>proxy.ts</code> + cookie de session signé. Pas de Clerk, pas de base d'utilisateurs.
+    Variable d'environnement : <code>APP_PASSWORD</code>. Protection légère, suffisante pour un usage personnel.
+  </p>
+</div>
+
+<div style="margin-top:24px;padding:16px;background:#eff6ff;border-radius:8px;border:1px solid #bfdbfe">
+  <strong>Cette architecture te convient ?</strong> Réponds dans le terminal.
+</div>

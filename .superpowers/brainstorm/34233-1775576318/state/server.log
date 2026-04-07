@@ -1,0 +1,6 @@
+{"type":"server-started","port":52013,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:52013","screen_dir":"/Users/victorrubia/teachIA/.superpowers/brainstorm/34233-1775576318/content","state_dir":"/Users/victorrubia/teachIA/.superpowers/brainstorm/34233-1775576318/state"}
+{"type":"screen-added","file":"/Users/victorrubia/teachIA/.superpowers/brainstorm/34233-1775576318/content/phases.html"}
+{"type":"screen-added","file":"/Users/victorrubia/teachIA/.superpowers/brainstorm/34233-1775576318/content/architecture.html"}
+{"type":"screen-added","file":"/Users/victorrubia/teachIA/.superpowers/brainstorm/34233-1775576318/content/ui-direction.html"}
+{"source":"user-event","type":"click","text":"A\n    \n      Dark dashboard\n      Fond sombre (zinc-950), sidebar sombre, accents violet/indigo. Style outil développeur. Adapté aux longues sessions de révision — moins de fatigue oculaire.\n      \n        \n          \n          \n          \n        \n        \n          \n            teachIA\n            DashboardChat IAExercicesFlashcardsStats","choice":"a","id":null,"timestamp":1775576943870}
+{"type":"screen-added","file":"/Users/victorrubia/teachIA/.superpowers/brainstorm/34233-1775576318/content/onboarding-flow.html"}

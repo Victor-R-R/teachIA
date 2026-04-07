@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bash scripts/start-server.sh --project-dir /Users/victorrubia/teachIA)",
+      "Bash(npx:*)",
+      "Read(//private/tmp/teachia-temp/**)",
+      "Bash(mv src/app app)",
+      "Bash(rmdir src:*)",
+      "Bash(npm install:*)",
+      "Bash(echo \"y:*)",
+      "Bash(echo \"EXIT: $?\")"
+    ]
+  }
+}
