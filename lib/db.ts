@@ -1,15 +1,7 @@
 import { neon } from '@neondatabase/serverless'
+import type { Domain, Level, ExerciseType } from '@/lib/constants'
 
-// Lazy initialization so the module can be imported in test environments
-// without a real DATABASE_URL. The neon() call is deferred until first use.
-let _sql: ReturnType<typeof neon> | null = null
-
-function getSql(): ReturnType<typeof neon> {
-  if (!_sql) {
-    _sql = neon(process.env.DATABASE_URL!)
-  }
-  return _sql
-}
+const sql = neon(process.env.DATABASE_URL!)
 
 export type Exercise = {
   id: number
@@ -34,9 +26,9 @@ export type ExerciseAttempt = {
 }
 
 export async function getExercises(filters: {
-  domain?: string
-  level?: string
-  type?: string
+  domain?: Domain
+  level?: Level
+  type?: ExerciseType
   limit?: number
 } = {}): Promise<Exercise[]> {
   const { domain, level, type, limit = 20 } = filters
@@ -49,7 +41,7 @@ export async function getExercises(filters: {
   if (type) { conditions.push(`type = $${i++}`); params.push(type) }
 
   const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''
-  const rows = await getSql()(
+  const rows = await sql.query(
     `SELECT * FROM exercises ${where} ORDER BY RANDOM() LIMIT $${i}`,
     [...params, limit]
   )
@@ -57,23 +49,23 @@ export async function getExercises(filters: {
 }
 
 export async function getExerciseById(id: number): Promise<Exercise | null> {
-  const rows = await getSql()('SELECT * FROM exercises WHERE id = $1', [id])
+  const rows = await sql.query('SELECT * FROM exercises WHERE id = $1', [id])
   return (rows[0] as Exercise) ?? null
 }
 
 export async function saveAttempt(attempt: Omit<ExerciseAttempt, 'id' | 'timestamp'>): Promise<void> {
-  await getSql()(
+  await sql.query(
     'INSERT INTO exercise_attempts (exercise_id, correct, time_spent) VALUES ($1, $2, $3)',
     [attempt.exercise_id, attempt.correct, attempt.time_spent]
   )
 }
 
 export async function saveExercise(exercise: Omit<Exercise, 'id' | 'created_at'>): Promise<Exercise> {
-  const rows = await getSql()(
+  const rows = await sql.query(
     `INSERT INTO exercises (theme, domain, type, question, options, answer, explanation, level, source)
      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
     [exercise.theme, exercise.domain, exercise.type, exercise.question,
-     JSON.stringify(exercise.options), exercise.answer, exercise.explanation,
+     exercise.options, exercise.answer, exercise.explanation,
      exercise.level, exercise.source]
   )
   return rows[0] as Exercise
