@@ -27,13 +27,19 @@ export function ExerciseLacunaire({ id, question, answer, explanation, onComplet
     onComplete(correct)
 
     if (!correct) {
-      const res = await fetch('/api/exercises/correct', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ exerciseId: id, userAnswer: value, correctAnswer: answer }),
-      })
-      const data = await res.json()
-      setAiExplanation(data.explanation)
+      try {
+        const res = await fetch('/api/exercises/correct', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ exerciseId: id, userAnswer: value, correctAnswer: answer }),
+        })
+        if (res.ok) {
+          const data = await res.json()
+          setAiExplanation(data.explanation)
+        }
+      } catch {
+        // AI explanation unavailable — static explanation shown as fallback
+      }
     }
   }
 
@@ -47,6 +53,10 @@ export function ExerciseLacunaire({ id, question, answer, explanation, onComplet
         onNext={() => window.location.reload()}
       />
     )
+  }
+
+  if (parts.length !== 2) {
+    return <p className="text-red-400 text-sm">Format de question invalide.</p>
   }
 
   return (

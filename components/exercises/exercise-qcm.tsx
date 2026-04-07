@@ -25,13 +25,19 @@ export function ExerciseQCM({ id, question, options, answer, explanation, onComp
     onComplete(correct)
 
     if (!correct) {
-      const res = await fetch('/api/exercises/correct', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ exerciseId: id, userAnswer: selected, correctAnswer: answer }),
-      })
-      const data = await res.json()
-      setAiExplanation(data.explanation)
+      try {
+        const res = await fetch('/api/exercises/correct', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ exerciseId: id, userAnswer: selected, correctAnswer: answer }),
+        })
+        if (res.ok) {
+          const data = await res.json()
+          setAiExplanation(data.explanation)
+        }
+      } catch {
+        // AI explanation unavailable — static explanation shown as fallback
+      }
     }
   }
 
@@ -54,6 +60,8 @@ export function ExerciseQCM({ id, question, options, answer, explanation, onComp
         {options.map(option => (
           <button
             key={option}
+            type="button"
+            aria-pressed={selected === option}
             onClick={() => setSelected(option)}
             className={`w-full text-left px-4 py-3 rounded-lg border text-sm transition-colors ${
               selected === option

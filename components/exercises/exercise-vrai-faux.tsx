@@ -24,13 +24,19 @@ export function ExerciseVraiFaux({ id, question, answer, explanation, onComplete
     onComplete(correct)
 
     if (!correct) {
-      const res = await fetch('/api/exercises/correct', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ exerciseId: id, userAnswer: selected, correctAnswer: answer }),
-      })
-      const data = await res.json()
-      setAiExplanation(data.explanation)
+      try {
+        const res = await fetch('/api/exercises/correct', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ exerciseId: id, userAnswer: selected, correctAnswer: answer }),
+        })
+        if (res.ok) {
+          const data = await res.json()
+          setAiExplanation(data.explanation)
+        }
+      } catch {
+        // AI explanation unavailable — static explanation shown as fallback
+      }
     }
   }
 
@@ -53,6 +59,8 @@ export function ExerciseVraiFaux({ id, question, answer, explanation, onComplete
         {['Vrai', 'Faux'].map(choice => (
           <button
             key={choice}
+            type="button"
+            aria-pressed={selected === choice}
             onClick={() => setSelected(choice)}
             className={`flex-1 py-4 rounded-lg border text-sm font-medium transition-colors ${
               selected === choice
