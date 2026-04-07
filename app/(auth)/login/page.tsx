@@ -1,3 +1,4 @@
+import { timingSafeEqual } from 'crypto'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { createSession, validateSession } from '@/lib/auth'
@@ -10,7 +11,10 @@ async function login(formData: FormData) {
   'use server'
   const password = formData.get('password') as string
 
-  if (password !== process.env.APP_PASSWORD) {
+  const expected = process.env.APP_PASSWORD ?? ''
+  const passwordBuf = Buffer.from(password.padEnd(expected.length, '\0'))
+  const expectedBuf = Buffer.from(expected.padEnd(password.length, '\0'))
+  if (password.length !== expected.length || !timingSafeEqual(passwordBuf, expectedBuf)) {
     redirect('/login?error=1')
   }
 

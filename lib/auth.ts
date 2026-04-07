@@ -3,6 +3,7 @@ import { SignJWT, jwtVerify } from 'jose'
 function getSecret(): Uint8Array {
   const secret = process.env.AUTH_SECRET
   if (!secret) throw new Error('AUTH_SECRET env var is not set')
+  if (secret.length < 32) throw new Error('AUTH_SECRET must be at least 32 characters')
   return new TextEncoder().encode(secret)
 }
 
