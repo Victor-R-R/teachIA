@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { getExercises } from '@/lib/db'
+import { GenerateExerciseButton } from '@/components/exercises/generate-exercise-button'
 import { DOMAINS, LEVELS } from '@/lib/constants'
 import type { Domain, Level } from '@/lib/constants'
 import { Card, CardContent } from '@/components/ui/card'
@@ -73,6 +74,10 @@ export default async function ExercicesPage({
             Niveau {level}
           </Link>
         ))}
+      </div>
+
+      <div className="flex justify-end mb-4">
+        <GenerateExerciseButton />
       </div>
 
       {/* Exercise cards */}
