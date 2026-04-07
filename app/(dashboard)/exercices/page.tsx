@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import { getExercises } from '@/lib/db'
+import { DOMAINS, LEVELS } from '@/lib/constants'
+import type { Domain, Level } from '@/lib/constants'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { BookOpen } from 'lucide-react'
@@ -31,11 +33,9 @@ export default async function ExercicesPage({
   searchParams: Promise<{ domain?: string; level?: string }>
 }) {
   const params = await searchParams
-  const exercises = await getExercises({
-    domain: params.domain as any,
-    level: params.level as any,
-    limit: 20,
-  })
+  const domain = DOMAINS.includes(params.domain as Domain) ? (params.domain as Domain) : undefined
+  const level = LEVELS.includes(params.level as Level) ? (params.level as Level) : undefined
+  const exercises = await getExercises({ domain, level, limit: 20 })
 
   return (
     <div>
