@@ -77,3 +77,8 @@ CREATE TABLE IF NOT EXISTS exam_sessions (
 );
 
 CREATE INDEX IF NOT EXISTS idx_study_sessions_date ON study_sessions(date);
+
+-- Multi-question exercises
+ALTER TABLE exercises
+  ADD COLUMN IF NOT EXISTS title TEXT,
+  ADD COLUMN IF NOT EXISTS questions JSONB;

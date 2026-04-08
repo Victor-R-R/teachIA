@@ -17,6 +17,7 @@
 | 🎨 | **Thème clair** | Interface light mode avec accent violet, sidebar blanche et cartes épurées |
 | 📱 | **Responsive mobile/tablette** | Navigation par header + drawer sur mobile, layout adaptatif < 1024px |
 | 🏆 | **Dashboard gamifié** | Niveau XP (Débutant → Professeur) + niveaux A/B/C par domaine mis à jour dynamiquement, objectif quotidien configurable, exercices en cours |
+| 🃏 | **Flashcards CAPES** | 53 cartes curées (Langue, Civi Espagne, Civi Latam, Didactique) + génération IA par thème, flip 3D animé, tracking Connu/À revoir en DB, filtres domaine et niveau |
 
 ---
 
