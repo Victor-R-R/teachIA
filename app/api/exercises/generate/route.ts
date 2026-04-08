@@ -22,26 +22,36 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
   }
 
-  const { theme, domain, type, level } = body as {
-    theme: string
-    domain: string
-    type: string
-    level: string
-  }
+  const RequestSchema = z.object({
+    theme: z.string().min(1),
+    domain: z.enum(['langue', 'civi_espagne', 'civi_latam', 'didactique']),
+    type: z.enum(['qcm', 'vrai_faux', 'lacunaire']),
+    level: z.enum(['A', 'B', 'C']),
+  })
 
-  const { output } = await generateText({
-    model: 'anthropic/claude-sonnet-4.6',
-    output: Output.object({ schema: ExerciseSchema }),
-    system: `Tu es un expert du CAPES d'espagnol. Tu génères des exercices rigoureux, culturellement précis et pédagogiquement pertinents pour des candidats préparant le concours.`,
-    prompt: `Génère un exercice de type "${type}" sur le thème "${theme}" dans le domaine "${domain}" pour un candidat de niveau "${level}".
+  const parsed = RequestSchema.safeParse(body)
+  if (!parsed.success) {
+    return NextResponse.json({ error: 'Invalid input' }, { status: 400 })
+  }
+  const { theme, domain, type, level } = parsed.data
+
+  try {
+    const { output } = await generateText({
+      model: 'anthropic/claude-sonnet-4.6',
+      output: Output.object({ schema: ExerciseSchema }),
+      system: `Tu es un expert du CAPES d'espagnol. Tu génères des exercices rigoureux, culturellement précis et pédagogiquement pertinents pour des candidats préparant le concours.`,
+      prompt: `Génère un exercice de type "${type}" sur le thème "${theme}" dans le domaine "${domain}" pour un candidat de niveau "${level}".
 
 Pour un QCM : 4 options dont une seule correcte.
 Pour un vrai/faux : une affirmation avec réponse "Vrai" ou "Faux".
 Pour un lacunaire : une phrase avec "___" pour le mot manquant.
 
 L'explication doit être pédagogique (2-3 phrases), jamais condescendante.`,
-  })
+    })
 
-  const saved = await saveExercise({ ...output, source: 'ai_generated' })
-  return NextResponse.json(saved)
+    const saved = await saveExercise({ ...output, source: 'ai_generated' })
+    return NextResponse.json(saved)
+  } catch {
+    return NextResponse.json({ error: 'Failed to generate exercise' }, { status: 500 })
+  }
 }

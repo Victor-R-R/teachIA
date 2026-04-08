@@ -43,9 +43,15 @@ export function GenerateExerciseButton() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       })
+      if (!res.ok) {
+        // Generation failed — stay on page, loading will be reset by finally
+        return
+      }
       const exercise = await res.json()
-      setOpen(false)
-      router.push(`/exercices/${exercise.id}`)
+      if (typeof exercise.id === 'number') {
+        setOpen(false)
+        router.push(`/exercices/${exercise.id}`)
+      }
     } finally {
       setLoading(false)
     }
