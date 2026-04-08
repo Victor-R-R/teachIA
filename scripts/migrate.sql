@@ -50,3 +50,30 @@ CREATE TABLE IF NOT EXISTS conversation_messages (
 
 CREATE INDEX IF NOT EXISTS idx_conv_messages_conv_id ON conversation_messages(conversation_id);
 CREATE INDEX IF NOT EXISTS idx_conversations_updated ON conversations(updated_at DESC);
+
+-- Dashboard gamification
+ALTER TABLE user_profile
+  ADD COLUMN IF NOT EXISTS xp             INTEGER DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS level_xp       INTEGER DEFAULT 1,
+  ADD COLUMN IF NOT EXISTS daily_goal_min INTEGER DEFAULT 60;
+
+CREATE TABLE IF NOT EXISTS study_sessions (
+  id              SERIAL PRIMARY KEY,
+  date            DATE NOT NULL,
+  domain          TEXT NOT NULL,
+  duration_min    INTEGER DEFAULT 0,
+  exercises_done  INTEGER DEFAULT 0,
+  correct_count   INTEGER DEFAULT 0,
+  UNIQUE (date, domain)
+);
+
+CREATE TABLE IF NOT EXISTS exam_sessions (
+  id          SERIAL PRIMARY KEY,
+  type        TEXT NOT NULL,
+  content     TEXT NOT NULL,
+  ai_feedback TEXT,
+  score       NUMERIC(4,1),
+  timestamp   TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_study_sessions_date ON study_sessions(date);
