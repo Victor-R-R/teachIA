@@ -55,7 +55,7 @@ export function ExerciseQCM({ id, question, options, answer, explanation, onComp
 
   return (
     <div className="space-y-3">
-      <p className="text-zinc-100 text-base font-medium leading-relaxed">{question}</p>
+      <p className="text-slate-900 text-base font-medium leading-relaxed">{question}</p>
       <div className="space-y-2 mt-4">
         {options.map(option => (
           <button
@@ -65,8 +65,8 @@ export function ExerciseQCM({ id, question, options, answer, explanation, onComp
             onClick={() => setSelected(option)}
             className={`w-full text-left px-4 py-3 rounded-lg border text-sm transition-colors ${
               selected === option
-                ? 'border-violet-500 bg-violet-500/10 text-violet-200'
-                : 'border-zinc-700 bg-zinc-800/50 text-zinc-300 hover:border-zinc-500'
+                ? 'border-violet-500 bg-violet-50 text-violet-700'
+                : 'border-slate-200 bg-white text-slate-700 hover:border-violet-300 hover:bg-violet-50/50'
             }`}
           >
             {option}

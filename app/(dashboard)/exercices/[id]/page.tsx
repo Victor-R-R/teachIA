@@ -41,21 +41,21 @@ export default async function ExercisePage({
     <div className="max-w-2xl mx-auto">
       <Link
         href="/exercices"
-        className="flex items-center gap-2 text-zinc-400 hover:text-zinc-200 text-sm mb-6 transition-colors"
+        className="flex items-center gap-2 text-slate-500 hover:text-slate-900 text-sm mb-6 transition-colors cursor-pointer"
       >
         <ArrowLeft className="h-4 w-4" /> Retour aux exercices
       </Link>
 
-      <Card className="bg-zinc-900 border-zinc-800">
+      <Card className="bg-white border-slate-200 shadow-sm">
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2 flex-wrap">
-            <Badge variant="outline" className="text-zinc-400 border-zinc-700 text-xs">
+            <Badge variant="outline" className="text-slate-500 border-slate-200 text-xs">
               {DOMAIN_LABELS[exercise.domain] ?? exercise.domain}
             </Badge>
-            <Badge variant="outline" className="text-zinc-400 border-zinc-700 text-xs">
+            <Badge variant="outline" className="text-slate-500 border-slate-200 text-xs">
               {exercise.theme}
             </Badge>
-            <Badge className="text-xs bg-violet-500/20 text-violet-400 border-violet-500/30">
+            <Badge className="text-xs bg-violet-50 text-violet-600 border-violet-200">
               Niveau {exercise.level}
             </Badge>
           </div>
@@ -71,7 +71,7 @@ export default async function ExercisePage({
             <ExerciseLacunaire {...sharedProps} />
           )}
           {!['qcm', 'vrai_faux', 'lacunaire'].includes(exercise.type) && (
-            <p className="text-zinc-400 text-sm">
+            <p className="text-slate-500 text-sm">
               Type d&apos;exercice &quot;{exercise.type}&quot; — interface à venir.
             </p>
           )}
