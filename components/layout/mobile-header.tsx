@@ -24,6 +24,7 @@ export function MobileHeader() {
     <>
       <header className="lg:hidden flex items-center h-14 px-4 bg-white border-b border-slate-200 shrink-0">
         <button
+          type="button"
           onClick={() => setOpen(true)}
           aria-label="Ouvrir le menu"
           className="p-1 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
