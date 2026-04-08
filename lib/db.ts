@@ -25,6 +25,32 @@ export type ExerciseAttempt = {
   timestamp: string
 }
 
+export type AttemptStats = {
+  exercise_id: number
+  attempt_count: number
+  has_correct: boolean
+}
+
+export type ExerciseStatus = 'not_started' | 'in_progress' | 'completed'
+
+export function getExerciseStatus(stats: AttemptStats | undefined): ExerciseStatus {
+  if (!stats || stats.attempt_count === 0) return 'not_started'
+  if (stats.has_correct) return 'completed'
+  return 'in_progress'
+}
+
+export async function getAttemptStatsByExercises(ids: number[]): Promise<AttemptStats[]> {
+  if (ids.length === 0) return []
+  const rows = await sql.query(
+    `SELECT exercise_id, COUNT(*)::int AS attempt_count, bool_or(correct) AS has_correct
+     FROM exercise_attempts
+     WHERE exercise_id = ANY($1::int[])
+     GROUP BY exercise_id`,
+    [ids]
+  )
+  return rows as AttemptStats[]
+}
+
 export async function getExercises(filters: {
   domain?: Domain
   level?: Level

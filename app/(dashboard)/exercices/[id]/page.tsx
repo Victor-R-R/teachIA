@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation'
-import { getExerciseById, saveAttempt } from '@/lib/db'
+import { getExerciseById, saveAttempt, getAttemptStatsByExercises, getExerciseStatus } from '@/lib/db'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { ExerciseProgressBar } from '@/components/exercises/exercise-progress-bar'
 import { ExerciseQCM } from '@/components/exercises/exercise-qcm'
 import { ExerciseVraiFaux } from '@/components/exercises/exercise-vrai-faux'
 import { ExerciseLacunaire } from '@/components/exercises/exercise-lacunaire'
@@ -21,8 +22,13 @@ export default async function ExercisePage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const exercise = await getExerciseById(Number(id))
+  const [exercise, statsRows] = await Promise.all([
+    getExerciseById(Number(id)),
+    getAttemptStatsByExercises([Number(id)]),
+  ])
   if (!exercise) notFound()
+  const status = getExerciseStatus(statsRows[0])
+  const attemptCount = statsRows[0]?.attempt_count ?? 0
 
   async function handleComplete(correct: boolean) {
     'use server'
@@ -59,6 +65,18 @@ export default async function ExercisePage({
               Niveau {exercise.level}
             </Badge>
           </div>
+          {status !== 'not_started' && (
+            <div className="mt-2 space-y-1.5">
+              <div className={`text-xs font-medium flex items-center gap-1.5 ${
+                status === 'completed' ? 'text-green-600' : 'text-amber-600'
+              }`}>
+                <span aria-hidden="true" className="inline-block w-2 h-2 rounded-full bg-current" />
+                {status === 'completed' ? 'Réussi' : 'En cours'}
+                {' · '}{attemptCount} tentative{attemptCount > 1 ? 's' : ''}
+              </div>
+              <ExerciseProgressBar status={status} height={4} />
+            </div>
+          )}
         </CardHeader>
         <CardContent className="pt-0">
           {exercise.type === 'qcm' && exercise.options && (
