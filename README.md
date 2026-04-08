@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# teachIA
 
-## Getting Started
+Plateforme personnelle de préparation au CAPES d'espagnol.
 
-First, run the development server:
+## Fonctionnalités (Phase 1 MVP)
+
+- **Exercices tipos test** — QCM, Vrai/Faux, Texte lacunaire avec feedback IA immédiat
+- **Génération d'exercices par IA** — Génère des exercices sur n'importe quel thème (domaine, type, niveau)
+- **Professeur IA** — Chat streaming avec un professeur expert CAPES (grammaire, civilisation, littérature, didactique)
+- **Auth solo** — Protection par mot de passe unique + cookie JWT signé
+
+## Stack
+
+- Next.js 16 App Router + TypeScript
+- Neon Postgres (`@neondatabase/serverless`)
+- Vercel AI SDK v6 + AI Gateway (OIDC) — modèle `anthropic/claude-sonnet-4.6`
+- shadcn/ui + Tailwind CSS (thème dark zinc/violet)
+- AI Elements pour le rendu du chat
+
+## Lancer en local
 
 ```bash
+npm install
+vercel link          # lie au projet Vercel
+vercel env pull      # récupère DATABASE_URL + OIDC token
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Variables d'environnement
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Variable | Description |
+|----------|-------------|
+| `DATABASE_URL` | Connection string Neon Postgres |
+| `APP_PASSWORD` | Mot de passe de connexion |
+| `AUTH_SECRET` | Secret JWT (32+ caractères) |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+L'AI Gateway est auto-provisionné via OIDC sur Vercel — pas de clé API à gérer.
 
-## Learn More
+## Base de données
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# Appliquer le schéma
+psql $DATABASE_URL < scripts/migrate.sql
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Seed des exercices initiaux (10 exercices curés)
+npx tsx scripts/seed-exercises.ts
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Domaines couverts
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Langue (grammaire, lexique, traduction FR↔ES)
+- Civilisation Espagne
+- Civilisation Amérique latine
+- Didactique (CECRL, approche actionnelle)
