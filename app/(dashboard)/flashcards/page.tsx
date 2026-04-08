@@ -2,18 +2,11 @@ export const dynamic = 'force-dynamic'
 
 import { getFlashcards, getFlashcardReviewStats } from '@/lib/db'
 import type { Domain, Level } from '@/lib/constants'
-import { DOMAINS, LEVELS } from '@/lib/constants'
+import { DOMAINS, LEVELS, DOMAIN_LABELS } from '@/lib/constants'
 import { FlashcardViewer } from '@/components/flashcards/flashcard-viewer'
 import { GenerateFlashcardButton } from '@/components/flashcards/generate-flashcard-button'
 import { CreditCard } from 'lucide-react'
 import Link from 'next/link'
-
-const DOMAIN_LABELS: Record<string, string> = {
-  langue: 'Langue',
-  civi_espagne: 'Civi. Espagne',
-  civi_latam: 'Amér. latine',
-  didactique: 'Didactique',
-}
 
 export default async function FlashcardsPage({
   searchParams,

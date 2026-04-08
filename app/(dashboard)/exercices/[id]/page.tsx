@@ -11,13 +11,7 @@ import { ExerciseLacunaire } from '@/components/exercises/exercise-lacunaire'
 import { ExerciseQuizRunner } from '@/components/exercises/exercise-quiz-runner'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
-
-const DOMAIN_LABELS: Record<string, string> = {
-  langue: 'Langue',
-  civi_espagne: 'Civilisation Espagne',
-  civi_latam: 'Amérique latine',
-  didactique: 'Didactique',
-}
+import { DOMAIN_LABELS } from '@/lib/constants'
 
 export default async function ExercisePage({
   params,

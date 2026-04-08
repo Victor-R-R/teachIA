@@ -5,19 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Check, RotateCcw, ChevronLeft, ChevronRight, Trophy } from 'lucide-react'
 import type { Flashcard, FlashcardReviewStat } from '@/lib/db'
-
-const DOMAIN_LABELS: Record<string, string> = {
-  langue: 'Langue',
-  civi_espagne: 'Civi. Espagne',
-  civi_latam: 'Amér. latine',
-  didactique: 'Didactique',
-}
-
-const LEVEL_COLORS: Record<string, string> = {
-  A: 'bg-red-50 text-red-600 border-red-200',
-  B: 'bg-amber-50 text-amber-600 border-amber-200',
-  C: 'bg-green-50 text-green-600 border-green-200',
-}
+import { DOMAIN_LABELS, LEVEL_COLORS } from '@/lib/constants'
 
 type SessionResult = { known: boolean }
 

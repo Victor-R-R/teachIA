@@ -1,17 +1,12 @@
 import { Card, CardContent } from '@/components/ui/card'
 import type { UserProfile } from '@/lib/db'
+import { LEVEL_COLORS } from '@/lib/constants'
 
 const DOMAIN_ROWS = [
   { label: 'Langue', key: 'level_langue' },
   { label: 'Civilisation', key: 'level_civi' },
   { label: 'Didactique', key: 'level_didactique' },
 ] as const
-
-const LEVEL_COLORS: Record<'A' | 'B' | 'C', string> = {
-  A: 'bg-red-50 text-red-600 border-red-200',
-  B: 'bg-amber-50 text-amber-600 border-amber-200',
-  C: 'bg-green-50 text-green-600 border-green-200',
-}
 
 const LEVEL_DOTS: Record<'A' | 'B' | 'C', number> = { A: 1, B: 2, C: 3 }
 
