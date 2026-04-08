@@ -49,7 +49,7 @@ Pour un lacunaire : une phrase avec "___" pour le mot manquant.
 L'explication doit être pédagogique (2-3 phrases), jamais condescendante.`,
     })
 
-    const saved = await saveExercise({ ...output, source: 'ai_generated' })
+    const saved = await saveExercise({ ...output, source: 'ai_generated', title: null, questions: null })
     return NextResponse.json(saved)
   } catch {
     return NextResponse.json({ error: 'Failed to generate exercise' }, { status: 500 })
