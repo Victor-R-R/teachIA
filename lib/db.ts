@@ -576,6 +576,42 @@ export async function getSimulacroGlobalStats(): Promise<SimulacroGlobalStats> {
   }
 }
 
+export async function createUserProfile(data: {
+  level_langue: 'A' | 'B' | 'C'
+  level_civi: 'A' | 'B' | 'C'
+  level_didactique: 'A' | 'B' | 'C'
+}): Promise<UserProfile> {
+  const rows = await sql.query(
+    `INSERT INTO user_profile (level_langue, level_civi, level_didactique)
+     VALUES ($1, $2, $3) RETURNING *`,
+    [data.level_langue, data.level_civi, data.level_didactique]
+  )
+  return rows[0] as UserProfile
+}
+
+export type StudyPlanItem = {
+  id: number
+  week_number: number
+  domain: string
+  objective: string
+  completed: boolean
+  target_date: string
+}
+
+export async function saveStudyPlan(items: {
+  week_number: number
+  domain: string
+  objective: string
+  target_date: string
+}[]): Promise<void> {
+  for (const item of items) {
+    await sql.query(
+      `INSERT INTO study_plan (week_number, domain, objective, target_date) VALUES ($1, $2, $3, $4)`,
+      [item.week_number, item.domain, item.objective, item.target_date]
+    )
+  }
+}
+
 export async function getFlashcardGlobalStats(): Promise<FlashcardGlobalStats> {
   const rows = await sql.query(
     `SELECT COUNT(*)::int AS total_reviews,

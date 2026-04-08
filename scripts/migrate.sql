@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS user_profile (
   id SERIAL PRIMARY KEY,
-  exam_date DATE NOT NULL,
+  exam_date DATE,
   level_langue TEXT CHECK (level_langue IN ('A','B','C')),
   level_civi TEXT CHECK (level_civi IN ('A','B','C')),
   level_didactique TEXT CHECK (level_didactique IN ('A','B','C')),
