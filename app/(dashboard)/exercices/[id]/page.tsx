@@ -8,6 +8,7 @@ import { ExerciseProgressBar } from '@/components/exercises/exercise-progress-ba
 import { ExerciseQCM } from '@/components/exercises/exercise-qcm'
 import { ExerciseVraiFaux } from '@/components/exercises/exercise-vrai-faux'
 import { ExerciseLacunaire } from '@/components/exercises/exercise-lacunaire'
+import { ExerciseQuizRunner } from '@/components/exercises/exercise-quiz-runner'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
@@ -43,13 +44,8 @@ export default async function ExercisePage({
     })
   }
 
-  const sharedProps = {
-    id: exercise.id,
-    question: exercise.question,
-    answer: exercise.answer,
-    explanation: exercise.explanation,
-    onComplete: handleComplete,
-  }
+  const questions = exercise.questions
+  const isMultiQuestion = questions && questions.length > 0
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -67,11 +63,16 @@ export default async function ExercisePage({
               {DOMAIN_LABELS[exercise.domain] ?? exercise.domain}
             </Badge>
             <Badge variant="outline" className="text-slate-500 border-slate-200 text-xs">
-              {exercise.theme}
+              {exercise.title ?? exercise.theme}
             </Badge>
             <Badge className="text-xs bg-violet-50 text-violet-600 border-violet-200">
               Niveau {exercise.level}
             </Badge>
+            {isMultiQuestion && (
+              <Badge variant="outline" className="text-slate-400 border-slate-200 text-xs">
+                {questions.length} questions
+              </Badge>
+            )}
           </div>
           {status !== 'not_started' && (
             <div className="mt-2 space-y-1.5">
@@ -87,19 +88,48 @@ export default async function ExercisePage({
           )}
         </CardHeader>
         <CardContent className="pt-0">
-          {exercise.type === 'qcm' && exercise.options && (
-            <ExerciseQCM {...sharedProps} options={exercise.options as string[]} />
-          )}
-          {exercise.type === 'vrai_faux' && (
-            <ExerciseVraiFaux {...sharedProps} />
-          )}
-          {exercise.type === 'lacunaire' && (
-            <ExerciseLacunaire {...sharedProps} />
-          )}
-          {!['qcm', 'vrai_faux', 'lacunaire'].includes(exercise.type) && (
-            <p className="text-slate-500 text-sm">
-              Type d&apos;exercice &quot;{exercise.type}&quot; — interface à venir.
-            </p>
+          {isMultiQuestion ? (
+            <ExerciseQuizRunner
+              title={exercise.title ?? exercise.theme}
+              questions={questions}
+              onComplete={handleComplete}
+            />
+          ) : (
+            <>
+              {exercise.type === 'qcm' && exercise.options && (
+                <ExerciseQCM
+                  id={exercise.id}
+                  question={exercise.question}
+                  options={exercise.options as string[]}
+                  answer={exercise.answer}
+                  explanation={exercise.explanation}
+                  onComplete={handleComplete}
+                />
+              )}
+              {exercise.type === 'vrai_faux' && (
+                <ExerciseVraiFaux
+                  id={exercise.id}
+                  question={exercise.question}
+                  answer={exercise.answer}
+                  explanation={exercise.explanation}
+                  onComplete={handleComplete}
+                />
+              )}
+              {exercise.type === 'lacunaire' && (
+                <ExerciseLacunaire
+                  id={exercise.id}
+                  question={exercise.question}
+                  answer={exercise.answer}
+                  explanation={exercise.explanation}
+                  onComplete={handleComplete}
+                />
+              )}
+              {!['qcm', 'vrai_faux', 'lacunaire'].includes(exercise.type) && (
+                <p className="text-slate-500 text-sm">
+                  Type d&apos;exercice &quot;{exercise.type}&quot; — interface à venir.
+                </p>
+              )}
+            </>
           )}
         </CardContent>
       </Card>

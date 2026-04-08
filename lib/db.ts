@@ -3,10 +3,19 @@ import type { Domain, Level, ExerciseType } from '@/lib/constants'
 
 const sql = neon(process.env.DATABASE_URL!)
 
+export type QuestionItem = {
+  type: 'qcm' | 'vrai_faux' | 'lacunaire'
+  question: string
+  options: string[] | null
+  answer: string
+  explanation: string
+}
+
 export type Exercise = {
   id: number
   theme: string
   domain: string
+  title: string | null
   type: 'qcm' | 'vrai_faux' | 'lacunaire' | 'chronologie' | 'association'
   question: string
   options: string[] | null
@@ -14,6 +23,7 @@ export type Exercise = {
   explanation: string
   level: 'A' | 'B' | 'C'
   source: string
+  questions: QuestionItem[] | null
   created_at: string
 }
 
@@ -333,4 +343,83 @@ export async function getInProgressSimulations(): Promise<ExamSession[]> {
 
 export async function updateDailyGoal(minutes: number): Promise<void> {
   await sql.query('UPDATE user_profile SET daily_goal_min = $1', [minutes])
+}
+
+// ─── Flashcards ───────────────────────────────────────────────────────────────
+
+export type Flashcard = {
+  id: number
+  front: string
+  back: string
+  domain: string
+  level: 'A' | 'B' | 'C'
+  source: string
+  created_at: string
+}
+
+export type FlashcardReviewStat = {
+  flashcard_id: number
+  total: number
+  known_count: number
+  last_known: boolean | null
+}
+
+export async function getFlashcards(filters: {
+  domain?: Domain
+  level?: Level
+  limit?: number
+} = {}): Promise<Flashcard[]> {
+  const { domain, level, limit = 200 } = filters
+  const conditions: string[] = []
+  const params: unknown[] = []
+  let i = 1
+
+  if (domain) { conditions.push(`domain = $${i++}`); params.push(domain) }
+  if (level) { conditions.push(`level = $${i++}`); params.push(level) }
+
+  const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''
+  const rows = await sql.query(
+    `SELECT * FROM flashcards ${where} ORDER BY created_at ASC LIMIT $${i}`,
+    [...params, limit]
+  )
+  return rows as Flashcard[]
+}
+
+export async function saveFlashcard(
+  card: Omit<Flashcard, 'id' | 'created_at'>
+): Promise<Flashcard> {
+  const rows = await sql.query(
+    `INSERT INTO flashcards (front, back, domain, level, source)
+     VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+    [card.front, card.back, card.domain, card.level, card.source]
+  )
+  return rows[0] as Flashcard
+}
+
+export async function saveFlashcardReview(
+  flashcard_id: number,
+  known: boolean
+): Promise<void> {
+  await sql.query(
+    'INSERT INTO flashcard_reviews (flashcard_id, known) VALUES ($1, $2)',
+    [flashcard_id, known]
+  )
+}
+
+export async function getFlashcardReviewStats(
+  ids: number[]
+): Promise<FlashcardReviewStat[]> {
+  if (ids.length === 0) return []
+  const rows = await sql.query(
+    `SELECT
+       flashcard_id,
+       COUNT(*)::int AS total,
+       SUM(CASE WHEN known THEN 1 ELSE 0 END)::int AS known_count,
+       (array_agg(known ORDER BY timestamp DESC))[1] AS last_known
+     FROM flashcard_reviews
+     WHERE flashcard_id = ANY($1::int[])
+     GROUP BY flashcard_id`,
+    [ids]
+  )
+  return rows as FlashcardReviewStat[]
 }

@@ -120,15 +120,21 @@ export default async function ExercicesPage({
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">
                         <p className="text-slate-900 text-sm font-medium line-clamp-2 mb-2">
-                          {ex.question}
+                          {ex.title ?? ex.question}
                         </p>
                         <div className="flex items-center gap-2 flex-wrap">
                           <Badge variant="outline" className="text-xs text-slate-500 border-slate-200">
                             {DB_DOMAIN_LABELS[ex.domain] ?? ex.domain}
                           </Badge>
-                          <Badge variant="outline" className="text-xs text-slate-500 border-slate-200">
-                            {DB_TYPE_LABELS[ex.type] ?? ex.type}
-                          </Badge>
+                          {ex.questions && ex.questions.length > 0 ? (
+                            <Badge variant="outline" className="text-xs text-slate-400 border-slate-200">
+                              {ex.questions.length} questions
+                            </Badge>
+                          ) : (
+                            <Badge variant="outline" className="text-xs text-slate-500 border-slate-200">
+                              {DB_TYPE_LABELS[ex.type] ?? ex.type}
+                            </Badge>
+                          )}
                         </div>
                       </div>
                       <Badge className={`text-xs shrink-0 ${LEVEL_COLORS[ex.level]}`}>
