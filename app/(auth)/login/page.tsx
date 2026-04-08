@@ -46,31 +46,31 @@ export default async function LoginPage({
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4">
-      <Card className="w-full max-w-sm bg-zinc-900 border-zinc-800">
+    <div className="min-h-screen bg-gradient-to-br from-violet-50 to-slate-100 flex items-center justify-center p-4">
+      <Card className="w-full max-w-sm bg-white border-slate-200 shadow-sm">
         <CardHeader>
-          <CardTitle className="text-zinc-100">teachIA</CardTitle>
-          <CardDescription className="text-zinc-400">
+          <CardTitle className="text-slate-900">teachIA</CardTitle>
+          <CardDescription className="text-slate-500">
             Préparation CAPES d&apos;espagnol
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form action={login} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-zinc-300">Mot de passe</Label>
+              <Label htmlFor="password" className="text-slate-700">Mot de passe</Label>
               <Input
                 id="password"
                 name="password"
                 type="password"
                 autoFocus
-                className="bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
+                className="bg-white border-slate-300 text-slate-900 placeholder:text-slate-400"
                 placeholder="••••••••"
               />
             </div>
             {params.error && (
-              <p className="text-sm text-red-400">Mot de passe incorrect.</p>
+              <p className="text-sm text-red-600">Mot de passe incorrect.</p>
             )}
-            <Button type="submit" className="w-full bg-violet-600 hover:bg-violet-700">
+            <Button type="submit" className="w-full bg-violet-600 hover:bg-violet-700 text-white">
               Accéder
             </Button>
           </form>

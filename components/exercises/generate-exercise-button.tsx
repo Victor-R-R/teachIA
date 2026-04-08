@@ -61,53 +61,53 @@ export function GenerateExerciseButton() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger
         render={
-          <Button size="sm" variant="outline" className="border-zinc-700 text-zinc-300 hover:border-violet-500 hover:text-violet-300">
+          <Button size="sm" variant="outline" className="border-slate-300 text-slate-600 hover:border-violet-500 hover:text-violet-600">
             <Sparkles className="h-4 w-4 mr-2" />
             Générer un exercice
           </Button>
         }
       />
-      <DialogContent className="bg-zinc-900 border-zinc-800">
+      <DialogContent className="bg-white border-slate-200 shadow-lg">
         <DialogHeader>
-          <DialogTitle className="text-zinc-100">Générer un exercice</DialogTitle>
+          <DialogTitle className="text-slate-900">Générer un exercice</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 mt-2">
           <div>
-            <Label className="text-zinc-300 text-sm">Thème</Label>
+            <Label className="text-slate-700 text-sm">Thème</Label>
             <Input
               value={form.theme}
               onChange={e => setForm(f => ({ ...f, theme: e.target.value }))}
               placeholder="ex: subjonctif, guerre civile, boom literario…"
-              className="mt-1 bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
+              className="mt-1 bg-white border-slate-300 text-slate-900 placeholder:text-slate-400"
             />
           </div>
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <Label className="text-zinc-300 text-sm">Domaine</Label>
+              <Label className="text-slate-700 text-sm">Domaine</Label>
               <select
                 value={form.domain}
                 onChange={e => setForm(f => ({ ...f, domain: e.target.value }))}
-                className="mt-1 w-full bg-zinc-800 border border-zinc-700 rounded-md px-3 py-2 text-sm text-zinc-100"
+                className="mt-1 w-full bg-white border border-slate-300 rounded-md px-3 py-2 text-sm text-slate-900"
               >
                 {DOMAINS.map(d => <option key={d.value} value={d.value}>{d.label}</option>)}
               </select>
             </div>
             <div>
-              <Label className="text-zinc-300 text-sm">Type</Label>
+              <Label className="text-slate-700 text-sm">Type</Label>
               <select
                 value={form.type}
                 onChange={e => setForm(f => ({ ...f, type: e.target.value }))}
-                className="mt-1 w-full bg-zinc-800 border border-zinc-700 rounded-md px-3 py-2 text-sm text-zinc-100"
+                className="mt-1 w-full bg-white border border-slate-300 rounded-md px-3 py-2 text-sm text-slate-900"
               >
                 {TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
               </select>
             </div>
             <div>
-              <Label className="text-zinc-300 text-sm">Niveau</Label>
+              <Label className="text-slate-700 text-sm">Niveau</Label>
               <select
                 value={form.level}
                 onChange={e => setForm(f => ({ ...f, level: e.target.value }))}
-                className="mt-1 w-full bg-zinc-800 border border-zinc-700 rounded-md px-3 py-2 text-sm text-zinc-100"
+                className="mt-1 w-full bg-white border border-slate-300 rounded-md px-3 py-2 text-sm text-slate-900"
               >
                 {['A', 'B', 'C'].map(l => <option key={l} value={l}>Niveau {l}</option>)}
               </select>

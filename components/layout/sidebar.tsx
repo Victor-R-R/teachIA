@@ -25,20 +25,20 @@ export function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="w-52 shrink-0 bg-zinc-900 border-r border-zinc-800 flex flex-col h-full">
-      <div className="px-4 py-5 border-b border-zinc-800">
-        <span className="text-violet-400 font-semibold text-lg tracking-tight">teachIA</span>
+    <aside className="w-52 shrink-0 bg-white border-r border-slate-200 flex flex-col h-full">
+      <div className="px-4 py-5 border-b border-slate-100">
+        <span className="text-violet-600 font-semibold text-lg tracking-tight">teachIA</span>
       </div>
-      <nav aria-label="Navigation principale" className="flex-1 px-2 py-4 space-y-1">
+      <nav aria-label="Navigation principale" className="flex-1 px-2 py-4 space-y-0.5">
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => (
           <Link
             key={href}
             href={href}
             className={cn(
-              'flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors',
+              'flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors cursor-pointer',
               pathname === href
-                ? 'bg-zinc-800 text-zinc-100'
-                : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50'
+                ? 'bg-violet-50 text-violet-700 font-medium'
+                : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
             )}
           >
             <Icon className="h-4 w-4 shrink-0" />
