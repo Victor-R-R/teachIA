@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { notFound } from 'next/navigation'
 import { getExerciseById, saveAttempt, getAttemptStatsByExercises, getExerciseStatus } from '@/lib/db'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'

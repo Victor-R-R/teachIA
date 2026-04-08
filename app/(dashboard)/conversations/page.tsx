@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { getConversations } from '@/lib/db'
 import { ConversationsList } from '@/components/conversations/conversations-list'
 

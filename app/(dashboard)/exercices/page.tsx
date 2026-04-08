@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import Link from 'next/link'
 import { getExercises, getAttemptStatsByExercises, getExerciseStatus } from '@/lib/db'
 import { EXERCISES } from '@/lib/exercises'
