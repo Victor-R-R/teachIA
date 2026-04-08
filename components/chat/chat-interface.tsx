@@ -20,9 +20,10 @@ const INIT_MARKER = '[[INIT]]'
 type Props = {
   conversationId?: string
   initialMessages?: UIMessage[]
+  initialPrompt?: string
 }
 
-export function ChatInterface({ conversationId: initialId, initialMessages = [] }: Props) {
+export function ChatInterface({ conversationId: initialId, initialMessages = [], initialPrompt }: Props) {
   const router = useRouter()
   const bottomRef = useRef<HTMLDivElement>(null)
   const [input, setInput] = useState('')
@@ -46,9 +47,9 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [] 
   useEffect(() => {
     if (!initSent.current) {
       initSent.current = true
-      sendMessage({ text: INIT_MARKER }).catch(console.error)
+      sendMessage({ text: initialPrompt ?? INIT_MARKER }).catch(console.error)
     }
-  }, [sendMessage])
+  }, [sendMessage, initialPrompt])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })

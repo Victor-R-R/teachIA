@@ -43,7 +43,7 @@ Quels sont les 5 éléments que le jury attend obligatoirement dans la présenta
       'Mention de Capmany (1742-1813), secrétaire de la Real Academia de la Historia, censor de libros, opposant à Godoy',
       'Nature du texte : pamphlet / discours pragmatique à visée de mobilisation',
       'Date de rédaction : été 1808, pendant la Guerra de la Independencia (pas "guerra de Independencia" sans article)',
-      'Fragment situé à la fin de la première partie de l'œuvre — synthèse des idées exposées',
+      `Fragment situé à la fin de la première partie de l'œuvre — synthèse des idées exposées`,
       'Destinataires : tous les Espagnols, appel aux Provinces via les juntas provinciales',
     ],
     source: 'Rapport du jury 2025, p. 6-7',
@@ -61,8 +61,8 @@ B) "¿En qué medida estos documentos, que denuncian situaciones de dominación 
 C) "¿Cómo se refleja la identidad española en los documentos del dossier?"`,
     pointsEvaluation: [
       'A) Non recevable : trop générale, ne tient pas compte de la thématique "dominations/insoumissions", ne permet pas un développement progressif',
-      'B) Recevable : formulation du jury 2025, interroge le degré de violence, l'identité, le projet politique — problématique ouverte et progressive',
-      'C) Partiellement recevable : pertinente mais trop vague, risque d'être réductrice, ne mentionne pas la dialectique domination/insoumission',
+      `B) Recevable : formulation du jury 2025, interroge le degré de violence, l'identité, le projet politique — problématique ouverte et progressive`,
+      `C) Partiellement recevable : pertinente mais trop vague, risque d'être réductrice, ne mentionne pas la dialectique domination/insoumission`,
     ],
     source: 'Rapport du jury 2025, p. 9',
   },
@@ -80,7 +80,7 @@ Proposez un plan en 3 parties avec 2 sous-parties chacune. Pour chaque partie, r
 Critères : le plan doit être progressif (pas chronologique doc par doc), chaque partie doit mobiliser les 3 documents, le plan doit répondre à la problématique.`,
     pointsEvaluation: [
       'Plan ne sépare pas les documents (1 doc = 1 partie est sévèrement sanctionné)',
-      'Plan progressif et argumenté (ex: I. la dénonciation / II. l'identité / III. le projet politique)',
+      `Plan progressif et argumenté (ex: I. la dénonciation / II. l'identité / III. le projet politique)`,
       'Les 3 documents mobilisés dans chaque partie',
       'Parties clairement articulées entre elles',
     ],
@@ -104,8 +104,8 @@ L'introduction doit comprendre :
 Durée suggérée : 45 minutes. Longueur attendue : 250-350 mots.`,
     pointsEvaluation: [
       'Présentation de chaque document dépasse le simple paratexte',
-      'Doc 1 situé dans l'économie de l'œuvre Centinela contra franceses',
-      'Doc 2 : identification de Blanco White comme libéral en exil à Londres, presse d'opposition',
+      `Doc 1 situé dans l'économie de l'œuvre Centinela contra franceses`,
+      `Doc 2 : identification de Blanco White comme libéral en exil à Londres, presse d'opposition`,
       'Doc 3 : identification du pronunciamiento comme genre discursif, La Gloriosa 1868',
       'Dissonances entre les 3 docs relevées (Capmany conservateur-national vs Blanco White libéral-éclairé)',
       'Problématique ouverte, en espagnol, répondant à la thématique',
@@ -203,7 +203,7 @@ Rédigez la composition complète en espagnol (introduction + développement en 
 3. "No había nadie que pudiera detenerlos en su camino."
 4. "Le dijo a ella que viniera cuanto antes, aunque no le importara demasiado."
 5. "Aunque supiera la verdad, nunca la revelaría."`,
-    indications: '1. aquel = distance temporelle/affective en récit rétrospectif → ces... de l'époque / echarse de menos = manquer. 2. volver a + inf = de nouveau. 3. nadie que + subj → personne qui puisse. 4. COI féminin = lui (pas le). 5. aunque + subjonctif imparfait = même si / bien que (valeur hypothétique).',
+    indications: `1. aquel = distance temporelle/affective en récit rétrospectif → ces... de l'époque / echarse de menos = manquer. 2. volver a + inf = de nouveau. 3. nadie que + subj → personne qui puisse. 4. COI féminin = lui (pas le). 5. aunque + subjonctif imparfait = même si / bien que (valeur hypothétique).`,
     source: 'Rapport du jury 2025, section VERSION, pièges récurrents',
   },
 
@@ -230,7 +230,7 @@ Rédigez la composition complète en espagnol (introduction + développement en 
     enonce: `Traduisez ce passage en français. Soyez attentif au registre, aux temps verbaux et aux pièges lexicaux.
 
 "Aquella tarde, cuando mi madre cerró la puerta del cuarto trasero, me puse a pensar en todas las cosas que nunca le había dicho. Era difícil empezar. Los recuerdos se echaban unos encima de otros, como ropa arrugada en un cajón que nadie se había molestado en ordenar desde hacía años. Aunque hubiera querido contárselo todo, no sabía por dónde empezar ni cómo hacerle entender que aquellos años no habían sido tan sencillos como ella recordaba."`,
-    indications: 'Pièges : aquella tarde (ce soir-là / ce soir de jadis), ponerse a (se mettre à), echarse encima (s'entasser / se superposer), aunque + plus-que-parfait du subjonctif (même si elle avait voulu), hacerle entender (lui faire comprendre — COI féminin lui).',
+    indications: `Pièges : aquella tarde (ce soir-là / ce soir de jadis), ponerse a (se mettre à), echarse encima (s'entasser / se superposer), aunque + plus-que-parfait du subjonctif (même si elle avait voulu), hacerle entender (lui faire comprendre — COI féminin lui).`,
     source: 'Inspiré du style de Carmen Martín Gaite (texte du corrigé 2025)',
   },
 
@@ -242,7 +242,7 @@ Rédigez la composition complète en espagnol (introduction + développement en 
     enonce: `Traduisez ce passage en français (style Javier Cercas, Soldados de Salamina) :
 
 "Aunque Sánchez Mazas hubiera muerto en aquel bosque, nadie lo habría sabido nunca. El miliciano le miró a los ojos durante unos instantes que a él se le antojaron eternos, y no dijo nada. Luego se dio la vuelta y se alejó entre los árboles. Sánchez Mazas comprendió entonces que ese hombre anónimo había decidido salvarle la vida, sin que nada le obligara a ello, sin que nadie pudiera saberlo jamás."`,
-    indications: 'Pièges : aunque + plus-que-parfait du subj (bien que / même si), antojarse = sembler / paraître (registre littéraire), darse la vuelta = se retourner, alejarse = s'éloigner, sin que + subjonctif = sans que.',
+    indications: `Pièges : aunque + plus-que-parfait du subj (bien que / même si), antojarse = sembler / paraître (registre littéraire), darse la vuelta = se retourner, alejarse = s'éloigner, sin que + subjonctif = sans que.`,
   },
 
   {
@@ -303,7 +303,7 @@ Rédigez la composition complète en espagnol (introduction + développement en 
     enonce: `Traduisez ce passage en espagnol. Respectez le registre littéraire et évitez les calques du français.
 
 "La forêt était silencieuse. On n'entendait plus que le craquement des branches sous le poids de la neige et, par instants, le cri lointain d'un oiseau que la nuit semblait avoir oublié. Il venait de refermer la porte derrière lui quand il remarqua que quelqu'un l'avait précédé sur ce chemin. Des empreintes fraîches s'enfonçaient dans la neige, si légères qu'on les aurait prises pour celles d'un enfant, bien qu'elles conduisissent trop profondément dans les ténèbres pour appartenir à un être humain."`,
-    indications: 'Pièges : on n'entendait plus que = ya no se oía más que / solo se oía, le cri = el grito/chant selon contexte, venir de refermer = acabar de cerrar, remarquer = darse cuenta de / notar, des empreintes = huellas, on les aurait prises pour = se las habría tomado por, bien que + subj → aunque + subj imparfait.',
+    indications: `Pièges : on n'entendait plus que = ya no se oía más que / solo se oía, le cri = el grito/chant selon contexte, venir de refermer = acabar de cerrar, remarquer = darse cuenta de / notar, des empreintes = huellas, on les aurait prises pour = se las habría tomado por, bien que + subj → aunque + subj imparfait.`,
     source: 'Inspiré de Michel Tournier, Le Roi des Aulnes (texte THÈME 2025)',
   },
 
@@ -326,7 +326,7 @@ Rédigez la composition complète en espagnol (introduction + développement en 
     enonce: `Traduisez ce passage en espagnol. Soignez la langue, l'accentuation et le registre.
 
 "Lorsqu'il prit conscience de ce qui s'était passé, il était trop tard pour revenir en arrière. On lui avait volé quelque chose d'irremplaçable, quelque chose dont il n'avait jamais mesuré la valeur tant qu'il l'avait possédé. Il se dit qu'il aurait dû faire plus attention, qu'il aurait pu éviter tout cela s'il avait voulu. Mais à quoi bon se lamenter sur ce qui aurait pu être différent ? La vérité, c'est qu'on ne sait jamais vraiment ce qu'on a jusqu'au moment où on le perd. Et cette leçon-là, si cruelle fût-elle, valait peut-être bien tous les livres qu'il avait lus."`,
-    indications: 'Pièges : prit conscience = se dio cuenta de, tant qu'il l'avait possédé = mientras lo había poseído, à quoi bon = ¿de qué sirve?, si cruelle fût-elle = por muy cruel que fuera (concession au subjonctif), valait peut-être bien = quizás valía / tal vez valiera.',
+    indications: `Pièges : prit conscience = se dio cuenta de, tant qu'il l'avait possédé = mientras lo había poseído, à quoi bon = ¿de qué sirve?, si cruelle fût-elle = por muy cruel que fuera (concession au subjonctif), valait peut-être bien = quizás valía / tal vez valiera.`,
   },
 
   // ══════════════════════════════════════
@@ -348,7 +348,7 @@ Rédigez la composition complète en espagnol (introduction + développement en 
 6. La obra ___ dirigida a todos los españoles.
 7. Juan Prim ___ muerto en diciembre de 1870.
 8. El texto ___ muy difícil de interpretar sin conocer el contexto.`,
-    indications: 'Ser : identité/définition, nationalité, matière, agent passif (ser + participé = voix passive). Estar : état/position, résultat d'une action (estar + participé = état résultant), lieu d'un événement (estar = localisation d'un fait).',
+    indications: `Ser : identité/définition, nationalité, matière, agent passif (ser + participé = voix passive). Estar : état/position, résultat d'une action (estar + participé = état résultant), lieu d'un événement (estar = localisation d'un fait).`,
   },
 
   {
@@ -480,7 +480,7 @@ H) Règne d'Isabelle II`,
       'D) 1808 — Motín de Aranjuez (abdication Carlos IV en faveur de Fernando VII)',
       'B) Mai 1808 — Début de la Guerra de la Independencia',
       'C) 1812 — Constitution de Cádiz (première constitution libérale espagnole)',
-      'H) 1833-1868 — Règne d'Isabelle II',
+      `H) 1833-1868 — Règne d'Isabelle II`,
       'A) Septembre 1868 — La Gloriosa (pronunciamiento de Prim et alii)',
       'G) 1873-1874 — Sexenio démocratique, 1ère République',
       'F) 1875 — Restauration',
@@ -535,7 +535,7 @@ H) Règne d'Isabelle II`,
     pointsEvaluation: [
       'Capmany : conservateur mais défenseur de la souveraineté nationale, secrétaire Real Academia de Historia, opposant à Godoy, élu aux Cortes de Cádiz',
       'Contradiction : défend les libertés mais avec une rhétorique conservatrice/nationale (pas libérale)',
-      'Centinela : sentinelle — métaphore militaire et médiévale, gardien de la nation contre l'envahisseur',
+      `Centinela : sentinelle — métaphore militaire et médiévale, gardien de la nation contre l'envahisseur`,
       'Destinataires : tous les Espagnols (los compatriotas, los centinelas) + les Provinces (juntas provinciales)',
     ],
   },
@@ -639,7 +639,7 @@ Critères : les objectifs doivent être précis, mesurables et adaptés au nivea
     pointsEvaluation: [
       'Objectifs culturels : crise UBA/universités publiques sous Milei + transmission du savoir, héritage intellectuel',
       'Objectifs linguistiques : voseo rioplatense + subordonnées conditionnelles ou discours rapporté',
-      'Objectif pragmatique : argumenter une position sur la valeur de l'éducation publique',
+      `Objectif pragmatique : argumenter une position sur la valeur de l'éducation publique`,
       'Tâche finale réaliste : pas de scénario irréaliste (conférence internationale...) mais débat, lettre, article de blog...',
     ],
   },
@@ -697,9 +697,9 @@ Séance 5 : évaluation sommative — précisez le type et les critères CECRL.`
 ---`,
     pointsEvaluation: [
       'Erreur 1 : pas de date, pas de réalisateurs nommés, pas de contexte de production',
-      'Erreur 2 : "plan d'ensemble, gros plan..." = catalogue de procédés sans analyse du sens',
-      'Erreur 3 : "le film parle de..." = paraphrase, pas d'analyse',
-      'Erreur 4 : "la langue utilisée est l'espagnol" = insuffisant — il faut identifier la variété (rioplatense), le voseo, le yeísmo rehilado',
+      `Erreur 2 : "plan d'ensemble, gros plan..." = catalogue de procédés sans analyse du sens`,
+      `Erreur 3 : "le film parle de..." = paraphrase, pas d'analyse`,
+      `Erreur 4 : "la langue utilisée est l'espagnol" = insuffisant — il faut identifier la variété (rioplatense), le voseo, le yeísmo rehilado`,
       'Erreur 5 : pas de problématique',
       'Erreur 6 : rédigée en français alors que la partie 1 doit être en espagnol',
     ],
@@ -722,7 +722,7 @@ L'introduction doit comprendre :
 - L'annonce du plan`,
     pointsEvaluation: [
       'Nature : documentaire biographique, témoignages + archives',
-      'Variété : espagnol péninsulaire standard + traces de l'andalou si présent (seseo)',
+      `Variété : espagnol péninsulaire standard + traces de l'andalou si présent (seseo)`,
       'Contexte : histoire du flamenco gitan, discrimination du peuple gitan, figures oubliées',
       'Problématique : mémoire des artistes minorés / rapport au corps et à la transmission',
       'Plan annoncé en 2-3 parties cohérentes',
@@ -787,7 +787,7 @@ PARTIE 2 (30 min) : Rédigez en français la séance pédagogique pour une class
 
 3. Rédigez votre accroche d'ouverture (2-3 phrases) pour cet exposé, en vous projetant clairement dans le métier d'enseignant d'espagnol.`,
     pointsEvaluation: [
-      'Éléments obligatoires : parcours de formation, expériences significatives (stages, voyages...), motivations pour l'enseignement, projection concrète dans le métier',
+      `Éléments obligatoires : parcours de formation, expériences significatives (stages, voyages...), motivations pour l'enseignement, projection concrète dans le métier`,
       'Erreurs à éviter : CV oralisé sans analyse, liste de textes officiels sans lien, ton monocorde, registre familier',
       'Accroche : personnalisée, anecdote concrète, lien avec la discipline',
     ],
@@ -810,11 +810,11 @@ Un élève de 3e distribue des tracts à caractère religieux prosélyte dans la
 
 Structurez votre réponse en 3-4 minutes d'exposé oral.`,
     pointsEvaluation: [
-      'Textes : Charte de la laïcité (2013), Code de l'éducation (art. L141-5-1), Circulaire Chatel 2012, BO 2004 sur les signes religieux',
-      'Distinction : liberté de conscience (privé) vs manifestation ostentatoire (interdit à l'école)',
-      'Dialogue avec l'élève : expliquer sans punir d'emblée',
-      'Information du CPE et du chef d'établissement',
-      'Communication avec les parents : information neutre, pas d'accusation',
+      `Textes : Charte de la laïcité (2013), Code de l'éducation (art. L141-5-1), Circulaire Chatel 2012, BO 2004 sur les signes religieux`,
+      `Distinction : liberté de conscience (privé) vs manifestation ostentatoire (interdit à l'école)`,
+      `Dialogue avec l'élève : expliquer sans punir d'emblée`,
+      `Information du CPE et du chef d'établissement`,
+      `Communication avec les parents : information neutre, pas d'accusation`,
     ],
     source: 'Rapport du jury 2025, thèmes des mises en situation, p. 60-64',
   },
@@ -835,8 +835,8 @@ Vous êtes professeur principal d'une classe de 2nde. Un élève vient vous voir
     pointsEvaluation: [
       'Dispositif pHARe (programme de lutte contre le harcèlement scolaire)',
       'Circulaire de février 2024 sur le harcèlement LGBTphobe',
-      'Rôle du CPE, de l'infirmier scolaire, du psychologue EN',
-      'Signalement au chef d'établissement',
+      `Rôle du CPE, de l'infirmier scolaire, du psychologue EN`,
+      `Signalement au chef d'établissement`,
       'Information bienveillante des parents (des deux parties)',
       'Travail en classe sur le respect et la diversité (sans exposer la victime)',
     ],
@@ -859,9 +859,9 @@ Situation 1 (discipline) : Un élève de Terminale refuse de travailler en espag
 
 Situation 2 (vie scolaire) : Vous apprenez qu'un de vos élèves de 1ère a plagié une composition en ligne (ChatGPT ou site de résumés). Ses parents contestent la décision du conseil de discipline. Quels sont vos arguments ? Sur quels textes vous appuyez-vous ?`,
     pointsEvaluation: [
-      'Partie 1 : structure en 3 temps (passé/présent/futur), projection dans le métier, exemples concrets d'expériences',
+      `Partie 1 : structure en 3 temps (passé/présent/futur), projection dans le métier, exemples concrets d'expériences`,
       'Situation 1 : valoriser les langues vivantes (BO 2019, CECRL), exemples concrets de débouchés, médiation culturelle',
-      'Situation 2 : fraude scolaire — règlement intérieur, BO sur l'intégrité académique, rôle formateur (apprendre à citer, à utiliser les sources)',
+      `Situation 2 : fraude scolaire — règlement intérieur, BO sur l'intégrité académique, rôle formateur (apprendre à citer, à utiliser les sources)`,
     ],
   },
 
@@ -915,7 +915,7 @@ Rédigez en espagnol une conclusion complète (100-130 mots) comprenant :
     pointsEvaluation: [
       'Synthèse : reformule sans répéter les intitulés des parties',
       'Réponse à la problématique : répond directement à la question posée en introduction',
-      'Ouverture : lien avec un autre auteur, une autre période ou une question contemporaine pertinente (ex : mémoire démocratique en Espagne aujourd'hui, Loi de 2022)',
+      `Ouverture : lien avec un autre auteur, une autre période ou une question contemporaine pertinente (ex : mémoire démocratique en Espagne aujourd'hui, Loi de 2022)`,
       'Langue : niveau C1, accentuation correcte, connecteurs logiques (así pues, en definitiva, en suma...)',
     ],
   },
@@ -941,7 +941,7 @@ Travail demandé :
       'Doc 1 : Padilla — contexte prix UNEAC 1968, censure du recueil, arrestation 1971, "autocritique" forcée',
       'Doc 2 : Lettre ouverte — rupture des compagnons de route de la Révolution, position de Vargas Llosa, García Márquez',
       'Doc 3 : discours fondateur de la politique culturelle castriste — "Palabras a los intelectuales"',
-      'Mise en relation : tension liberté/engagement, révolution comme utopie trahie, rôle de l'intellectuel',
+      `Mise en relation : tension liberté/engagement, révolution comme utopie trahie, rôle de l'intellectuel`,
       'Problématique doit interroger la dialectique liberté artistique / engagement révolutionnaire',
     ],
   },
@@ -963,9 +963,9 @@ Rédigez uniquement la partie "mise en relation des documents" (150-200 mots en 
 - Identifiant 2 divergences (nature, registre, époque, point de vue)
 - Reliant l'ensemble à l'axe "Mémoire(s) : écrire l'histoire"`,
     pointsEvaluation: [
-      'Points communs : mémoire de Franco / débat sur l'héritage franquiste / question de la réconciliation nationale',
+      `Points communs : mémoire de Franco / débat sur l'héritage franquiste / question de la réconciliation nationale`,
       'Divergences : doc 1 = fiction littéraire / doc 2 = presse / doc 3 = document iconographique ; passé vs présent',
-      'Lien avec l'axe : comment la mémoire historique se construit et se conteste dans le temps',
+      `Lien avec l'axe : comment la mémoire historique se construit et se conteste dans le temps`,
       'Langue : connecteurs de similarité (asimismo, de igual modo) et de différence (sin embargo, en cambio, por el contrario)',
     ],
   },
@@ -1030,7 +1030,7 @@ Gestion du temps suggérée : 30 min lecture/réflexion — 30 min introduction 
 5. "Le pidió que no dijera nada."
 6. "Aunque lo hubiera sabido, no habría actuado de otro modo."
 7. "El hecho de que lo hubieran elegido sorprendió a todos."`,
-    indications: '1. quería que + subj → voulait que + subjonctif. 2. era imposible que + subj → il était impossible qu'il revienne. 3. donde + subj (valeur hypothétique) → où il puisse. 4. cuando + subj futur → quand + indicatif futur. 5. le pidió que + subj → lui demanda de + inf (même sujet → inf). 6. aunque + ppq subj → même s'il l'avait su.',
+    indications: `1. quería que + subj → voulait que + subjonctif. 2. era imposible que + subj → il était impossible qu'il revienne. 3. donde + subj (valeur hypothétique) → où il puisse. 4. cuando + subj futur → quand + indicatif futur. 5. le pidió que + subj → lui demanda de + inf (même sujet → inf). 6. aunque + ppq subj → même s'il l'avait su.`,
   },
 
   {
@@ -1041,7 +1041,7 @@ Gestion du temps suggérée : 30 min lecture/réflexion — 30 min introduction 
     enonce: `Traduisez ce passage en français en préservant le registre solennel et la rhétorique de combat :
 
 "¿Qué somos sin patria? Sombras errantes, hojas secas que el viento arrastra sin rumbo. El pueblo que renuncia a su tierra renuncia a sí mismo. Y sin embargo, hay quienes prefieren doblar la cerviz ante el extranjero antes que empuñar las armas en defensa de lo que les pertenece por derecho de nacimiento y de historia. A estos hombres sin honra, a estos traidores de su propia sangre, no les pregunto qué harán cuando la victoria llegue: les pregunto qué dirán cuando sus hijos les pregunten qué hicieron cuando la patria los llamó."`,
-    indications: 'Registre : rhétorique de combat, harangue, style élevé. Pièges : hojas secas = feuilles mortes/sèches ; arrastra sin rumbo = emporte sans direction ; doblar la cerviz = courber la tête/s'incliner ; empuñar = saisir/brandir ; por derecho de nacimiento = de droit de naissance ; lo que dirán = ce qu'ils diront (futur → futur).',
+    indications: `Registre : rhétorique de combat, harangue, style élevé. Pièges : hojas secas = feuilles mortes/sèches ; arrastra sin rumbo = emporte sans direction ; doblar la cerviz = courber la tête/s'incliner ; empuñar = saisir/brandir ; por derecho de nacimiento = de droit de naissance ; lo que dirán = ce qu'ils diront (futur → futur).`,
   },
 
   {
@@ -1052,7 +1052,7 @@ Gestion du temps suggérée : 30 min lecture/réflexion — 30 min introduction 
     enonce: `Traduisez ce passage en français (style Rafael Chirbes, La caída de Madrid) :
 
 "Esteban sabía que aquello iba a terminar, aunque nadie se atreviera a decirlo en voz alta. Llevaba semanas observando las caras de sus compañeros, leyendo en ellas el miedo mezclado con algo parecido al alivio. Él también lo sentía, ese alivio extraño que daba vergüenza reconocer. Como si todo lo que habían construido juntos durante cuarenta años hubiera sido una mentira conveniente de la que todos necesitaban despertar pero ninguno sabía cómo."`,
-    indications: 'Pièges : aquello iba a terminar = cela allait finir (périphrase ir a + inf au passé) ; aunque nadie se atreviera = bien que personne n'ose / même si personne n'osait ; llevaba semanas observando = il passait des semaines à observer / cela faisait des semaines qu'il observait ; eso que daba vergüenza reconocer = cette chose qu'on avait honte de reconnaître ; hubiera sido = avait été (ppq subj).',
+    indications: `Pièges : aquello iba a terminar = cela allait finir (périphrase ir a + inf au passé) ; aunque nadie se atreviera = bien que personne n'ose / même si personne n'osait ; llevaba semanas observando = il passait des semaines à observer / cela faisait des semaines qu'il observait ; eso que daba vergüenza reconocer = cette chose qu'on avait honte de reconnaître ; hubiera sido = avait été (ppq subj).`,
   },
 
   {
@@ -1084,7 +1084,7 @@ Gestion du temps suggérée : 30 min lecture/réflexion — 30 min introduction 
 5. "Dès qu'elle eut lu la lettre, elle la brûla."
 6. "Il avait espéré qu'elle reviendrait, mais il s'était trompé."
 7. "Tout ce qu'il avait construit s'effondra en un instant."`,
-    indications: '1. nunca había visto. 2. la reunión ya había empezado. 3. lamentó no haberle dicho (même sujet → inf passé). 4. era la primera vez que oía (oír au ppq si l'on accentue l'antériorité : había oído). 5. En cuanto hubo leído = passé antérieur ou nada más leer + ind. 6. había esperado que volviera (subj imparfait). 7. todo lo que había construido se derrumbó.',
+    indications: `1. nunca había visto. 2. la reunión ya había empezado. 3. lamentó no haberle dicho (même sujet → inf passé). 4. era la primera vez que oía (oír au ppq si l'on accentue l'antériorité : había oído). 5. En cuanto hubo leído = passé antérieur ou nada más leer + ind. 6. había esperado que volviera (subj imparfait). 7. todo lo que había construido se derrumbó.`,
   },
 
   {
@@ -1123,7 +1123,7 @@ Gestion du temps suggérée : 30 min lecture/réflexion — 30 min introduction 
     enonce: `Traduisez ce passage en espagnol en restituant correctement le discours indirect au passé :
 
 "Il lui avait dit qu'il ne reviendrait plus, que tout était fini entre eux et qu'il valait mieux oublier ce qui s'était passé. Elle lui avait répondu qu'elle comprenait, mais qu'elle ne pouvait pas l'oublier aussi facilement qu'il semblait le croire. Il n'avait rien ajouté. Le silence qui suivit fut plus long et plus douloureux que toutes les paroles qu'ils auraient pu échanger."`,
-    indications: 'Discours indirect au passé — concordance : il lui avait dit que + conditionnel → le había dicho que no volvería más / que todo había terminado. elle lui avait répondu que → le había respondido que entendía, pero que no podía olvidarlo. que toutes les paroles qu'ils auraient pu → que todas las palabras que habrían podido intercambiar.',
+    indications: `Discours indirect au passé — concordance : il lui avait dit que + conditionnel → le había dicho que no volvería más / que todo había terminado. elle lui avait répondu que → le había respondido que entendía, pero que no podía olvidarlo. que toutes les paroles qu'ils auraient pu → que todas las palabras que habrían podido intercambiar.`,
   },
 
   {
@@ -1177,7 +1177,7 @@ Gestion du temps suggérée : 30 min lecture/réflexion — 30 min introduction 
 8. El general fue reconocido ___ sus tropas como un héroe.
 9. Aún no estoy ___ tomar esa decisión.
 10. Trabaja ___ una empresa barcelonesa desde hace años.`,
-    indications: 'POR : agente passif, durée, échange/prix, cause, mouvement à travers, au nom de. PARA : but/finalité, destination, bénéficiaire, date limite, opinion personnelle (para mí), concession (para + inf = "pour quelqu'un qui").',
+    indications: `POR : agente passif, durée, échange/prix, cause, mouvement à travers, au nom de. PARA : but/finalité, destination, bénéficiaire, date limite, opinion personnelle (para mí), concession (para + inf = "pour quelqu'un qui").`,
   },
 
   {
@@ -1440,8 +1440,8 @@ Concevez :
     pointsEvaluation: [
       'Compréhension globale : question ouverte sur le sens global (qui, quoi, où) — pas de questionnaire fermé en première lecture',
       'Compréhension fine : questions précises sur les informations importantes (pas triviales)',
-      'Fait de langue pertinent : le passé composé vs le prétérit / l'imparfait de narration',
-      'Production : tâche réaliste pour A2+ (parler de ses origines, de sa famille, d'un voyage)',
+      `Fait de langue pertinent : le passé composé vs le prétérit / l'imparfait de narration`,
+      `Production : tâche réaliste pour A2+ (parler de ses origines, de sa famille, d'un voyage)`,
     ],
   },
 
@@ -1600,7 +1600,7 @@ DESCRIPTIONS :
 6. Fournit des orientations sur l'évaluation formative et sommative dans les disciplines.
 7. Définit les thèmes, axes d'étude et compétences pour l'enseignement des LVE.
 8. Décrit les niveaux de langue A1 à C2 et les descripteurs de compétences.`,
-    source: 'Rapport du jury 2025, épreuve d'entretien, p. 58-64',
+    source: `Rapport du jury 2025, épreuve d'entretien, p. 58-64`,
   },
 
   {
@@ -1638,8 +1638,8 @@ Questions :
 4. Quelle procédure disciplinaire pouvez-vous enclencher ?
 5. Comment transformez-vous cet incident en opportunité pédagogique (apprendre à utiliser l'IA comme outil, pas comme substitut) ?`,
     pointsEvaluation: [
-      'Textes : règlement intérieur, circulaire sur la fraude scolaire, BO sur l'intégrité académique',
-      'Distinction : utilisation de l'IA pour s'aider (autorisée si déclarée) vs substitution du travail (fraude)',
+      `Textes : règlement intérieur, circulaire sur la fraude scolaire, BO sur l'intégrité académique`,
+      `Distinction : utilisation de l'IA pour s'aider (autorisée si déclarée) vs substitution du travail (fraude)`,
       'Procédure : avertissement / rapport au CPE / conseil de classe / conseil de discipline selon la gravité',
       'Pédagogie : formation à la source, à la citation, au "prompt literacy" — enjeu 2025-2030',
     ],

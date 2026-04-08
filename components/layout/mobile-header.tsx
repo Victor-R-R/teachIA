@@ -50,7 +50,9 @@ export function MobileHeader() {
                 onClick={() => setOpen(false)}
                 className={cn(
                   'flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors cursor-pointer',
-                  pathname === href || (href === '/chat' && pathname.startsWith('/chat'))
+                  pathname === href ||
+                  (href === '/chat' && pathname.startsWith('/chat')) ||
+                  (href === '/exercices' && pathname.startsWith('/exercices'))
                     ? 'bg-violet-50 text-violet-700 font-medium'
                     : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
                 )}

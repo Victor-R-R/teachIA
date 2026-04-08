@@ -1,13 +1,14 @@
 import { ChatInterface } from '@/components/chat/chat-interface'
 import { getConversationMessages } from '@/lib/db'
+import { getExerciseById } from '@/lib/exercises'
 import type { UIMessage } from 'ai'
 
 type Props = {
-  searchParams: Promise<{ id?: string }>
+  searchParams: Promise<{ id?: string; exercise?: string }>
 }
 
 export default async function ChatPage({ searchParams }: Props) {
-  const { id } = await searchParams
+  const { id, exercise: exerciseId } = await searchParams
 
   let initialMessages: UIMessage[] = []
   if (id) {
@@ -23,14 +24,21 @@ export default async function ChatPage({ searchParams }: Props) {
     }
   }
 
+  const exercise = exerciseId ? getExerciseById(exerciseId) : undefined
+  const initialPrompt = exercise
+    ? `Je veux faire l'exercice ${exercise.id} : "${exercise.titre}". Lance-moi cet exercice.`
+    : undefined
+
   return (
     <div className="h-full flex flex-col">
       <div className="mb-4">
         <h1 className="text-2xl font-semibold text-slate-900">Professeur IA</h1>
-        <p className="text-slate-500 text-sm">Pose n'importe quelle question sur le CAPES d'espagnol.</p>
+        <p className="text-slate-500 text-sm">
+          {exercise ? `Exercice : ${exercise.titre}` : "Pose n'importe quelle question sur le CAPES d'espagnol."}
+        </p>
       </div>
       <div className="flex-1 min-h-0">
-        <ChatInterface conversationId={id} initialMessages={initialMessages} />
+        <ChatInterface conversationId={id} initialMessages={initialMessages} initialPrompt={initialPrompt} />
       </div>
     </div>
   )
