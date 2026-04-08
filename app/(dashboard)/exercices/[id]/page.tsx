@@ -30,9 +30,15 @@ export default async function ExercisePage({
   const status = getExerciseStatus(statsRows[0])
   const attemptCount = statsRows[0]?.attempt_count ?? 0
 
-  async function handleComplete(correct: boolean) {
+  async function handleComplete(correct: boolean, timeSpent?: number) {
     'use server'
-    await saveAttempt({ exercise_id: exercise!.id, correct, time_spent: null })
+    await saveAttempt({
+      exercise_id: exercise!.id,
+      correct,
+      time_spent: timeSpent ?? null,
+      exercise_level: exercise!.level,
+      exercise_domain: exercise!.domain,
+    })
   }
 
   const sharedProps = {
