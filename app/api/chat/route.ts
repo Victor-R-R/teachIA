@@ -311,6 +311,112 @@ Entrées culturelles exploitables : "Vivre entre générations" (transmission), 
 Pièges à éviter pour ce document : catalogue de procédés filmiques sans lien avec le sens, oublier d'identifier la variété linguistique, ne pas contextualiser le Milei/UBA dans le développement.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+BANQUE D'EXERCICES — CAPES ESPAGNOL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Tu disposes d'une banque de 82 exercices répartis en 8 catégories et 3 niveaux.
+[A] = consolidation (bac+3) | [B] = intermédiaire M1 | [C] = avancé (conditions de concours)
+
+Quand l'utilisateur demande un exercice, propose-lui un de ces exercices en lisant son contenu complet dans la banque, puis corrige-le.
+
+COMPOSITION (12) :
+[A] comp-a1 : Présentation du doc 1 — Dossier 2025
+[A] comp-a2 : Évaluation de problématiques — Dossier 2025
+[A] comp-a3 : Exercice plan — Dossier 2025
+[A] comp-a4 : Évaluer un plan — recevable ou non ?
+[A] comp-a5 : Rédiger une conclusion type
+[B] comp-b1 : Rédaction de l'introduction — Dossier 2025
+[B] comp-b2 : Rédaction d'une sous-partie — Légitimation de l'insurrection
+[B] comp-b3 : Dossier fictif — Chirbes et la mémoire
+[B] comp-b4 : Dossier fictif — El caso Padilla (axe "Identités et échanges")
+[B] comp-b5 : Mise en relation de documents — La Guerre Civile et la mémoire
+[C] comp-c1 : Simulation complète — Dossier sur le libéralisme espagnol
+[C] comp-c2 : Simulation complète — Dossier Amérique latine
+
+VERSION (10) :
+[A] vers-a1 : Phrases avec pièges — aquel / volver a / nadie
+[A] vers-a2 : Phrases avec pièges — pronoms relatifs et COD/COI
+[A] vers-a3 : Phrases — temps verbaux et passé simple
+[A] vers-a4 : Phrases — subjonctif espagnol → équivalents français
+[B] vers-b1 : Extrait de prose — El cuarto de atrás (Carmen Martín Gaite)
+[B] vers-b2 : Extrait de prose — Javier Cercas, mémoire et histoire
+[B] vers-b3 : Extrait — registre politique XIXe siècle (style Capmany)
+[B] vers-b4 : Extrait — registre contemporain (style Chirbes)
+[C] vers-c1 : Passage complet — niveau concours (200 mots)
+[C] vers-c2 : Passage complet — style Cervantes (registre classique)
+
+THÈME (10) :
+[A] them-a1 : Phrases — traduction du "on" et périphrases verbales
+[A] them-a2 : Phrases — traduction du "dont" et des conditionnelles
+[A] them-a3 : Phrases — plus-que-parfait et antériorité
+[A] them-a4 : Phrases — infinitif français vs subjonctif espagnol
+[B] them-b1 : Extrait de prose — Le Roi des Aulnes (Michel Tournier)
+[B] them-b2 : Passage littéraire — concordance des temps et discours indirect
+[B] them-b3 : Passage littéraire — Flaubert (style XIXe, concordance des temps)
+[B] them-b4 : Dialogue au discours indirect — passage de roman
+[C] them-c1 : Passage complet — niveau concours (180 mots)
+[C] them-c2 : Passage complet — Camus / Sartre (registre philosophique)
+
+GRAMMAIRE (13) :
+[A] gram-a1 : Ser / Estar — discrimination
+[A] gram-a2 : Conditionnelles avec si — tableau et exercice
+[A] gram-a3 : Déictiques spatiaux en récit rétrospectif
+[A] gram-a4 : Subjonctif présent — conjugaison et emploi
+[A] gram-a5 : Por / Para — discrimination
+[B] gram-b1 : Aunque — indicatif vs subjonctif
+[B] gram-b2 : Traduction du "dont" — cuyo / de quien / del que
+[B] gram-b3 : Périphrases verbales — valeurs aspectuelles
+[B] gram-b4 : Subjonctif dans les subordonnées relatives
+[B] gram-b5 : Ser / Estar avec adjectifs — changement de sens
+[B] gram-b6 : Voseo rioplatense — conjugaison et usage
+[C] gram-c1 : Analyse grammaticale complète — passage du rapport 2025
+[C] gram-c2 : Analyse grammaticale complète — extrait de Capmany
+
+CIVILISATION (11) :
+[A] civ-a1 : Chronologie — Espagne XIXe siècle
+[A] civ-a2 : QCM — XIXe siècle espagnol
+[A] civ-a3 : QCM — Amérique latine et Boom littéraire
+[B] civ-b1 : Capmany — contextualisation approfondie
+[B] civ-b2 : El caso Padilla — Cuba et la liberté artistique
+[B] civ-b3 : La Transition démocratique — Chirbes et la mémoire
+[B] civ-b4 : La Generación del 98 — contexte et auteurs
+[B] civ-b5 : La Guerre Civile et la culture — témoignages et répression
+[B] civ-b6 : Le flamenco et le peuple gitan — histoire et représentations
+[C] civ-c1 : Analyse croisée — Capmany, La caída de Madrid et la mémoire nationale
+[C] civ-c2 : Synthèse — Mémoire historique en Espagne (1975-2022)
+
+DIDACTIQUE (9) :
+[A] did-a1 : Identification d'un fait de langue
+[A] did-a2 : Identifier les activités langagières
+[A] did-a3 : Formuler des objectifs CECRL précis
+[B] did-b1 : Analyse complète d'un fait de langue — format EEDA B2
+[B] did-b2 : Conception d'objectifs pédagogiques — séquence sur Puan
+[B] did-b3 : Analyse complète d'un fait de langue — aunque indicatif/subjonctif
+[B] did-b4 : Concevoir une activité de compréhension écrite (cycle 4)
+[C] did-c1 : Séquence complète — El caso Padilla (5 séances)
+[C] did-c2 : Séquence complète — La caída de Madrid (1ère spécialité LLCE)
+
+LEÇON AUDIOVISUELLE (9) :
+[A] lecon-a1 : Identification de la variété linguistique — Puan
+[A] lecon-a2 : Auto-évaluation — erreurs dans une introduction audiovisuelle
+[A] lecon-a3 : Comparaison de variétés linguistiques
+[A] lecon-a4 : Checklist — les 10 critères d'une bonne introduction audiovisuelle
+[B] lecon-b1 : Introduction d'analyse audiovisuelle — La Singla
+[B] lecon-b2 : Séance pédagogique — El hoyo (Partie 2 épreuve de leçon)
+[B] lecon-b3 : Analyse audiovisuelle complète — La Singla (développement)
+[C] lecon-c1 : Simulation complète — Casa de Bernarda Alba (film)
+[C] lecon-c2 : Simulation épreuve de leçon — El caso Padilla (documentaire)
+
+ENTRETIEN (8) :
+[A] entr-a1 : Partie 1 — Structure de l'exposé "parcours et motivations"
+[A] entr-a2 : Connaître les textes officiels — associer texte et contenu
+[A] entr-a3 : Questions fréquentes du jury — préparer ses réponses
+[B] entr-b1 : Mise en situation — Laïcité et prosélytisme
+[B] entr-b2 : Mise en situation — Harcèlement LGBTphobe
+[B] entr-b3 : Mise en situation — Usage de l'IA et plagiat numérique
+[C] entr-c1 : Simulation complète — Entretien session 2025
+[C] entr-c2 : Simulation complète — Questions sur le mémoire MEEF et le projet professionnel
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 CONTEXTE UTILISATEUR
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Tu as accès au profil de l'utilisateur : son niveau (A/B/C), ses points faibles identifiés, la version du concours visée (bac+3 / bac+5 / interne), sa progression dans le plan de révision, et l'historique de ses sessions. Utilise ces données pour personnaliser chaque interaction.

@@ -10,7 +10,7 @@
 |---|---|---|
 | 📝 | **Exercices tipos test** | QCM, Vrai/Faux, Texte lacunaire avec feedback IA immédiat |
 | ⚡ | **Génération par IA** | Crée un exercice sur n'importe quel thème en quelques secondes |
-| 🤖 | **Professeur IA** | Chat streaming avec un expert CAPES (grammaire, civi, littérature, didactique) |
+| 🤖 | **Professeur IA** | Chat streaming avec un expert CAPES — 82 exercices structurés (composition, version, thème, grammaire, civilisation, didactique, leçon, entretien) |
 | 💬 | **Conversations persistantes** | Chaque session de chat est sauvegardée en DB, restaurable via `/chat?id=xxx` |
 | 📋 | **Historique `/conversations`** | Liste toutes les sessions passées avec titre généré par IA, date et suppression |
 | 🔒 | **Auth solo** | Protection par mot de passe unique + cookie JWT signé |
@@ -98,7 +98,8 @@ teachIA/
 ├── lib/
 │   ├── db.ts                  # Client Neon + helpers
 │   ├── auth.ts                # JWT helpers
-│   └── constants.ts           # Domaines, niveaux, types
+│   ├── constants.ts           # Domaines, niveaux, types
+│   └── exercises.ts           # Banque de 82 exercices structurés (TypeScript)
 ├── proxy.ts                   # Auth guard (Next.js 16)
 └── scripts/
     ├── migrate.sql            # Schéma BDD
