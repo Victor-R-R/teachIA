@@ -9,12 +9,14 @@ import {
   CreditCard,
   Target,
   BarChart2,
+  History,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/chat', label: 'Professeur IA', icon: MessageCircle },
+  { href: '/conversations', label: 'Conversations', icon: History },
   { href: '/exercices', label: 'Exercices', icon: BookOpen },
   { href: '/flashcards', label: 'Flashcards', icon: CreditCard },
   { href: '/simulacros', label: 'Simulacros', icon: Target },
@@ -36,7 +38,7 @@ export function Sidebar() {
             href={href}
             className={cn(
               'flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors cursor-pointer',
-              pathname === href
+              pathname === href || (href === '/chat' && pathname.startsWith('/chat'))
                 ? 'bg-violet-50 text-violet-700 font-medium'
                 : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
             )}
