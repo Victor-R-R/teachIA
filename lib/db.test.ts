@@ -162,4 +162,43 @@ describe('gamification helpers', () => {
     const result = await getInProgressSimulations()
     expect(result).toEqual([row])
   })
+
+  it('saveAttempt does not update XP on incorrect answer', async () => {
+    vi.resetModules()
+    const mockSql = vi.fn().mockResolvedValue([]) as ReturnType<typeof vi.fn> & { query: ReturnType<typeof vi.fn> }
+    mockSql.query = mockSql
+    vi.doMock('@neondatabase/serverless', () => ({ neon: vi.fn(() => mockSql) }))
+    const { saveAttempt } = await import('./db')
+    await saveAttempt({ exercise_id: 1, correct: false, time_spent: null, exercise_level: 'B', exercise_domain: 'langue' })
+    const calls = mockSql.query.mock.calls.map((c: unknown[]) => (c[0] as string).trim())
+    expect(calls.some((q: string) => q.includes('UPDATE user_profile') && q.includes('xp'))).toBe(false)
+  })
+
+  it('saveAttempt increments XP on correct answer', async () => {
+    vi.resetModules()
+    const mockSql = vi.fn()
+      .mockResolvedValueOnce([])  // INSERT attempt
+      .mockResolvedValueOnce([{ xp: 20, level_xp: 1 }]) // UPDATE xp RETURNING
+      .mockResolvedValue([{ total: 1, correct_count: 1 }]) as ReturnType<typeof vi.fn> & { query: ReturnType<typeof vi.fn> }
+    mockSql.query = mockSql
+    vi.doMock('@neondatabase/serverless', () => ({ neon: vi.fn(() => mockSql) }))
+    const { saveAttempt } = await import('./db')
+    await saveAttempt({ exercise_id: 1, correct: true, time_spent: null, exercise_level: 'B', exercise_domain: 'langue' })
+    const calls = mockSql.query.mock.calls.map((c: unknown[]) => (c[0] as string).trim())
+    expect(calls.some((q: string) => q.includes('UPDATE user_profile') && q.includes('xp = xp +'))).toBe(true)
+  })
+
+  it('saveAttempt upserts study_sessions when time_spent is set', async () => {
+    vi.resetModules()
+    const mockSql = vi.fn()
+      .mockResolvedValueOnce([]) // INSERT attempt
+      .mockResolvedValueOnce([]) // upsert study_sessions
+      .mockResolvedValue([{ xp: 10, level_xp: 1 }]) as ReturnType<typeof vi.fn> & { query: ReturnType<typeof vi.fn> }
+    mockSql.query = mockSql
+    vi.doMock('@neondatabase/serverless', () => ({ neon: vi.fn(() => mockSql) }))
+    const { saveAttempt } = await import('./db')
+    await saveAttempt({ exercise_id: 1, correct: true, time_spent: 120, exercise_level: 'C', exercise_domain: 'langue' })
+    const calls = mockSql.query.mock.calls.map((c: unknown[]) => (c[0] as string).trim())
+    expect(calls.some((q: string) => q.includes('INSERT INTO study_sessions'))).toBe(true)
+  })
 })
