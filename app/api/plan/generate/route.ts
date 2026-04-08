@@ -72,7 +72,7 @@ Répartis les domaines de façon équilibrée mais en accordant plus de semaines
     })
 
     // Sauvegarder le profil utilisateur
-    await createUserProfile({ exam_date, level_langue, level_civi, level_didactique })
+    await createUserProfile({ level_langue, level_civi, level_didactique })
 
     // Calculer les dates cibles et sauvegarder le plan
     const startDate = new Date()
