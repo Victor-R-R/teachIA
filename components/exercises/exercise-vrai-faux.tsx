@@ -21,7 +21,7 @@ export function ExerciseVraiFaux({ id, question, answer, explanation, onComplete
     if (!selected) return
     setSubmitted(true)
     const correct = selected === answer
-    onComplete(correct)
+    await onComplete(correct)
 
     if (!correct) {
       try {

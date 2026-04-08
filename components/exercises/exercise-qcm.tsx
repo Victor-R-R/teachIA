@@ -22,7 +22,7 @@ export function ExerciseQCM({ id, question, options, answer, explanation, onComp
     if (!selected) return
     setSubmitted(true)
     const correct = selected === answer
-    onComplete(correct)
+    await onComplete(correct)
 
     if (!correct) {
       try {
