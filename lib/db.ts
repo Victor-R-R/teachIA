@@ -181,3 +181,77 @@ export async function hasTitle(conversationId: string): Promise<boolean> {
   )
   return !!(rows[0] as { title: string | null } | undefined)?.title
 }
+
+export type UserProfile = {
+  id: number
+  exam_date: string | null
+  level_langue: 'A' | 'B' | 'C' | null
+  level_civi: 'A' | 'B' | 'C' | null
+  level_didactique: 'A' | 'B' | 'C' | null
+  xp: number
+  level_xp: number
+  daily_goal_min: number
+  created_at: string
+}
+
+export type InProgressExercise = {
+  id: number
+  question: string
+  type: string
+  domain: string
+  level: 'A' | 'B' | 'C'
+  attempt_count: number
+}
+
+export type ExamSession = {
+  id: number
+  type: string
+  content: string
+  ai_feedback: string | null
+  score: number | null
+  timestamp: string
+}
+
+export async function getUserProfile(): Promise<UserProfile | null> {
+  const rows = await sql.query('SELECT * FROM user_profile LIMIT 1')
+  return (rows[0] as UserProfile) ?? null
+}
+
+export async function getTodayMinutes(): Promise<number> {
+  const rows = await sql.query(
+    `SELECT COALESCE(SUM(duration_min), 0)::int AS total_min
+     FROM study_sessions WHERE date = CURRENT_DATE`,
+  )
+  return (rows[0] as { total_min: number | null }).total_min ?? 0
+}
+
+export async function getInProgressExercises(): Promise<InProgressExercise[]> {
+  const rows = await sql.query(
+    `WITH stats AS (
+       SELECT exercise_id,
+              COUNT(*)::int AS attempt_count,
+              bool_or(correct) AS has_correct,
+              MAX(timestamp) AS last_attempt
+       FROM exercise_attempts
+       GROUP BY exercise_id
+     )
+     SELECT e.id, e.question, e.type, e.domain, e.level, s.attempt_count
+     FROM stats s
+     JOIN exercises e ON e.id = s.exercise_id
+     WHERE NOT s.has_correct
+     ORDER BY s.last_attempt DESC
+     LIMIT 5`,
+  )
+  return rows as InProgressExercise[]
+}
+
+export async function getInProgressSimulations(): Promise<ExamSession[]> {
+  const rows = await sql.query(
+    `SELECT * FROM exam_sessions WHERE ai_feedback IS NULL ORDER BY timestamp DESC LIMIT 3`,
+  )
+  return rows as ExamSession[]
+}
+
+export async function updateDailyGoal(minutes: number): Promise<void> {
+  await sql.query('UPDATE user_profile SET daily_goal_min = $1', [minutes])
+}
