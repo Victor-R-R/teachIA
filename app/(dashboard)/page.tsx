@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import Link from 'next/link'
 import { Target } from 'lucide-react'
 import { getUserProfile, getTodayMinutes, getInProgressExercises, getInProgressSimulations } from '@/lib/db'
