@@ -82,3 +82,11 @@ CREATE INDEX IF NOT EXISTS idx_study_sessions_date ON study_sessions(date);
 ALTER TABLE exercises
   ADD COLUMN IF NOT EXISTS title TEXT,
   ADD COLUMN IF NOT EXISTS questions JSONB;
+
+-- Simulacros
+ALTER TABLE exam_sessions
+  ADD COLUMN IF NOT EXISTS subject TEXT,
+  ADD COLUMN IF NOT EXISTS title TEXT;
+
+CREATE INDEX IF NOT EXISTS idx_exam_sessions_type ON exam_sessions(type);
+CREATE INDEX IF NOT EXISTS idx_exam_sessions_timestamp ON exam_sessions(timestamp DESC);
