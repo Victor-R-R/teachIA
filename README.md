@@ -8,7 +8,7 @@
 
 | | Fonctionnalité | Description |
 |---|---|---|
-| 📝 | **92 exercices unifiés** | 10 interactifs (QCM/Vrai-Faux/Lacunaire) + 82 exercices CAPES ouverts (composition, version, thème, grammaire, civilisation, didactique, leçon, entretien) |
+| 📝 | **182 exercices unifiés** | 15 quiz interactifs (100 questions QCM/Vrai-Faux/Lacunaire, 6-7 questions par quiz) + 82 exercices CAPES ouverts (composition, version, thème, grammaire, civilisation, didactique, leçon, entretien) |
 | ⚡ | **Génération par IA** | Crée un exercice sur n'importe quel thème en quelques secondes |
 | 🤖 | **Professeur IA** | Chat streaming avec un expert CAPES. Bouton "Démarrer" sur chaque exercice CAPES pour lancer l'exercice directement avec l'IA |
 | 💬 | **Conversations persistantes** | Chaque session de chat est sauvegardée en DB, restaurable via `/chat?id=xxx` |
@@ -75,7 +75,7 @@ Ouvrir [http://localhost:3000](http://localhost:3000)
 # Appliquer le schéma
 psql $DATABASE_URL < scripts/migrate.sql
 
-# Seed des exercices initiaux (10 exercices curés)
+# Seed des exercices (15 quiz, 100 questions)
 npx tsx scripts/seed-exercises.ts
 ```
 
