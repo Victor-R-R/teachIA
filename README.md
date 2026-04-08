@@ -11,6 +11,8 @@
 | 📝 | **Exercices tipos test** | QCM, Vrai/Faux, Texte lacunaire avec feedback IA immédiat |
 | ⚡ | **Génération par IA** | Crée un exercice sur n'importe quel thème en quelques secondes |
 | 🤖 | **Professeur IA** | Chat streaming avec un expert CAPES (grammaire, civi, littérature, didactique) |
+| 💬 | **Conversations persistantes** | Chaque session de chat est sauvegardée en DB, restaurable via `/chat?id=xxx` |
+| 📋 | **Historique `/conversations`** | Liste toutes les sessions passées avec titre généré par IA, date et suppression |
 | 🔒 | **Auth solo** | Protection par mot de passe unique + cookie JWT signé |
 | 🎨 | **Thème clair** | Interface light mode avec accent violet, sidebar blanche et cartes épurées |
 
