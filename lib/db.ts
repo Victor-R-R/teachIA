@@ -79,11 +79,90 @@ export async function getExerciseById(id: number): Promise<Exercise | null> {
   return (rows[0] as Exercise) ?? null
 }
 
-export async function saveAttempt(attempt: Omit<ExerciseAttempt, 'id' | 'timestamp'>): Promise<void> {
+export async function saveAttempt(attempt: {
+  exercise_id: number
+  correct: boolean
+  time_spent: number | null
+  exercise_level: 'A' | 'B' | 'C'
+  exercise_domain: string
+}): Promise<void> {
+  const { exercise_id, correct, time_spent, exercise_level, exercise_domain } = attempt
+
+  // 1. Enregistrer la tentative
   await sql.query(
     'INSERT INTO exercise_attempts (exercise_id, correct, time_spent) VALUES ($1, $2, $3)',
-    [attempt.exercise_id, attempt.correct, attempt.time_spent]
+    [exercise_id, correct, time_spent]
   )
+
+  // 2. Mettre à jour study_sessions (si durée > 0)
+  if (time_spent !== null) {
+    const durationMin = Math.floor(time_spent / 60)
+    if (durationMin > 0) {
+      await sql.query(
+        `INSERT INTO study_sessions (date, domain, duration_min, exercises_done, correct_count)
+         VALUES (CURRENT_DATE, $1, $2, 1, $3)
+         ON CONFLICT (date, domain) DO UPDATE SET
+           duration_min = study_sessions.duration_min + EXCLUDED.duration_min,
+           exercises_done = study_sessions.exercises_done + 1,
+           correct_count = study_sessions.correct_count + EXCLUDED.correct_count`,
+        [exercise_domain, durationMin, correct ? 1 : 0]
+      )
+    }
+  }
+
+  // 3. Arrêt si réponse incorrecte
+  if (!correct) return
+
+  // 4. Incrémenter XP
+  const xpGain: Record<'A' | 'B' | 'C', number> = { A: 30, B: 20, C: 10 }
+  const gain = xpGain[exercise_level]
+  const rows = await sql.query(
+    'UPDATE user_profile SET xp = xp + $1 RETURNING xp, level_xp',
+    [gain]
+  )
+  if (rows.length === 0) return
+
+  const { xp: newXp, level_xp: currentLevel } = rows[0] as { xp: number; level_xp: number }
+  const nextThreshold = (currentLevel + 1) * (currentLevel + 1) * 100
+  if (newXp >= nextThreshold) {
+    await sql.query('UPDATE user_profile SET level_xp = level_xp + 1')
+  }
+
+  // 5. Recalculer le niveau A/B/C du domaine
+  const domainGroup =
+    exercise_domain === 'langue'
+      ? ['langue']
+      : exercise_domain === 'civi_espagne' || exercise_domain === 'civi_latam'
+        ? ['civi_espagne', 'civi_latam']
+        : ['didactique']
+
+  const levelColumn =
+    exercise_domain === 'langue'
+      ? 'level_langue'
+      : exercise_domain === 'civi_espagne' || exercise_domain === 'civi_latam'
+        ? 'level_civi'
+        : 'level_didactique'
+
+  const statRows = await sql.query(
+    `SELECT COUNT(*)::int AS total,
+            SUM(CASE WHEN ea.correct THEN 1 ELSE 0 END)::int AS correct_count
+     FROM (
+       SELECT ea.correct
+       FROM exercise_attempts ea
+       JOIN exercises e ON e.id = ea.exercise_id
+       WHERE e.domain = ANY($1)
+       ORDER BY ea.timestamp DESC
+       LIMIT 20
+     ) ea`,
+    [domainGroup]
+  )
+
+  const { total, correct_count } = statRows[0] as { total: number; correct_count: number }
+  if (total >= 5) {
+    const pct = correct_count / total
+    const newLevel = pct >= 0.8 ? 'C' : pct >= 0.5 ? 'B' : 'A'
+    await sql.query(`UPDATE user_profile SET ${levelColumn} = $1`, [newLevel])
+  }
 }
 
 export async function saveExercise(exercise: Omit<Exercise, 'id' | 'created_at'>): Promise<Exercise> {
@@ -180,4 +259,78 @@ export async function hasTitle(conversationId: string): Promise<boolean> {
     [conversationId]
   )
   return !!(rows[0] as { title: string | null } | undefined)?.title
+}
+
+export type UserProfile = {
+  id: number
+  exam_date: string | null
+  level_langue: 'A' | 'B' | 'C' | null
+  level_civi: 'A' | 'B' | 'C' | null
+  level_didactique: 'A' | 'B' | 'C' | null
+  xp: number
+  level_xp: number
+  daily_goal_min: number
+  created_at: string
+}
+
+export type InProgressExercise = {
+  id: number
+  question: string
+  type: string
+  domain: string
+  level: 'A' | 'B' | 'C'
+  attempt_count: number
+}
+
+export type ExamSession = {
+  id: number
+  type: string
+  content: string
+  ai_feedback: string | null
+  score: number | null
+  timestamp: string
+}
+
+export async function getUserProfile(): Promise<UserProfile | null> {
+  const rows = await sql.query('SELECT * FROM user_profile LIMIT 1')
+  return (rows[0] as UserProfile) ?? null
+}
+
+export async function getTodayMinutes(): Promise<number> {
+  const rows = await sql.query(
+    `SELECT COALESCE(SUM(duration_min), 0)::int AS total_min
+     FROM study_sessions WHERE date = CURRENT_DATE`,
+  )
+  return (rows[0] as { total_min: number | null }).total_min ?? 0
+}
+
+export async function getInProgressExercises(): Promise<InProgressExercise[]> {
+  const rows = await sql.query(
+    `WITH stats AS (
+       SELECT exercise_id,
+              COUNT(*)::int AS attempt_count,
+              bool_or(correct) AS has_correct,
+              MAX(timestamp) AS last_attempt
+       FROM exercise_attempts
+       GROUP BY exercise_id
+     )
+     SELECT e.id, e.question, e.type, e.domain, e.level, s.attempt_count
+     FROM stats s
+     JOIN exercises e ON e.id = s.exercise_id
+     WHERE NOT s.has_correct
+     ORDER BY s.last_attempt DESC
+     LIMIT 5`,
+  )
+  return rows as InProgressExercise[]
+}
+
+export async function getInProgressSimulations(): Promise<ExamSession[]> {
+  const rows = await sql.query(
+    `SELECT * FROM exam_sessions WHERE ai_feedback IS NULL ORDER BY timestamp DESC LIMIT 3`,
+  )
+  return rows as ExamSession[]
+}
+
+export async function updateDailyGoal(minutes: number): Promise<void> {
+  await sql.query('UPDATE user_profile SET daily_goal_min = $1', [minutes])
 }
