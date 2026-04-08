@@ -6,7 +6,7 @@ import { EXERCISES } from '@/lib/exercises'
 import type { Level as CAPESLevel } from '@/lib/exercises'
 import { ExerciseProgressBar } from '@/components/exercises/exercise-progress-bar'
 import { GenerateExerciseButton } from '@/components/exercises/generate-exercise-button'
-import { LEVELS } from '@/lib/constants'
+import { LEVELS, LEVEL_COLORS, DOMAIN_LABELS } from '@/lib/constants'
 import type { Level } from '@/lib/constants'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -14,25 +14,12 @@ import { buttonVariants } from '@/components/ui/button'
 import { BookOpen, ArrowRight, MessageCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-const LEVEL_COLORS: Record<string, string> = {
-  A: 'bg-red-50 text-red-600 border-red-200',
-  B: 'bg-amber-50 text-amber-600 border-amber-200',
-  C: 'bg-green-50 text-green-600 border-green-200',
-}
-
 const DB_TYPE_LABELS: Record<string, string> = {
   qcm: 'QCM',
   vrai_faux: 'Vrai / Faux',
   lacunaire: 'Texte lacunaire',
   chronologie: 'Chronologie',
   association: 'Association',
-}
-
-const DB_DOMAIN_LABELS: Record<string, string> = {
-  langue: 'Langue',
-  civi_espagne: 'Civilisation Espagne',
-  civi_latam: 'Amérique latine',
-  didactique: 'Didactique',
 }
 
 const CAPES_TYPE_LABELS: Record<string, string> = {
@@ -124,7 +111,7 @@ export default async function ExercicesPage({
                         </p>
                         <div className="flex items-center gap-2 flex-wrap">
                           <Badge variant="outline" className="text-xs text-slate-500 border-slate-200">
-                            {DB_DOMAIN_LABELS[ex.domain] ?? ex.domain}
+                            {DOMAIN_LABELS[ex.domain] ?? ex.domain}
                           </Badge>
                           {ex.questions && ex.questions.length > 0 ? (
                             <Badge variant="outline" className="text-xs text-slate-400 border-slate-200">

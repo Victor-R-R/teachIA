@@ -7,34 +7,10 @@ import {
   getSimulacroGlobalStats,
   getFlashcardGlobalStats,
 } from '@/lib/db'
+import { DOMAIN_LABELS, DOMAIN_COLORS } from '@/lib/constants'
+import { pct, formatMinutes } from '@/lib/utils'
 import { Card, CardContent } from '@/components/ui/card'
 import { BarChart2, CheckCircle2, Clock, BookOpen, CreditCard, Target } from 'lucide-react'
-
-const DOMAIN_LABELS: Record<string, string> = {
-  langue: 'Langue',
-  civi_espagne: 'Civi. Espagne',
-  civi_latam: 'Civi. Latam',
-  didactique: 'Didactique',
-}
-
-const DOMAIN_COLORS: Record<string, string> = {
-  langue: 'bg-violet-500',
-  civi_espagne: 'bg-blue-500',
-  civi_latam: 'bg-emerald-500',
-  didactique: 'bg-amber-500',
-}
-
-function pct(a: number, b: number) {
-  if (b === 0) return 0
-  return Math.round((a / b) * 100)
-}
-
-function formatMinutes(min: number) {
-  if (min < 60) return `${min} min`
-  const h = Math.floor(min / 60)
-  const m = min % 60
-  return m > 0 ? `${h}h${m}` : `${h}h`
-}
 
 // Generate last 7 days labels including days with no activity
 function buildWeekData(activity: { date: string; duration_min: number; exercises_done: number }[]) {

@@ -3,24 +3,12 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ArrowRight, BookOpen, FileText } from 'lucide-react'
 import type { InProgressExercise, ExamSession } from '@/lib/db'
-
-const DOMAIN_LABELS: Record<string, string> = {
-  langue: 'Langue',
-  civi_espagne: 'Civi. Espagne',
-  civi_latam: 'Amér. latine',
-  didactique: 'Didactique',
-}
+import { DOMAIN_LABELS, LEVEL_COLORS } from '@/lib/constants'
 
 const TYPE_LABELS: Record<string, string> = {
   composition: 'Composition',
   traduction: 'Traduction',
   explication: 'Explication de texte',
-}
-
-const LEVEL_COLORS: Record<string, string> = {
-  A: 'bg-red-50 text-red-600 border-red-200',
-  B: 'bg-amber-50 text-amber-600 border-amber-200',
-  C: 'bg-green-50 text-green-600 border-green-200',
 }
 
 interface InProgressListProps {
