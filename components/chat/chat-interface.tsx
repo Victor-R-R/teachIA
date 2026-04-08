@@ -12,12 +12,22 @@ import {
   MessageResponse,
 } from '@/components/ai-elements/message'
 
+const INIT_MARKER = '[[INIT]]'
+
 export function ChatInterface() {
   const bottomRef = useRef<HTMLDivElement>(null)
   const [input, setInput] = useState('')
+  const initSent = useRef(false)
   const { messages, sendMessage, status } = useChat({
     transport: new DefaultChatTransport({ api: '/api/chat' }),
   })
+
+  useEffect(() => {
+    if (!initSent.current) {
+      initSent.current = true
+      sendMessage({ text: INIT_MARKER }).catch(console.error)
+    }
+  }, [sendMessage])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -36,34 +46,34 @@ export function ChatInterface() {
     <div className="flex flex-col h-full max-h-[calc(100vh-6rem)]">
       {/* Messages */}
       <div className="flex-1 overflow-y-auto space-y-4 pb-4">
-        {messages.length === 0 && (
-          <div className="text-center py-16 text-zinc-500" role="status">
-            <p className="text-lg mb-2">¡Hola! Je suis ton professeur IA.</p>
-            <p className="text-sm">Pose-moi une question sur la grammaire, la civilisation, la littérature ou la didactique.</p>
-          </div>
-        )}
-        {messages.map(message => (
-          <Message key={message.id} from={message.role}>
-            <MessageContent>
-              {message.parts?.map((part, index) =>
-                part.type === 'text' ? (
-                  <MessageResponse key={index}>{part.text}</MessageResponse>
-                ) : null
-              ) ?? null}
-            </MessageContent>
-          </Message>
-        ))}
+        {messages
+          .filter(m => {
+            if (m.role !== 'user') return true
+            const text = m.parts?.find(p => p.type === 'text')?.text
+            return text !== INIT_MARKER
+          })
+          .map(message => (
+            <Message key={message.id} from={message.role}>
+              <MessageContent>
+                {message.parts?.map((part, index) =>
+                  part.type === 'text' ? (
+                    <MessageResponse key={index}>{part.text}</MessageResponse>
+                  ) : null
+                ) ?? null}
+              </MessageContent>
+            </Message>
+          ))}
         <div ref={bottomRef} />
       </div>
 
       {/* Input */}
-      <form onSubmit={handleSubmit} className="flex gap-2 pt-4 border-t border-zinc-800">
+      <form onSubmit={handleSubmit} className="flex gap-2 pt-4 border-t border-slate-200">
         <Input
           value={input}
           onChange={e => setInput(e.target.value)}
           placeholder="Pose une question à ton professeur…"
           disabled={isStreaming}
-          className="flex-1 bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
+          className="flex-1 bg-white border-slate-300 text-slate-900 placeholder:text-slate-400"
         />
         <Button
           type="submit"

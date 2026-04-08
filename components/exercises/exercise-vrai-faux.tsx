@@ -54,7 +54,7 @@ export function ExerciseVraiFaux({ id, question, answer, explanation, onComplete
 
   return (
     <div className="space-y-4">
-      <p className="text-zinc-100 text-base font-medium leading-relaxed">{question}</p>
+      <p className="text-slate-900 text-base font-medium leading-relaxed">{question}</p>
       <div className="flex gap-3 mt-4">
         {['Vrai', 'Faux'].map(choice => (
           <button
@@ -64,8 +64,8 @@ export function ExerciseVraiFaux({ id, question, answer, explanation, onComplete
             onClick={() => setSelected(choice)}
             className={`flex-1 py-4 rounded-lg border text-sm font-medium transition-colors ${
               selected === choice
-                ? 'border-violet-500 bg-violet-500/10 text-violet-200'
-                : 'border-zinc-700 bg-zinc-800/50 text-zinc-300 hover:border-zinc-500'
+                ? 'border-violet-500 bg-violet-50 text-violet-700'
+                : 'border-slate-200 bg-white text-slate-700 hover:border-violet-300 hover:bg-violet-50/50'
             }`}
           >
             {choice}

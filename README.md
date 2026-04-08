@@ -12,6 +12,7 @@
 | ⚡ | **Génération par IA** | Crée un exercice sur n'importe quel thème en quelques secondes |
 | 🤖 | **Professeur IA** | Chat streaming avec un expert CAPES (grammaire, civi, littérature, didactique) |
 | 🔒 | **Auth solo** | Protection par mot de passe unique + cookie JWT signé |
+| 🎨 | **Thème clair** | Interface light mode avec accent violet, sidebar blanche et cartes épurées |
 
 ---
 
