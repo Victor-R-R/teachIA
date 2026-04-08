@@ -295,6 +295,8 @@ export type InProgressExercise = {
 export type ExamSession = {
   id: number
   type: string
+  title: string | null
+  subject: string | null
   content: string
   ai_feedback: string | null
   score: number | null
@@ -422,4 +424,59 @@ export async function getFlashcardReviewStats(
     [ids]
   )
   return rows as FlashcardReviewStat[]
+}
+
+// ─── Simulacros ───────────────────────────────────────────────────────────────
+
+export async function createSimulacro(
+  type: string,
+  title: string,
+  subject: string
+): Promise<ExamSession> {
+  const rows = await sql.query(
+    `INSERT INTO exam_sessions (type, title, subject, content)
+     VALUES ($1, $2, $3, '') RETURNING *`,
+    [type, title, subject]
+  )
+  return rows[0] as ExamSession
+}
+
+export async function saveSimulacroResponse(
+  id: number,
+  content: string
+): Promise<void> {
+  await sql.query(
+    'UPDATE exam_sessions SET content = $1 WHERE id = $2',
+    [content, id]
+  )
+}
+
+export async function saveSimulacroFeedback(
+  id: number,
+  ai_feedback: string,
+  score: number
+): Promise<void> {
+  await sql.query(
+    'UPDATE exam_sessions SET ai_feedback = $1, score = $2 WHERE id = $3',
+    [ai_feedback, score, id]
+  )
+}
+
+export async function getSimulacros(): Promise<ExamSession[]> {
+  const rows = await sql.query(
+    `SELECT id, type, title, subject, content, ai_feedback, score, timestamp
+     FROM exam_sessions
+     WHERE subject IS NOT NULL
+     ORDER BY timestamp DESC
+     LIMIT 50`
+  )
+  return rows as ExamSession[]
+}
+
+export async function getSimulacroById(id: number): Promise<ExamSession | null> {
+  const rows = await sql.query(
+    'SELECT * FROM exam_sessions WHERE id = $1',
+    [id]
+  )
+  return (rows[0] as ExamSession) ?? null
 }
