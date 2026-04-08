@@ -480,3 +480,111 @@ export async function getSimulacroById(id: number): Promise<ExamSession | null> 
   )
   return (rows[0] as ExamSession) ?? null
 }
+
+// ─── Stats ─────────────────────────────────────────────────────────────────────
+
+export type GlobalStats = {
+  total_attempts: number
+  correct_count: number
+  unique_exercises: number
+  total_study_min: number
+}
+
+export type DomainStat = {
+  domain: string
+  attempts: number
+  correct_count: number
+}
+
+export type DailyActivity = {
+  date: string
+  duration_min: number
+  exercises_done: number
+}
+
+export type SimulacroGlobalStats = {
+  total: number
+  corrected: number
+  avg_score: number | null
+}
+
+export type FlashcardGlobalStats = {
+  total_reviews: number
+  known_count: number
+}
+
+export async function getGlobalStats(): Promise<GlobalStats> {
+  const [attemptsRow, studyRow] = await Promise.all([
+    sql.query(
+      `SELECT COUNT(*)::int AS total_attempts,
+              SUM(CASE WHEN correct THEN 1 ELSE 0 END)::int AS correct_count,
+              COUNT(DISTINCT exercise_id)::int AS unique_exercises
+       FROM exercise_attempts`
+    ),
+    sql.query(
+      `SELECT COALESCE(SUM(duration_min), 0)::int AS total_min FROM study_sessions`
+    ),
+  ])
+  const a = attemptsRow[0] as { total_attempts: number; correct_count: number; unique_exercises: number }
+  return {
+    total_attempts: a?.total_attempts ?? 0,
+    correct_count: a?.correct_count ?? 0,
+    unique_exercises: a?.unique_exercises ?? 0,
+    total_study_min: (studyRow[0] as { total_min: number })?.total_min ?? 0,
+  }
+}
+
+export async function getDomainStats(): Promise<DomainStat[]> {
+  const rows = await sql.query(
+    `SELECT e.domain,
+            COUNT(ea.id)::int AS attempts,
+            SUM(CASE WHEN ea.correct THEN 1 ELSE 0 END)::int AS correct_count
+     FROM exercise_attempts ea
+     JOIN exercises e ON e.id = ea.exercise_id
+     GROUP BY e.domain
+     ORDER BY e.domain`
+  )
+  return rows as DomainStat[]
+}
+
+export async function getDailyActivity(days: number = 7): Promise<DailyActivity[]> {
+  const rows = await sql.query(
+    `SELECT date::text,
+            SUM(duration_min)::int AS duration_min,
+            SUM(exercises_done)::int AS exercises_done
+     FROM study_sessions
+     WHERE date >= CURRENT_DATE - INTERVAL '${days - 1} days'
+     GROUP BY date
+     ORDER BY date`
+  )
+  return rows as DailyActivity[]
+}
+
+export async function getSimulacroGlobalStats(): Promise<SimulacroGlobalStats> {
+  const rows = await sql.query(
+    `SELECT COUNT(*)::int AS total,
+            COUNT(CASE WHEN ai_feedback IS NOT NULL THEN 1 END)::int AS corrected,
+            ROUND(AVG(score)::numeric, 1) AS avg_score
+     FROM exam_sessions
+     WHERE subject IS NOT NULL`
+  )
+  const r = rows[0] as SimulacroGlobalStats
+  return {
+    total: r?.total ?? 0,
+    corrected: r?.corrected ?? 0,
+    avg_score: r?.avg_score ?? null,
+  }
+}
+
+export async function getFlashcardGlobalStats(): Promise<FlashcardGlobalStats> {
+  const rows = await sql.query(
+    `SELECT COUNT(*)::int AS total_reviews,
+            SUM(CASE WHEN known THEN 1 ELSE 0 END)::int AS known_count
+     FROM flashcard_reviews`
+  )
+  const r = rows[0] as FlashcardGlobalStats
+  return {
+    total_reviews: r?.total_reviews ?? 0,
+    known_count: r?.known_count ?? 0,
+  }
+}
