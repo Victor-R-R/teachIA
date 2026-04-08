@@ -48,6 +48,15 @@ export function DomainLevelsCard({ profile }: { profile: UserProfile }) {
             )
           })}
         </div>
+        <div className="mt-3 pt-3 border-t border-slate-100 flex items-center gap-3">
+          <span className="text-xs text-slate-400 shrink-0">Niveaux :</span>
+          {(['A', 'B', 'C'] as const).map((lvl) => (
+            <span key={lvl} className={`text-xs px-1.5 py-0.5 rounded border font-medium ${LEVEL_COLORS[lvl]}`}>
+              {lvl}
+            </span>
+          ))}
+          <span className="text-xs text-slate-400">→ débutant · intermédiaire · avancé</span>
+        </div>
       </CardContent>
     </Card>
   )

@@ -93,6 +93,17 @@ export default async function ExercicesPage({
         </div>
       </div>
 
+      {/* Level legend */}
+      <div className="flex items-center gap-3 mb-6 text-xs text-slate-400">
+        <span className="shrink-0">Niveaux :</span>
+        {(['A', 'B', 'C'] as const).map((lvl) => (
+          <span key={lvl} className={`px-1.5 py-0.5 rounded border font-medium ${LEVEL_COLORS[lvl]}`}>
+            {lvl}
+          </span>
+        ))}
+        <span>→ débutant · intermédiaire · avancé</span>
+      </div>
+
       {/* DB exercises — interactive */}
       {dbExercises.length > 0 && (
         <div className="mb-8">
