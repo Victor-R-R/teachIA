@@ -19,6 +19,7 @@
 | 🏆 | **Dashboard gamifié** | Niveau XP (Débutant → Professeur) + niveaux A/B/C par domaine mis à jour dynamiquement, objectif quotidien configurable, exercices en cours |
 | 🃏 | **Flashcards CAPES** | 53 cartes curées (Langue, Civi Espagne, Civi Latam, Didactique) + génération IA par thème, flip 3D animé, tracking Connu/À revoir en DB, filtres domaine et niveau |
 | 🎯 | **Simulacros CAPES** | Sujets générés par IA conformes au jury 2025 (composition dossier 3 docs, thème FR→ES, version ES→FR) — rédaction chronométrée, correction IA structurée avec score /20 (langue, méthodologie, contenu) |
+| 📊 | **Statistiques `/stats`** | Vue d'ensemble : KPIs globaux (tentatives, taux de réussite, temps d'étude, simulacros), graphique d'activité 7 jours, performance par domaine, flashcards et simulacros |
 
 ---
 
