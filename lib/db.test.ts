@@ -202,3 +202,94 @@ describe('gamification helpers', () => {
     expect(calls.some((q: string) => q.includes('INSERT INTO study_sessions'))).toBe(true)
   })
 })
+
+// Flux : le niveau de domaine monte à chaque réponse correcte (visible sur /dashboard)
+describe('domain level progression (dashboard flow)', () => {
+  // Helper : simule saveAttempt avec des stats de tentatives données
+  async function callSaveAttemptWithStats(total: number, correct_count: number) {
+    vi.resetModules()
+    const mockSql = vi.fn()
+      .mockResolvedValueOnce([])                          // INSERT attempt
+      .mockResolvedValueOnce([{ xp: 50, level_xp: 1 }]) // UPDATE xp RETURNING
+      .mockResolvedValueOnce([{ total, correct_count }]) // SELECT stats domaine
+      .mockResolvedValue([])                              // UPDATE level (si total >= 5)
+    mockSql.query = mockSql
+    vi.doMock('@neondatabase/serverless', () => ({ neon: vi.fn(() => mockSql) }))
+    const { saveAttempt } = await import('./db')
+    await saveAttempt({ exercise_id: 1, correct: true, time_spent: null, exercise_level: 'B', exercise_domain: 'langue' })
+    return mockSql.query.mock.calls.map((c: unknown[]) => ({ sql: (c[0] as string).trim(), params: c[1] }))
+  }
+
+  it('ne met pas à jour le niveau si moins de 5 tentatives', async () => {
+    const calls = await callSaveAttemptWithStats(4, 4)
+    const levelUpdate = calls.find(c => c.sql.includes('UPDATE user_profile SET level_'))
+    expect(levelUpdate).toBeUndefined()
+  })
+
+  it('niveau A quand taux correct < 50% (4/10 = 40%)', async () => {
+    const calls = await callSaveAttemptWithStats(10, 4)
+    const levelUpdate = calls.find(c => c.sql.includes('UPDATE user_profile SET level_langue'))
+    expect(levelUpdate).toBeDefined()
+    expect(levelUpdate!.params).toContain('A')
+  })
+
+  it('niveau B quand taux correct entre 50% et 79% (6/10 = 60%)', async () => {
+    const calls = await callSaveAttemptWithStats(10, 6)
+    const levelUpdate = calls.find(c => c.sql.includes('UPDATE user_profile SET level_langue'))
+    expect(levelUpdate).toBeDefined()
+    expect(levelUpdate!.params).toContain('B')
+  })
+
+  it('niveau C quand taux correct >= 80% (8/10 = 80%)', async () => {
+    const calls = await callSaveAttemptWithStats(10, 8)
+    const levelUpdate = calls.find(c => c.sql.includes('UPDATE user_profile SET level_langue'))
+    expect(levelUpdate).toBeDefined()
+    expect(levelUpdate!.params).toContain('C')
+  })
+
+  it('met à jour level_civi pour le domaine civi_espagne', async () => {
+    vi.resetModules()
+    const mockSql = vi.fn()
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([{ xp: 50, level_xp: 1 }])
+      .mockResolvedValueOnce([{ total: 10, correct_count: 9 }])
+      .mockResolvedValue([])
+    mockSql.query = mockSql
+    vi.doMock('@neondatabase/serverless', () => ({ neon: vi.fn(() => mockSql) }))
+    const { saveAttempt } = await import('./db')
+    await saveAttempt({ exercise_id: 2, correct: true, time_spent: null, exercise_level: 'A', exercise_domain: 'civi_espagne' })
+    const calls = mockSql.query.mock.calls.map((c: unknown[]) => (c[0] as string).trim())
+    expect(calls.some((q: string) => q.includes('level_civi'))).toBe(true)
+  })
+
+  it('met à jour level_didactique pour le domaine didactique', async () => {
+    vi.resetModules()
+    const mockSql = vi.fn()
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([{ xp: 50, level_xp: 1 }])
+      .mockResolvedValueOnce([{ total: 10, correct_count: 5 }])
+      .mockResolvedValue([])
+    mockSql.query = mockSql
+    vi.doMock('@neondatabase/serverless', () => ({ neon: vi.fn(() => mockSql) }))
+    const { saveAttempt } = await import('./db')
+    await saveAttempt({ exercise_id: 3, correct: true, time_spent: null, exercise_level: 'B', exercise_domain: 'didactique' })
+    const calls = mockSql.query.mock.calls.map((c: unknown[]) => (c[0] as string).trim())
+    expect(calls.some((q: string) => q.includes('level_didactique'))).toBe(true)
+  })
+
+  it('flux complet : A → B → C au fur et à mesure des bonnes réponses', async () => {
+    // Simule 3 états successifs du profil tel que /dashboard le verrait
+    const scenarios: Array<{ total: number; correct_count: number; expectedLevel: 'A' | 'B' | 'C' }> = [
+      { total: 5,  correct_count: 2,  expectedLevel: 'A' }, // 40% → A
+      { total: 10, correct_count: 6,  expectedLevel: 'B' }, // 60% → B
+      { total: 20, correct_count: 16, expectedLevel: 'C' }, // 80% → C
+    ]
+
+    for (const { total, correct_count, expectedLevel } of scenarios) {
+      const calls = await callSaveAttemptWithStats(total, correct_count)
+      const levelUpdate = calls.find(c => c.sql.includes('UPDATE user_profile SET level_langue'))
+      expect(levelUpdate, `niveau attendu ${expectedLevel} pour ${correct_count}/${total}`).toBeDefined()
+      expect(levelUpdate!.params).toContain(expectedLevel)
+    }
+  })
+})
