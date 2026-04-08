@@ -27,7 +27,7 @@ export function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="w-52 shrink-0 bg-white border-r border-slate-200 flex flex-col h-full">
+    <aside className="hidden lg:flex flex-col w-52 shrink-0 bg-white border-r border-slate-200 h-full">
       <div className="px-4 py-5 border-b border-slate-100">
         <span className="text-violet-600 font-semibold text-lg tracking-tight">teachIA</span>
       </div>
