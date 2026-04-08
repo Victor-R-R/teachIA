@@ -3,6 +3,8 @@
 import { useChat } from '@ai-sdk/react'
 import { DefaultChatTransport } from 'ai'
 import { useRef, useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { nanoid } from 'nanoid'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Send, Loader2 } from 'lucide-react'
@@ -11,16 +13,35 @@ import {
   MessageContent,
   MessageResponse,
 } from '@/components/ai-elements/message'
+import type { UIMessage } from 'ai'
 
 const INIT_MARKER = '[[INIT]]'
 
-export function ChatInterface() {
+type Props = {
+  conversationId?: string
+  initialMessages?: UIMessage[]
+}
+
+export function ChatInterface({ conversationId: initialId, initialMessages = [] }: Props) {
+  const router = useRouter()
   const bottomRef = useRef<HTMLDivElement>(null)
   const [input, setInput] = useState('')
-  const initSent = useRef(false)
+  const convId = useRef<string>(initialId ?? nanoid())
+  const initSent = useRef(initialMessages.length > 0)
+
   const { messages, sendMessage, status } = useChat({
-    transport: new DefaultChatTransport({ api: '/api/chat' }),
+    transport: new DefaultChatTransport({
+      api: '/api/chat',
+      body: { conversationId: convId.current },
+    }),
+    messages: initialMessages,
   })
+
+  useEffect(() => {
+    if (!initialId) {
+      router.replace(`/chat?id=${convId.current}`)
+    }
+  }, [initialId, router])
 
   useEffect(() => {
     if (!initSent.current) {
@@ -42,31 +63,29 @@ export function ChatInterface() {
     setInput('')
   }
 
+  const visibleMessages = messages.filter(m => {
+    if (m.role !== 'user') return true
+    const text = m.parts?.find(p => p.type === 'text')?.text
+    return text !== INIT_MARKER
+  })
+
   return (
     <div className="flex flex-col h-full max-h-[calc(100vh-6rem)]">
-      {/* Messages */}
       <div className="flex-1 overflow-y-auto space-y-4 pb-4">
-        {messages
-          .filter(m => {
-            if (m.role !== 'user') return true
-            const text = m.parts?.find(p => p.type === 'text')?.text
-            return text !== INIT_MARKER
-          })
-          .map(message => (
-            <Message key={message.id} from={message.role}>
-              <MessageContent>
-                {message.parts?.map((part, index) =>
-                  part.type === 'text' ? (
-                    <MessageResponse key={index}>{part.text}</MessageResponse>
-                  ) : null
-                ) ?? null}
-              </MessageContent>
-            </Message>
-          ))}
+        {visibleMessages.map(message => (
+          <Message key={message.id} from={message.role}>
+            <MessageContent>
+              {message.parts?.map((part, index) =>
+                part.type === 'text' ? (
+                  <MessageResponse key={index}>{part.text}</MessageResponse>
+                ) : null
+              ) ?? null}
+            </MessageContent>
+          </Message>
+        ))}
         <div ref={bottomRef} />
       </div>
 
-      {/* Input */}
       <form onSubmit={handleSubmit} className="flex gap-2 pt-4 border-t border-slate-200">
         <Input
           value={input}

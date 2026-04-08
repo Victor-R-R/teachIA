@@ -32,3 +32,21 @@ CREATE TABLE IF NOT EXISTS exercise_attempts (
 CREATE INDEX IF NOT EXISTS idx_exercises_domain ON exercises(domain);
 CREATE INDEX IF NOT EXISTS idx_exercises_level ON exercises(level);
 CREATE INDEX IF NOT EXISTS idx_attempts_timestamp ON exercise_attempts(timestamp);
+
+CREATE TABLE IF NOT EXISTS conversations (
+  id TEXT PRIMARY KEY,
+  title TEXT,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS conversation_messages (
+  id SERIAL PRIMARY KEY,
+  conversation_id TEXT REFERENCES conversations(id) ON DELETE CASCADE,
+  role TEXT NOT NULL CHECK (role IN ('user', 'assistant')),
+  content TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_conv_messages_conv_id ON conversation_messages(conversation_id);
+CREATE INDEX IF NOT EXISTS idx_conversations_updated ON conversations(updated_at DESC);

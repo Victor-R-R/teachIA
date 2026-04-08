@@ -1,6 +1,28 @@
 import { ChatInterface } from '@/components/chat/chat-interface'
+import { getConversationMessages } from '@/lib/db'
+import type { UIMessage } from 'ai'
 
-export default function ChatPage() {
+type Props = {
+  searchParams: Promise<{ id?: string }>
+}
+
+export default async function ChatPage({ searchParams }: Props) {
+  const { id } = await searchParams
+
+  let initialMessages: UIMessage[] = []
+  if (id) {
+    try {
+      const messages = await getConversationMessages(id)
+      initialMessages = messages.map(m => ({
+        id: String(m.id),
+        role: m.role as 'user' | 'assistant',
+        parts: [{ type: 'text' as const, text: m.content }],
+      }))
+    } catch {
+      // Conversation not found — start fresh
+    }
+  }
+
   return (
     <div className="h-full flex flex-col">
       <div className="mb-4">
@@ -8,7 +30,7 @@ export default function ChatPage() {
         <p className="text-slate-500 text-sm">Pose n'importe quelle question sur le CAPES d'espagnol.</p>
       </div>
       <div className="flex-1 min-h-0">
-        <ChatInterface />
+        <ChatInterface conversationId={id} initialMessages={initialMessages} />
       </div>
     </div>
   )

@@ -70,3 +70,88 @@ export async function saveExercise(exercise: Omit<Exercise, 'id' | 'created_at'>
   )
   return rows[0] as Exercise
 }
+
+export type ConversationSummary = {
+  id: string
+  title: string | null
+  created_at: string
+  updated_at: string
+  message_count: string
+}
+
+export type ConversationMessage = {
+  id: number
+  conversation_id: string
+  role: 'user' | 'assistant'
+  content: string
+  created_at: string
+}
+
+export async function createConversation(id: string): Promise<void> {
+  await sql.query(
+    'INSERT INTO conversations (id) VALUES ($1) ON CONFLICT DO NOTHING',
+    [id]
+  )
+}
+
+export async function saveMessage(
+  conversationId: string,
+  role: 'user' | 'assistant',
+  content: string
+): Promise<void> {
+  await sql.query(
+    `INSERT INTO conversation_messages (conversation_id, role, content) VALUES ($1, $2, $3)`,
+    [conversationId, role, content]
+  )
+  await sql.query(
+    `UPDATE conversations SET updated_at = NOW() WHERE id = $1`,
+    [conversationId]
+  )
+}
+
+export async function updateConversationTitle(id: string, title: string): Promise<void> {
+  await sql.query(
+    'UPDATE conversations SET title = $1 WHERE id = $2',
+    [title, id]
+  )
+}
+
+export async function getConversations(): Promise<ConversationSummary[]> {
+  const rows = await sql.query(
+    `SELECT c.id, c.title, c.created_at, c.updated_at,
+            COUNT(m.id)::text AS message_count
+     FROM conversations c
+     LEFT JOIN conversation_messages m ON m.conversation_id = c.id
+     GROUP BY c.id
+     ORDER BY c.updated_at DESC`
+  )
+  return rows as ConversationSummary[]
+}
+
+export async function getConversationMessages(id: string): Promise<ConversationMessage[]> {
+  const rows = await sql.query(
+    `SELECT * FROM conversation_messages WHERE conversation_id = $1 ORDER BY created_at ASC`,
+    [id]
+  )
+  return rows as ConversationMessage[]
+}
+
+export async function deleteConversation(id: string): Promise<void> {
+  await sql.query('DELETE FROM conversations WHERE id = $1', [id])
+}
+
+export async function getMessageCount(conversationId: string): Promise<number> {
+  const rows = await sql.query(
+    'SELECT COUNT(*)::int AS count FROM conversation_messages WHERE conversation_id = $1',
+    [conversationId]
+  )
+  return (rows[0] as { count: number }).count
+}
+
+export async function hasTitle(conversationId: string): Promise<boolean> {
+  const rows = await sql.query(
+    'SELECT title FROM conversations WHERE id = $1',
+    [conversationId]
+  )
+  return !!(rows[0] as { title: string | null } | undefined)?.title
+}
