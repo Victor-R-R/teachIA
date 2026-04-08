@@ -3,13 +3,14 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
-import { Menu, LayoutDashboard, MessageCircle, BookOpen, CreditCard, Target, BarChart2 } from 'lucide-react'
+import { Menu, LayoutDashboard, MessageCircle, BookOpen, CreditCard, Target, BarChart2, History } from 'lucide-react'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/chat', label: 'Professeur IA', icon: MessageCircle },
+  { href: '/conversations', label: 'Conversations', icon: History },
   { href: '/exercices', label: 'Exercices', icon: BookOpen },
   { href: '/flashcards', label: 'Flashcards', icon: CreditCard },
   { href: '/simulacros', label: 'Simulacros', icon: Target },
@@ -27,6 +28,7 @@ export function MobileHeader() {
           type="button"
           onClick={() => setOpen(true)}
           aria-label="Ouvrir le menu"
+          aria-expanded={open}
           className="p-1 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
         >
           <Menu className="h-5 w-5" />
@@ -48,7 +50,7 @@ export function MobileHeader() {
                 onClick={() => setOpen(false)}
                 className={cn(
                   'flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors cursor-pointer',
-                  pathname === href
+                  pathname === href || (href === '/chat' && pathname.startsWith('/chat'))
                     ? 'bg-violet-50 text-violet-700 font-medium'
                     : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
                 )}

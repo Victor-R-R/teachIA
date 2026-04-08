@@ -77,7 +77,7 @@ export default async function ExercicesPage({
       </div>
 
       <div className="flex justify-end mb-4">
-        <GenerateExerciseButton />
+        <GenerateExerciseButton className="w-full sm:w-auto" />
       </div>
 
       {/* Exercise cards */}

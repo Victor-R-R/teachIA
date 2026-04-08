@@ -15,6 +15,7 @@
 | 📋 | **Historique `/conversations`** | Liste toutes les sessions passées avec titre généré par IA, date et suppression |
 | 🔒 | **Auth solo** | Protection par mot de passe unique + cookie JWT signé |
 | 🎨 | **Thème clair** | Interface light mode avec accent violet, sidebar blanche et cartes épurées |
+| 📱 | **Responsive mobile/tablette** | Navigation par header + drawer sur mobile, layout adaptatif < 1024px |
 
 ---
 

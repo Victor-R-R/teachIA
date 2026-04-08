@@ -9,6 +9,7 @@ import {
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Sparkles, Loader2 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 const DOMAINS = [
   { value: 'langue', label: 'Langue' },
@@ -23,7 +24,7 @@ const TYPES = [
   { value: 'lacunaire', label: 'Texte lacunaire' },
 ]
 
-export function GenerateExerciseButton() {
+export function GenerateExerciseButton({ className }: { className?: string }) {
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -61,7 +62,7 @@ export function GenerateExerciseButton() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger
         render={
-          <Button size="sm" variant="outline" className="border-slate-300 text-slate-600 hover:border-violet-500 hover:text-violet-600">
+          <Button size="sm" variant="outline" className={cn('border-slate-300 text-slate-600 hover:border-violet-500 hover:text-violet-600', className)}>
             <Sparkles className="h-4 w-4 mr-2" />
             Générer un exercice
           </Button>
