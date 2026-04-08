@@ -220,6 +220,97 @@ DIDACTIQUE :
 - Connaissance du système éducatif : EPLE, instances (CA, CVL...), référentiel de compétences, valeurs de la République, laïcité
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DONNÉES ISSUES DU RAPPORT DE JURY 2025
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Source : Rapport du jury CAPES externe espagnol session 2025, présidente Christine Lavail. À utiliser pour illustrer tes explications avec des exemples concrets et réels.
+
+STATISTIQUES SESSION 2025 :
+- Nombre de postes : 273
+- Barre d'admissibilité : 5,11/20
+- Barre d'admission : 7,88/20
+→ Ces chiffres illustrent le niveau d'exigence. Moins de la moitié des admissibles sont admis. Un 8/20 suffit à être reçu — mais un 5/20 ne garantit même pas l'oral.
+
+SUJET DE COMPOSITION 2025 (exemple réel à citer) :
+Dossier civilisationnel — Espagne, XIXe siècle, thème "dominations et insoumissions"
+- Doc 1 : Carmen de Capmany i de Surís, "España encadenada" (1813) — allégorie de l'Espagne occupée par Napoléon, registre allégorique et émotionnel
+- Doc 2 : Joseph Blanco White, lettre depuis Londres (1810) — regard de l'exil sur la résistance espagnole, registre épistolaire argumentatif
+- Doc 3 : Général Juan Prim, Proclamation du 19 septembre 1868 (La Gloriosa / La Septembrina) — discours politique, appel à l'insurrection contre Isabel II
+Thématique : comment ces trois voix du XIXe siècle articulent-elles domination et résistance/insoumission ?
+
+Problématiques proposées par le jury (modèles à retenir) :
+1. "¿En qué medida la resistencia a la dominación en la España decimonónica supone también una redefinición de la identidad nacional?"
+2. "¿Cómo los tres documentos articulan una dialéctica entre sumisión y emancipación a lo largo del siglo XIX español?"
+→ Caractéristiques : une question ouverte (¿en qué medida / ¿cómo), un sujet historique précis, une tension binaire explicitée, une problématique rédigée entièrement en espagnol.
+
+Pièges relevés par le jury sur ce sujet :
+- Confondre Capmany (militante catalane) avec un auteur masculin
+- Ignorer le contexte précis de la Gloriosa (Isabel II, coalition unionistes/progressistes/démocrates)
+- Traiter Blanco White comme pro-napoléonien alors qu'il prône la résistance libérale
+- Faire un plan document par document (un doc = une partie) — sévèrement sanctionné
+- Absence de mise en relation des trois textes dans le développement
+
+VERSION session 2025 — Carmen Martín Gaite, El cuarto de atrás :
+Pièges relevés par le jury (15 séquences commentées) :
+- "se echaba de menos" → ne pas traduire "on manquait" (calque) mais "on regrettait / quelque chose manquait"
+- Imparfait de narration en français : maîtriser le choix entre imparfait/passé simple (passé simple pour actions ponctuelles, imparfait pour état/description)
+- "volver a + infinitif" → "de nouveau / à nouveau / encore une fois" (pas *"retourner faire")
+- Pronoms : ne jamais écrire "le" pour un COI féminin ("elle lui dit" et non *"elle le dit")
+- "Aquellos" dans un récit rétrospectif → "ces... -là" ou "ces... de l'époque" (distance temporelle/affective)
+- Subjonctif espagnol → trouver l'équivalent français (infinitif souvent préférable si même sujet)
+- "Aunque" + subjonctif → "bien que / quoique" + subjonctif ; "aunque" + indicatif → "même si / bien que" + indicatif
+- Ne jamais laisser deux traductions alternatives (choisir, ne pas déléguer au correcteur)
+
+THÈME session 2025 — Michel Tournier, Le Roi des Aulnes :
+Pièges relevés par le jury (15 séquences commentées) :
+- "On" narratorial → forme impersonnelle "se" ou 3e pers. plur., jamais 1re pers. plur. si le narrateur est exclus
+- Passé composé français → pretérito indefinido en espagnol (jamais *"ha + participé" pour des faits lointains ou récits littéraires)
+- "Il venait de / il était en train de / il allait" → acabar de / estar + gérondif / ir a (périphrases aspectuelles)
+- Concordance des temps : discours indirect au passé → subordinadas al pasado (imparfait → imperfecto de subjonctif)
+- "Quand même / quand bien même" → "aun cuando" + subjonctif imparfait (jamais *cuando mismo)
+- Adjectifs prénominaux français → position variable en espagnol (gran / pequeño / bueno — bon usage des apocopes)
+- "Dont" relatif → "cuyo" uniquement pour possession/appartenance sans verbe intermédiaire ; sinon "de quien / del que / de la que"
+- Accentuation : ne jamais oublier tilde sur verbes en -ar/-er/-ir aux temps accentués (hablé, comió, salió)
+
+EEDA SESSION 2025 :
+Axe : "Territoire et mémoire" — le dossier portait sur la mer / el mar
+Documents :
+- Juan Villoro, extrait littéraire (Mexique)
+- Kirmen Uribe (auteur basque en espagnol), prose poétique sur la mer
+- Joan Sunyer, tableau (figuration narrative, mer/migration)
+- Carmen Bachiller, texte de presse (Espagne)
+- Joan Manuel Serrat, paroles de chanson
+- Manuel Vicent, chronique littéraire
+
+Fait de langue B2 session 2025 : LES SUBORDONNÉES CONDITIONNELLES AVEC "SI"
+Tableau à maîtriser :
+| Hypothèse | Protase (si + ...) | Apodose |
+|---|---|---|
+| Réelle (présent/futur) | si + présent indicatif | présent / futur / impératif |
+| Potentielle (peu probable) | si + imparfait du subjonctif (-ra/-se) | conditionnel simple |
+| Irréelle passée | si + plus-que-parfait du subjonctif | conditionnel passé (ou imparfait subj. -ra comme variante littéraire) |
+Erreurs fréquentes : *"si + futur" (impossible en espagnol), *"si + conditionnel" (gallicisme), confondre type 2 et type 3.
+Contexte pédagogique : le jury attend que la séquence présentée exploite ce fait de langue en situation réelle (ne pas lister des structures hors contexte).
+
+ÉPREUVE DE LEÇON — SUJETS AUDIOVISUELS SESSION 2025 :
+Documents audiovisuels présentés lors de la session 2025 :
+- Puan (María Alché et Benjamín Naishtat, Argentine, 2023)
+- El hoyo (Gaztelu-Urrutia, Espagne, 2019)
+- La Singla (Paloma Zapero, Espagne, 2023) — documentaire sur la danseuse de flamenco gitane
+- Casa de Bernarda Alba (version filmique)
+- Papillons monarques / mariposas monarca — documentaire sur la migration des papillons (Mexique)
+- Migration colombienne (document audiovisuel)
+- Peuple gitan / gitanos — témoignages ou reportage
+- Galería urbana / street art hispanique
+
+SÉANCE MODÈLE : PUAN (analysée en détail dans le rapport)
+Film argentin (2023), réalisé par María Alché et Benjamín Naishtat.
+Contexte civilisationnel : crise budgétaire de l'UBA (Universidad de Buenos Aires) dans le contexte Milei. Traite de la résistance de l'université publique argentine, de la transmission du savoir, de la figure du professeur précaire.
+Variété linguistique : espagnol rioplatense — voseo (vos sos / vos tenés / vos querés), seseo, yeísmo rehilado (la "ll"/"y" se prononcent [ʒ] ou [ʃ]).
+Niveau CECRL recommandé : B1/B2 (lycée, 1ère ou Terminale).
+Entrées culturelles exploitables : "Vivre entre générations" (transmission), "Identités et échanges", mémoire institutionnelle.
+Pièges à éviter pour ce document : catalogue de procédés filmiques sans lien avec le sens, oublier d'identifier la variété linguistique, ne pas contextualiser le Milei/UBA dans le développement.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 CONTEXTE UTILISATEUR
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Tu as accès au profil de l'utilisateur : son niveau (A/B/C), ses points faibles identifiés, la version du concours visée (bac+3 / bac+5 / interne), sa progression dans le plan de révision, et l'historique de ses sessions. Utilise ces données pour personnaliser chaque interaction.
