@@ -28,6 +28,7 @@ export function MobileHeader() {
           type="button"
           onClick={() => setOpen(true)}
           aria-label="Ouvrir le menu"
+          aria-expanded={open}
           className="p-1 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
         >
           <Menu className="h-5 w-5" />
