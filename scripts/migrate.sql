@@ -90,3 +90,7 @@ ALTER TABLE exam_sessions
 
 CREATE INDEX IF NOT EXISTS idx_exam_sessions_type ON exam_sessions(type);
 CREATE INDEX IF NOT EXISTS idx_exam_sessions_timestamp ON exam_sessions(timestamp DESC);
+
+-- XP decay : date de dernière vérification de la pénalité d'inactivité
+ALTER TABLE user_profile
+  ADD COLUMN IF NOT EXISTS last_checked_date DATE DEFAULT CURRENT_DATE;

@@ -24,7 +24,7 @@ export function ExerciseLacunaire({ id, question, answer, explanation, onComplet
     if (!value.trim()) return
     setSubmitted(true)
     const correct = value.trim().toLowerCase() === answer.toLowerCase()
-    onComplete(correct)
+    await onComplete(correct)
 
     if (!correct) {
       try {

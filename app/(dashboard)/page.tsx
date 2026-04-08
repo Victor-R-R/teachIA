@@ -2,13 +2,14 @@ export const dynamic = 'force-dynamic'
 
 import Link from 'next/link'
 import { Target } from 'lucide-react'
-import { getUserProfile, getTodayMinutes, getInProgressExercises, getInProgressSimulations } from '@/lib/db'
+import { getUserProfile, getTodayMinutes, getInProgressExercises, getInProgressSimulations, applyXpDecay } from '@/lib/db'
 import { XPLevelCard } from '@/components/dashboard/xp-level-card'
 import { DomainLevelsCard } from '@/components/dashboard/domain-levels-card'
 import { DailyGoalCard } from '@/components/dashboard/daily-goal-card'
 import { InProgressList } from '@/components/dashboard/in-progress-list'
 
 export default async function DashboardPage() {
+  const xpLost = await applyXpDecay()
   const [profile, todayMin, inProgressExercises, inProgressSims] = await Promise.all([
     getUserProfile(),
     getTodayMinutes(),
@@ -48,7 +49,7 @@ export default async function DashboardPage() {
 
       {/* Zone 2 — Progression */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <XPLevelCard profile={profile} />
+        <XPLevelCard profile={profile} xpLost={xpLost} />
         <DomainLevelsCard profile={profile} />
       </div>
 

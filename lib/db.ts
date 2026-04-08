@@ -280,6 +280,7 @@ export type UserProfile = {
   xp: number
   level_xp: number
   daily_goal_min: number
+  last_checked_date: string | null
   created_at: string
 }
 
@@ -345,6 +346,56 @@ export async function getInProgressSimulations(): Promise<ExamSession[]> {
 
 export async function updateDailyGoal(minutes: number): Promise<void> {
   await sql.query('UPDATE user_profile SET daily_goal_min = $1', [minutes])
+}
+
+const XP_DECAY_PER_DAY = 10
+
+/**
+ * Déduit du XP pour chaque jour sans activité depuis la dernière vérification.
+ * À appeler au chargement du dashboard. Retourne le XP perdu (0 si aucun).
+ */
+export async function applyXpDecay(): Promise<number> {
+  const profileRows = await sql.query(
+    'SELECT last_checked_date FROM user_profile LIMIT 1'
+  )
+  if (profileRows.length === 0) return 0
+
+  const { last_checked_date } = profileRows[0] as { last_checked_date: string | null }
+
+  // Si déjà vérifié aujourd'hui, rien à faire
+  if (last_checked_date) {
+    const lastChecked = new Date(last_checked_date)
+    const today = new Date()
+    lastChecked.setHours(0, 0, 0, 0)
+    today.setHours(0, 0, 0, 0)
+    if (lastChecked >= today) return 0
+  }
+
+  // Compter les jours sans study_session entre (last_checked + 1) et hier
+  const inactiveRows = await sql.query(
+    `SELECT COUNT(*)::int AS inactive_days
+     FROM generate_series(
+       COALESCE($1::date, CURRENT_DATE) + 1,
+       CURRENT_DATE - 1,
+       '1 day'::interval
+     ) AS d(day)
+     WHERE NOT EXISTS (
+       SELECT 1 FROM study_sessions ss WHERE ss.date = d.day::date
+     )`,
+    [last_checked_date ?? null]
+  )
+
+  const inactiveDays = (inactiveRows[0] as { inactive_days: number }).inactive_days
+
+  // Toujours mettre à jour la date de vérification
+  await sql.query('UPDATE user_profile SET last_checked_date = CURRENT_DATE')
+
+  if (inactiveDays === 0) return 0
+
+  const xpLost = inactiveDays * XP_DECAY_PER_DAY
+  await sql.query('UPDATE user_profile SET xp = GREATEST(0, xp - $1)', [xpLost])
+
+  return xpLost
 }
 
 // ─── Flashcards ───────────────────────────────────────────────────────────────
