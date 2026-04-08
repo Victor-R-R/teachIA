@@ -8,9 +8,9 @@
 
 | | Fonctionnalité | Description |
 |---|---|---|
-| 📝 | **Exercices tipos test** | QCM, Vrai/Faux, Texte lacunaire avec feedback IA immédiat |
+| 📝 | **92 exercices unifiés** | 10 interactifs (QCM/Vrai-Faux/Lacunaire) + 82 exercices CAPES ouverts (composition, version, thème, grammaire, civilisation, didactique, leçon, entretien) |
 | ⚡ | **Génération par IA** | Crée un exercice sur n'importe quel thème en quelques secondes |
-| 🤖 | **Professeur IA** | Chat streaming avec un expert CAPES — 82 exercices structurés (composition, version, thème, grammaire, civilisation, didactique, leçon, entretien) |
+| 🤖 | **Professeur IA** | Chat streaming avec un expert CAPES. Bouton "Démarrer" sur chaque exercice CAPES pour lancer l'exercice directement avec l'IA |
 | 💬 | **Conversations persistantes** | Chaque session de chat est sauvegardée en DB, restaurable via `/chat?id=xxx` |
 | 📋 | **Historique `/conversations`** | Liste toutes les sessions passées avec titre généré par IA, date et suppression |
 | 🔒 | **Auth solo** | Protection par mot de passe unique + cookie JWT signé |
