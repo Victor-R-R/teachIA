@@ -67,13 +67,13 @@ export default async function ExercisePage({
           </div>
           {status !== 'not_started' && (
             <div className="mt-2 space-y-1.5">
-              <span className={`text-xs font-medium flex items-center gap-1.5 ${
+              <div className={`text-xs font-medium flex items-center gap-1.5 ${
                 status === 'completed' ? 'text-green-600' : 'text-amber-600'
               }`}>
-                <span className="inline-block w-2 h-2 rounded-full bg-current" />
+                <span aria-hidden="true" className="inline-block w-2 h-2 rounded-full bg-current" />
                 {status === 'completed' ? 'Réussi' : 'En cours'}
                 {' · '}{attemptCount} tentative{attemptCount > 1 ? 's' : ''}
-              </span>
+              </div>
               <ExerciseProgressBar status={status} height={4} />
             </div>
           )}
