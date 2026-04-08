@@ -22,14 +22,36 @@ Didactique : approche actionnelle, interculturelle, conception de séquences pé
 Tu commences chaque session en proposant de continuer là où l'utilisateur en est, ou en lui demandant ce qu'il veut travailler aujourd'hui.`
 
 export async function POST(req: NextRequest) {
-  const { messages } = await req.json()
+  let messages: unknown
+  try {
+    const body = await req.json()
+    messages = body?.messages
+  } catch {
+    return new Response(JSON.stringify({ error: 'Invalid JSON' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' },
+    })
+  }
 
-  const result = streamText({
-    model: 'anthropic/claude-sonnet-4.6',
-    system: SYSTEM_PROMPT,
-    messages: await convertToModelMessages(messages),
-    maxOutputTokens: 1024,
-  })
+  if (!Array.isArray(messages)) {
+    return new Response(JSON.stringify({ error: 'messages must be an array' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' },
+    })
+  }
 
-  return result.toUIMessageStreamResponse()
+  try {
+    const result = streamText({
+      model: 'anthropic/claude-sonnet-4.6',
+      system: SYSTEM_PROMPT,
+      messages: await convertToModelMessages(messages),
+      maxOutputTokens: 1024,
+    })
+    return result.toUIMessageStreamResponse()
+  } catch {
+    return new Response(JSON.stringify({ error: 'Streaming failed' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    })
+  }
 }

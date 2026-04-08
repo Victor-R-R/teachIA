@@ -37,7 +37,7 @@ export function ChatInterface() {
       {/* Messages */}
       <div className="flex-1 overflow-y-auto space-y-4 pb-4">
         {messages.length === 0 && (
-          <div className="text-center py-16 text-zinc-500">
+          <div className="text-center py-16 text-zinc-500" role="status">
             <p className="text-lg mb-2">¡Hola! Je suis ton professeur IA.</p>
             <p className="text-sm">Pose-moi une question sur la grammaire, la civilisation, la littérature ou la didactique.</p>
           </div>
@@ -45,11 +45,11 @@ export function ChatInterface() {
         {messages.map(message => (
           <Message key={message.id} from={message.role}>
             <MessageContent>
-              {message.parts.map((part, index) =>
+              {message.parts?.map((part, index) =>
                 part.type === 'text' ? (
                   <MessageResponse key={index}>{part.text}</MessageResponse>
                 ) : null
-              )}
+              ) ?? null}
             </MessageContent>
           </Message>
         ))}
@@ -68,11 +68,12 @@ export function ChatInterface() {
         <Button
           type="submit"
           disabled={!input.trim() || isStreaming}
+          aria-label={isStreaming ? 'Envoi en cours…' : 'Envoyer'}
           className="bg-violet-600 hover:bg-violet-700 disabled:opacity-40 px-3"
         >
           {isStreaming
-            ? <Loader2 className="h-4 w-4 animate-spin" />
-            : <Send className="h-4 w-4" />
+            ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+            : <Send className="h-4 w-4" aria-hidden="true" />
           }
         </Button>
       </form>
