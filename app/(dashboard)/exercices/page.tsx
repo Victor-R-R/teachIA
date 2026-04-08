@@ -6,7 +6,7 @@ import { DOMAINS, LEVELS } from '@/lib/constants'
 import type { Domain, Level } from '@/lib/constants'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { BookOpen, GraduationCap } from 'lucide-react'
+import { BookOpen } from 'lucide-react'
 
 const DOMAIN_LABELS: Record<string, string> = {
   langue: 'Langue',
@@ -93,59 +93,46 @@ export default async function ExercicesPage({
         ))}
       </div>
 
-      {/* CAPES exercises banner */}
-      <Link
-        href="/exercices/capes"
-        className="flex items-center justify-between gap-3 mb-4 p-3 rounded-lg border border-violet-200 bg-violet-50 hover:bg-violet-100 transition-colors"
-      >
-        <div className="flex items-center gap-3">
-          <GraduationCap className="h-4 w-4 text-violet-600 shrink-0" />
-          <span className="text-sm font-medium text-violet-700">82 exercices CAPES</span>
-          <span className="text-xs text-violet-500">composition · version · thème · didactique · entretien…</span>
-        </div>
-        <span className="text-xs text-violet-500 shrink-0">Voir →</span>
-      </Link>
-
       <div className="flex justify-end mb-4">
         <GenerateExerciseButton className="w-full sm:w-auto" />
       </div>
 
       {/* Exercise cards */}
       <div className="grid gap-3">
-        {exercises.map(ex => (
-          <Link key={ex.id} href={`/exercices/${ex.id}`}>
-            <Card className="bg-white border-slate-200 hover:border-violet-300 hover:shadow-sm transition-all cursor-pointer">
-              <CardContent className="p-4 pb-3">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-slate-900 text-sm font-medium line-clamp-2 mb-2">
-                      {ex.question}
-                    </p>
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <Badge variant="outline" className="text-xs text-slate-500 border-slate-200">
-                        {DOMAIN_LABELS[ex.domain] ?? ex.domain}
-                      </Badge>
-                      <Badge variant="outline" className="text-xs text-slate-500 border-slate-200">
-                        {TYPE_LABELS[ex.type] ?? ex.type}
-                      </Badge>
+        {exercises.map(ex => {
+          const status = getExerciseStatus(statsMap.get(ex.id))
+          return (
+            <Link key={ex.id} href={`/exercices/${ex.id}`}>
+              <Card className="bg-white border-slate-200 hover:border-violet-300 hover:shadow-sm transition-all cursor-pointer">
+                <CardContent className="p-4 pb-3">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-slate-900 text-sm font-medium line-clamp-2 mb-2">
+                        {ex.question}
+                      </p>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <Badge variant="outline" className="text-xs text-slate-500 border-slate-200">
+                          {DOMAIN_LABELS[ex.domain] ?? ex.domain}
+                        </Badge>
+                        <Badge variant="outline" className="text-xs text-slate-500 border-slate-200">
+                          {TYPE_LABELS[ex.type] ?? ex.type}
+                        </Badge>
+                      </div>
                     </div>
+                    <Badge className={`text-xs shrink-0 ${LEVEL_COLORS[ex.level]}`}>
+                      {ex.level}
+                    </Badge>
                   </div>
-                  <Badge className={`text-xs shrink-0 ${LEVEL_COLORS[ex.level]}`}>
-                    {ex.level}
-                  </Badge>
-                </div>
-                {(() => {
-                  const status = getExerciseStatus(statsMap.get(ex.id))
-                  return status !== 'not_started' ? (
+                  {status !== 'not_started' && (
                     <div className="mt-3">
                       <ExerciseProgressBar status={status} height={3} />
                     </div>
-                  ) : null
-                })()}
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
+                  )}
+                </CardContent>
+              </Card>
+            </Link>
+          )
+        })}
 
         {exercises.length === 0 && (
           <div className="text-center py-12 text-slate-400">
