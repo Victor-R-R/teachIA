@@ -746,3 +746,25 @@ export async function getCatalogFlashcards(filters: {
   )
   return rows as Flashcard[]
 }
+
+// ─── Compte utilisateur ──────────────────────────────────────────────────────
+
+export async function deleteUser(userId: string): Promise<void> {
+  // Supprimer les données applicatives (ordre : dépendances d'abord)
+  await sql.query(
+    'DELETE FROM conversation_messages WHERE conversation_id IN (SELECT id FROM conversations WHERE user_id = $1)',
+    [userId]
+  )
+  await sql.query('DELETE FROM conversations WHERE user_id = $1', [userId])
+  await sql.query('DELETE FROM exam_sessions WHERE user_id = $1', [userId])
+  await sql.query('DELETE FROM flashcard_reviews WHERE user_id = $1', [userId])
+  await sql.query('DELETE FROM study_sessions WHERE user_id = $1', [userId])
+  await sql.query('DELETE FROM exercise_attempts WHERE user_id = $1', [userId])
+  await sql.query('DELETE FROM user_profile WHERE user_id = $1', [userId])
+  await sql.query('DELETE FROM study_plan WHERE user_id = $1', [userId])
+  // Tables Auth.js (camelCase entre guillemets)
+  await sql.query('DELETE FROM accounts WHERE "userId" = $1', [userId])
+  await sql.query('DELETE FROM sessions WHERE "userId" = $1', [userId])
+  // Enregistrement utilisateur en dernier
+  await sql.query('DELETE FROM users WHERE id = $1', [userId])
+}
