@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS accounts (
 );
 
 CREATE TABLE IF NOT EXISTS sessions (
+  id             TEXT        DEFAULT gen_random_uuid()::text,
   "sessionToken" TEXT        PRIMARY KEY,
   "userId"       TEXT        NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   expires        TIMESTAMPTZ NOT NULL

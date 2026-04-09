@@ -35,6 +35,7 @@ CREATE TABLE accounts (
 );
 
 CREATE TABLE sessions (
+  id             TEXT        DEFAULT gen_random_uuid()::text,
   "sessionToken" TEXT        PRIMARY KEY,
   "userId"       TEXT        NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   expires        TIMESTAMPTZ NOT NULL
