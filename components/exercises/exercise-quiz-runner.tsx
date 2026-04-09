@@ -12,7 +12,7 @@ type Phase = 'answering' | 'feedback' | 'saving' | 'results'
 type Props = {
   title: string
   questions: QuestionItem[]
-  onComplete: (correct: boolean, timeSpent: number) => Promise<void>
+  onComplete: (correct: boolean, timeSpent: number, scoreCorrect: number, scoreTotal: number) => Promise<void>
 }
 
 export function ExerciseQuizRunner({ title, questions, onComplete }: Props) {
@@ -22,6 +22,7 @@ export function ExerciseQuizRunner({ title, questions, onComplete }: Props) {
   const [selected, setSelected] = useState('')
   const [lastCorrect, setLastCorrect] = useState(false)
   const [finalScore, setFinalScore] = useState({ correct: 0, total: 0 })
+  const [saveError, setSaveError] = useState(false)
   const answersRef = useRef<boolean[]>([])
   const startRef = useRef(Date.now())
 
@@ -51,9 +52,15 @@ export function ExerciseQuizRunner({ title, questions, onComplete }: Props) {
       const correctCount = answersRef.current.filter(Boolean).length
       const timeSpent = Math.floor((Date.now() - startRef.current) / 1000)
       const passed = correctCount / total >= 0.6
-      await onComplete(passed, timeSpent)
-      setFinalScore({ correct: correctCount, total })
-      setPhase('results')
+      try {
+        await onComplete(passed, timeSpent, correctCount, total)
+      } catch (e) {
+        console.error('Failed to save exercise result:', e)
+        setSaveError(true)
+      } finally {
+        setFinalScore({ correct: correctCount, total })
+        setPhase('results')
+      }
     }
   }
 
@@ -62,6 +69,7 @@ export function ExerciseQuizRunner({ title, questions, onComplete }: Props) {
     setSelected('')
     setPhase('answering')
     setLastCorrect(false)
+    setSaveError(false)
     answersRef.current = []
     startRef.current = Date.now()
   }
@@ -91,6 +99,11 @@ export function ExerciseQuizRunner({ title, questions, onComplete }: Props) {
           </p>
           <p className="text-slate-500 text-sm mt-1">{Math.round(pct * 100)}% de bonnes réponses</p>
         </div>
+        {saveError && (
+          <p className="text-xs text-amber-600 bg-amber-50 rounded-md px-3 py-2">
+            Résultats non sauvegardés (problème réseau). Tes réponses sont affichées ci-dessus.
+          </p>
+        )}
         <div className="flex flex-col gap-2">
           <Button onClick={handleRetry} variant="outline" className="gap-2">
             <RotateCcw className="h-4 w-4" /> Réessayer
