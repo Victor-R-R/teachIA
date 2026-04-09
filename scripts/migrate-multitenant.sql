@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS accounts (
+  id                  TEXT        DEFAULT gen_random_uuid()::text,
   "userId"            TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   type                TEXT NOT NULL,
   provider            TEXT NOT NULL,
