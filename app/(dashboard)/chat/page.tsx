@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import { ChatInterface } from '@/components/chat/chat-interface'
 import { getConversationMessages } from '@/lib/db'
+import { getEffectiveUserId } from '@/lib/session'
 import { getExerciseById } from '@/lib/exercises'
 import type { UIMessage } from 'ai'
 

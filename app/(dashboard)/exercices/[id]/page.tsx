@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import { notFound } from 'next/navigation'
 import { getExerciseById, saveAttempt, getAttemptStatsByExercises, getExerciseStatus } from '@/lib/db'
+import { getEffectiveUserId } from '@/lib/session'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ExerciseProgressBar } from '@/components/exercises/exercise-progress-bar'
@@ -19,9 +20,10 @@ export default async function ExercisePage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
+  const userId = await getEffectiveUserId()
   const [exercise, statsRows] = await Promise.all([
     getExerciseById(Number(id)),
-    getAttemptStatsByExercises([Number(id)]),
+    getAttemptStatsByExercises(userId, [Number(id)]),
   ])
   if (!exercise) notFound()
   const status = getExerciseStatus(statsRows[0])
@@ -29,7 +31,8 @@ export default async function ExercisePage({
 
   async function handleComplete(correct: boolean, timeSpent?: number) {
     'use server'
-    await saveAttempt({
+    const currentUserId = await getEffectiveUserId()
+    await saveAttempt(currentUserId, {
       exercise_id: exercise!.id,
       correct,
       time_spent: timeSpent ?? null,
