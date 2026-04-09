@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS verification_tokens;
 DROP TABLE IF EXISTS users CASCADE;
 
 CREATE TABLE users (
-  id             TEXT        PRIMARY KEY,
+  id             TEXT        PRIMARY KEY DEFAULT gen_random_uuid()::text,
   name           TEXT,
   email          TEXT        UNIQUE NOT NULL,
   "emailVerified" TIMESTAMPTZ,
