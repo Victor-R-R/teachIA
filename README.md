@@ -19,7 +19,7 @@
 | 📊 | **Statistiques `/stats`** | KPIs globaux, graphique 7 jours, performance par domaine, flashcards et simulacros |
 | 🔒 | **Auth multi-tenant** | Google OAuth (Auth.js v5), sessions DB, isolation par `user_id`, rôles `student`/`superadmin` |
 | 🛡️ | **Panel admin `/admin`** | Dashboard stats, gestion utilisateurs, impersonation, catalogue partagé, réglages globaux |
-| 📱 | **Responsive** | Sidebar sur desktop, header + drawer sur mobile (< 1024px) |
+| 📱 | **Responsive** | Sidebar sur desktop, header + drawer sur mobile (< 1024px) — avatar, nom et email affichés en haut de chaque panneau de navigation |
 
 ---
 

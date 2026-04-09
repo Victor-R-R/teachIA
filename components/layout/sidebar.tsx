@@ -28,19 +28,35 @@ const NAV_ITEMS = [
 interface SidebarProps {
   userRole?: string
   userName?: string | null
+  userEmail?: string | null
+  userImage?: string | null
 }
 
-export function Sidebar({ userRole = 'student', userName }: SidebarProps) {
+export function Sidebar({ userRole = 'student', userName, userEmail, userImage }: SidebarProps) {
   const pathname = usePathname()
   const isSuperAdmin = userRole === 'superadmin'
 
+  const initials = userName
+    ? userName.split(' ').map((n) => n[0]).slice(0, 2).join('').toUpperCase()
+    : '?'
+
   return (
     <aside className="hidden lg:flex flex-col w-52 shrink-0 bg-white border-r border-slate-200 h-full">
-      <div className="px-4 py-5 border-b border-slate-100">
-        {userName && (
-          <p className="text-xs text-slate-400 truncate mb-0.5">{userName}</p>
-        )}
-        <span className="text-violet-600 font-semibold text-lg tracking-tight">teachIA</span>
+      <div className="px-4 py-4 border-b border-slate-100 space-y-3">
+        <div className="flex items-center gap-2.5 min-w-0">
+          {userImage ? (
+            <img src={userImage} alt="" className="w-8 h-8 rounded-full shrink-0 object-cover" />
+          ) : (
+            <div className="w-8 h-8 rounded-full bg-violet-100 text-violet-600 text-xs font-semibold flex items-center justify-center shrink-0">
+              {initials}
+            </div>
+          )}
+          <div className="min-w-0">
+            {userName && <p className="text-sm font-medium text-slate-800 truncate leading-tight">{userName}</p>}
+            {userEmail && <p className="text-xs text-slate-400 truncate leading-tight">{userEmail}</p>}
+          </div>
+        </div>
+        <span className="text-violet-600 font-semibold text-lg tracking-tight block">teachIA</span>
       </div>
       <nav aria-label="Navigation principale" className="flex-1 px-2 py-4 space-y-0.5">
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => (

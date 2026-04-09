@@ -20,12 +20,18 @@ const NAV_ITEMS = [
 interface MobileHeaderProps {
   userRole?: string
   userName?: string | null
+  userEmail?: string | null
+  userImage?: string | null
 }
 
-export function MobileHeader({ userRole = 'student', userName }: MobileHeaderProps) {
+export function MobileHeader({ userRole = 'student', userName, userEmail, userImage }: MobileHeaderProps) {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
   const isSuperAdmin = userRole === 'superadmin'
+
+  const initials = userName
+    ? userName.split(' ').map((n) => n[0]).slice(0, 2).join('').toUpperCase()
+    : '?'
 
   return (
     <>
@@ -41,17 +47,30 @@ export function MobileHeader({ userRole = 'student', userName }: MobileHeaderPro
         </button>
         <div className="mx-auto text-center leading-none">
           {userName && (
-            <p className="text-xs text-slate-400 truncate max-w-32 mx-auto">{userName}</p>
+            <p className="text-xs text-slate-500 font-medium truncate max-w-40 mx-auto">{userName}</p>
+          )}
+          {userEmail && (
+            <p className="text-xs text-slate-400 truncate max-w-40 mx-auto">{userEmail}</p>
           )}
           <span className="text-violet-600 font-semibold text-lg tracking-tight">teachIA</span>
         </div>
       </header>
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent side="left" className="w-52 p-0">
-          <SheetHeader className="px-4 py-5 border-b border-slate-100">
-            {userName && (
-              <p className="text-xs text-slate-400 truncate text-left">{userName}</p>
-            )}
+          <SheetHeader className="px-4 py-4 border-b border-slate-100 space-y-3">
+            <div className="flex items-center gap-2.5 min-w-0">
+              {userImage ? (
+                <img src={userImage} alt="" className="w-8 h-8 rounded-full shrink-0 object-cover" />
+              ) : (
+                <div className="w-8 h-8 rounded-full bg-violet-100 text-violet-600 text-xs font-semibold flex items-center justify-center shrink-0">
+                  {initials}
+                </div>
+              )}
+              <div className="min-w-0 text-left">
+                {userName && <p className="text-sm font-medium text-slate-800 truncate leading-tight">{userName}</p>}
+                {userEmail && <p className="text-xs text-slate-400 truncate leading-tight">{userEmail}</p>}
+              </div>
+            </div>
             <SheetTitle className="text-violet-600 font-semibold text-lg tracking-tight text-left">
               teachIA
             </SheetTitle>
