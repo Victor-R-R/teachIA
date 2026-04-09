@@ -55,24 +55,34 @@ export function ExerciseLacunaire({ id, question, answer, explanation, onComplet
     )
   }
 
-  if (parts.length !== 2) {
-    return <p className="text-red-400 text-sm">Format de question invalide.</p>
-  }
-
   return (
     <div className="space-y-4">
-      <div className="text-slate-900 text-base font-medium leading-relaxed flex flex-wrap items-center gap-2">
-        {parts[0]}
-        <Input
-          value={value}
-          onChange={e => setValue(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && handleSubmit()}
-          className="inline-block w-40 bg-white border-slate-300 text-slate-900 h-8 px-2 text-sm"
-          placeholder="votre réponse"
-          autoFocus
-        />
-        {parts[1]}
-      </div>
+      {parts.length === 2 ? (
+        <div className="text-slate-900 text-base font-medium leading-relaxed flex flex-wrap items-center gap-2">
+          {parts[0]}
+          <Input
+            value={value}
+            onChange={e => setValue(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && handleSubmit()}
+            className="inline-block w-40 bg-white border-slate-300 text-slate-900 h-8 px-2 text-sm"
+            placeholder="votre réponse"
+            autoFocus
+          />
+          {parts[1]}
+        </div>
+      ) : (
+        <div className="space-y-3">
+          <p className="text-slate-900 text-base font-medium leading-relaxed">{question}</p>
+          <Input
+            value={value}
+            onChange={e => setValue(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && handleSubmit()}
+            className="w-full bg-white border-slate-300 text-slate-900 text-sm"
+            placeholder="votre réponse"
+            autoFocus
+          />
+        </div>
+      )}
       <Button
         onClick={handleSubmit}
         disabled={!value.trim()}

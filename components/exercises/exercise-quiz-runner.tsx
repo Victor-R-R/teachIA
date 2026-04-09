@@ -178,20 +178,34 @@ export function ExerciseQuizRunner({ title, questions, onComplete }: Props) {
         </>
       )}
 
-      {q.type === 'lacunaire' && lacunaireparts && lacunaireparts.length === 2 && (
+      {q.type === 'lacunaire' && (
         <div className="space-y-3">
-          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-base font-medium text-slate-900 leading-relaxed">
-            <span>{lacunaireparts[0]}</span>
-            <Input
-              value={selected}
-              onChange={e => setSelected(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleSubmit()}
-              className="inline-block w-36 h-8 px-2 text-sm"
-              placeholder="votre réponse"
-              autoFocus
-            />
-            <span>{lacunaireparts[1]}</span>
-          </div>
+          {lacunaireparts && lacunaireparts.length === 2 ? (
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-base font-medium text-slate-900 leading-relaxed">
+              <span>{lacunaireparts[0]}</span>
+              <Input
+                value={selected}
+                onChange={e => setSelected(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && handleSubmit()}
+                className="inline-block w-36 h-8 px-2 text-sm"
+                placeholder="votre réponse"
+                autoFocus
+              />
+              <span>{lacunaireparts[1]}</span>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              <p className="text-slate-900 text-base font-medium leading-relaxed">{q.question}</p>
+              <Input
+                value={selected}
+                onChange={e => setSelected(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && handleSubmit()}
+                className="w-full text-sm"
+                placeholder="votre réponse"
+                autoFocus
+              />
+            </div>
+          )}
         </div>
       )}
 
