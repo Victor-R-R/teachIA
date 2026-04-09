@@ -8,6 +8,8 @@ vi.mock('@neondatabase/serverless', () => ({
   }),
 }))
 
+const TEST_USER = 'user-test-123'
+
 describe('db helpers', () => {
   it('getExercises builds query without filters', async () => {
     vi.resetModules()
@@ -17,7 +19,7 @@ describe('db helpers', () => {
       neon: vi.fn(() => mockSql),
     }))
     const { getExercises } = await import('./db')
-    await getExercises()
+    await getExercises(TEST_USER)
     // test passes if no error thrown
     expect(true).toBe(true)
   })
@@ -43,7 +45,7 @@ describe('conversation helpers', () => {
     mockSql.query = mockSql
     vi.doMock('@neondatabase/serverless', () => ({ neon: vi.fn(() => mockSql) }))
     const { createConversation } = await import('./db')
-    await createConversation('conv-1')
+    await createConversation(TEST_USER, 'conv-1')
     expect(mockSql.query).toHaveBeenCalledWith(
       expect.stringContaining('INSERT INTO conversations'),
       expect.arrayContaining(['conv-1'])
@@ -70,7 +72,7 @@ describe('conversation helpers', () => {
     mockSql.query = mockSql
     vi.doMock('@neondatabase/serverless', () => ({ neon: vi.fn(() => mockSql) }))
     const { getConversations } = await import('./db')
-    const result = await getConversations()
+    const result = await getConversations(TEST_USER)
     expect(result).toEqual([row])
   })
 
@@ -106,7 +108,7 @@ describe('gamification helpers', () => {
     mockSql.query = mockSql
     vi.doMock('@neondatabase/serverless', () => ({ neon: vi.fn(() => mockSql) }))
     const { getUserProfile } = await import('./db')
-    const result = await getUserProfile()
+    const result = await getUserProfile(TEST_USER)
     expect(result).toBeNull()
   })
 
@@ -117,7 +119,7 @@ describe('gamification helpers', () => {
     mockSql.query = mockSql
     vi.doMock('@neondatabase/serverless', () => ({ neon: vi.fn(() => mockSql) }))
     const { getUserProfile } = await import('./db')
-    const result = await getUserProfile()
+    const result = await getUserProfile(TEST_USER)
     expect(result).toEqual(profile)
   })
 
@@ -127,7 +129,7 @@ describe('gamification helpers', () => {
     mockSql.query = mockSql
     vi.doMock('@neondatabase/serverless', () => ({ neon: vi.fn(() => mockSql) }))
     const { getTodayMinutes } = await import('./db')
-    const result = await getTodayMinutes()
+    const result = await getTodayMinutes(TEST_USER)
     expect(result).toBe(0)
   })
 
@@ -137,7 +139,7 @@ describe('gamification helpers', () => {
     mockSql.query = mockSql
     vi.doMock('@neondatabase/serverless', () => ({ neon: vi.fn(() => mockSql) }))
     const { getTodayMinutes } = await import('./db')
-    const result = await getTodayMinutes()
+    const result = await getTodayMinutes(TEST_USER)
     expect(result).toBe(37)
   })
 
@@ -148,7 +150,7 @@ describe('gamification helpers', () => {
     mockSql.query = mockSql
     vi.doMock('@neondatabase/serverless', () => ({ neon: vi.fn(() => mockSql) }))
     const { getInProgressExercises } = await import('./db')
-    const result = await getInProgressExercises()
+    const result = await getInProgressExercises(TEST_USER)
     expect(result).toEqual([row])
   })
 
@@ -159,7 +161,7 @@ describe('gamification helpers', () => {
     mockSql.query = mockSql
     vi.doMock('@neondatabase/serverless', () => ({ neon: vi.fn(() => mockSql) }))
     const { getInProgressSimulations } = await import('./db')
-    const result = await getInProgressSimulations()
+    const result = await getInProgressSimulations(TEST_USER)
     expect(result).toEqual([row])
   })
 
@@ -169,7 +171,7 @@ describe('gamification helpers', () => {
     mockSql.query = mockSql
     vi.doMock('@neondatabase/serverless', () => ({ neon: vi.fn(() => mockSql) }))
     const { saveAttempt } = await import('./db')
-    await saveAttempt({ exercise_id: 1, correct: false, time_spent: null, exercise_level: 'B', exercise_domain: 'langue' })
+    await saveAttempt(TEST_USER, { exercise_id: 1, correct: false, time_spent: null, exercise_level: 'B', exercise_domain: 'langue' })
     const calls = mockSql.query.mock.calls.map((c: unknown[]) => (c[0] as string).trim())
     expect(calls.some((q: string) => q.includes('UPDATE user_profile') && q.includes('xp'))).toBe(false)
   })
@@ -183,7 +185,7 @@ describe('gamification helpers', () => {
     mockSql.query = mockSql
     vi.doMock('@neondatabase/serverless', () => ({ neon: vi.fn(() => mockSql) }))
     const { saveAttempt } = await import('./db')
-    await saveAttempt({ exercise_id: 1, correct: true, time_spent: null, exercise_level: 'B', exercise_domain: 'langue' })
+    await saveAttempt(TEST_USER, { exercise_id: 1, correct: true, time_spent: null, exercise_level: 'B', exercise_domain: 'langue' })
     const calls = mockSql.query.mock.calls.map((c: unknown[]) => (c[0] as string).trim())
     expect(calls.some((q: string) => q.includes('UPDATE user_profile') && q.includes('xp = xp +'))).toBe(true)
   })
@@ -197,7 +199,7 @@ describe('gamification helpers', () => {
     mockSql.query = mockSql
     vi.doMock('@neondatabase/serverless', () => ({ neon: vi.fn(() => mockSql) }))
     const { saveAttempt } = await import('./db')
-    await saveAttempt({ exercise_id: 1, correct: true, time_spent: 120, exercise_level: 'C', exercise_domain: 'langue' })
+    await saveAttempt(TEST_USER, { exercise_id: 1, correct: true, time_spent: 120, exercise_level: 'C', exercise_domain: 'langue' })
     const calls = mockSql.query.mock.calls.map((c: unknown[]) => (c[0] as string).trim())
     expect(calls.some((q: string) => q.includes('INSERT INTO study_sessions'))).toBe(true)
   })
@@ -216,7 +218,7 @@ describe('domain level progression (dashboard flow)', () => {
     mockSql.query = mockSql
     vi.doMock('@neondatabase/serverless', () => ({ neon: vi.fn(() => mockSql) }))
     const { saveAttempt } = await import('./db')
-    await saveAttempt({ exercise_id: 1, correct: true, time_spent: null, exercise_level: 'B', exercise_domain: 'langue' })
+    await saveAttempt(TEST_USER, { exercise_id: 1, correct: true, time_spent: null, exercise_level: 'B', exercise_domain: 'langue' })
     return mockSql.query.mock.calls.map((c: unknown[]) => ({ sql: (c[0] as string).trim(), params: c[1] }))
   }
 
@@ -257,7 +259,7 @@ describe('domain level progression (dashboard flow)', () => {
     mockSql.query = mockSql
     vi.doMock('@neondatabase/serverless', () => ({ neon: vi.fn(() => mockSql) }))
     const { saveAttempt } = await import('./db')
-    await saveAttempt({ exercise_id: 2, correct: true, time_spent: null, exercise_level: 'A', exercise_domain: 'civi_espagne' })
+    await saveAttempt(TEST_USER, { exercise_id: 2, correct: true, time_spent: null, exercise_level: 'A', exercise_domain: 'civi_espagne' })
     const calls = mockSql.query.mock.calls.map((c: unknown[]) => (c[0] as string).trim())
     expect(calls.some((q: string) => q.includes('level_civi'))).toBe(true)
   })
@@ -272,7 +274,7 @@ describe('domain level progression (dashboard flow)', () => {
     mockSql.query = mockSql
     vi.doMock('@neondatabase/serverless', () => ({ neon: vi.fn(() => mockSql) }))
     const { saveAttempt } = await import('./db')
-    await saveAttempt({ exercise_id: 3, correct: true, time_spent: null, exercise_level: 'B', exercise_domain: 'didactique' })
+    await saveAttempt(TEST_USER, { exercise_id: 3, correct: true, time_spent: null, exercise_level: 'B', exercise_domain: 'didactique' })
     const calls = mockSql.query.mock.calls.map((c: unknown[]) => (c[0] as string).trim())
     expect(calls.some((q: string) => q.includes('level_didactique'))).toBe(true)
   })

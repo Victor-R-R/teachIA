@@ -49,34 +49,34 @@ export function getExerciseStatus(stats: AttemptStats | undefined): ExerciseStat
   return 'in_progress'
 }
 
-export async function getAttemptStatsByExercises(ids: number[]): Promise<AttemptStats[]> {
+export async function getAttemptStatsByExercises(userId: string, ids: number[]): Promise<AttemptStats[]> {
   if (ids.length === 0) return []
   const rows = await sql.query(
     `SELECT exercise_id, COUNT(*)::int AS attempt_count, bool_or(correct) AS has_correct
      FROM exercise_attempts
-     WHERE exercise_id = ANY($1::int[])
+     WHERE user_id = $1 AND exercise_id = ANY($2::int[])
      GROUP BY exercise_id`,
-    [ids]
+    [userId, ids]
   )
   return rows as AttemptStats[]
 }
 
-export async function getExercises(filters: {
+export async function getExercises(userId: string, filters: {
   domain?: Domain
   level?: Level
   type?: ExerciseType
   limit?: number
 } = {}): Promise<Exercise[]> {
   const { domain, level, type, limit = 20 } = filters
-  const conditions: string[] = []
-  const params: unknown[] = []
-  let i = 1
+  const conditions: string[] = ['(user_id IS NULL OR user_id = $1)']
+  const params: unknown[] = [userId]
+  let i = 2
 
   if (domain) { conditions.push(`domain = $${i++}`); params.push(domain) }
   if (level) { conditions.push(`level = $${i++}`); params.push(level) }
   if (type) { conditions.push(`type = $${i++}`); params.push(type) }
 
-  const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''
+  const where = `WHERE ${conditions.join(' AND ')}`
   const rows = await sql.query(
     `SELECT * FROM exercises ${where} ORDER BY RANDOM() LIMIT $${i}`,
     [...params, limit]
@@ -89,7 +89,7 @@ export async function getExerciseById(id: number): Promise<Exercise | null> {
   return (rows[0] as Exercise) ?? null
 }
 
-export async function saveAttempt(attempt: {
+export async function saveAttempt(userId: string, attempt: {
   exercise_id: number
   correct: boolean
   time_spent: number | null
@@ -100,8 +100,8 @@ export async function saveAttempt(attempt: {
 
   // 1. Enregistrer la tentative
   await sql.query(
-    'INSERT INTO exercise_attempts (exercise_id, correct, time_spent) VALUES ($1, $2, $3)',
-    [exercise_id, correct, time_spent]
+    'INSERT INTO exercise_attempts (user_id, exercise_id, correct, time_spent) VALUES ($1, $2, $3, $4)',
+    [userId, exercise_id, correct, time_spent]
   )
 
   // 2. Mettre à jour study_sessions (si durée > 0)
@@ -109,13 +109,13 @@ export async function saveAttempt(attempt: {
     const durationMin = Math.floor(time_spent / 60)
     if (durationMin > 0) {
       await sql.query(
-        `INSERT INTO study_sessions (date, domain, duration_min, exercises_done, correct_count)
-         VALUES (CURRENT_DATE, $1, $2, 1, $3)
-         ON CONFLICT (date, domain) DO UPDATE SET
+        `INSERT INTO study_sessions (date, domain, user_id, duration_min, exercises_done, correct_count)
+         VALUES (CURRENT_DATE, $1, $2, $3, 1, $4)
+         ON CONFLICT (date, domain, user_id) DO UPDATE SET
            duration_min = study_sessions.duration_min + EXCLUDED.duration_min,
            exercises_done = study_sessions.exercises_done + 1,
            correct_count = study_sessions.correct_count + EXCLUDED.correct_count`,
-        [exercise_domain, durationMin, correct ? 1 : 0]
+        [exercise_domain, userId, durationMin, correct ? 1 : 0]
       )
     }
   }
@@ -127,15 +127,15 @@ export async function saveAttempt(attempt: {
   const xpGain: Record<'A' | 'B' | 'C', number> = { A: 30, B: 20, C: 10 }
   const gain = xpGain[exercise_level]
   const rows = await sql.query(
-    'UPDATE user_profile SET xp = xp + $1 RETURNING xp, level_xp',
-    [gain]
+    'UPDATE user_profile SET xp = xp + $1 WHERE user_id = $2 RETURNING xp, level_xp',
+    [gain, userId]
   )
   if (rows.length === 0) return
 
   const { xp: newXp, level_xp: currentLevel } = rows[0] as { xp: number; level_xp: number }
   const nextThreshold = (currentLevel + 1) * (currentLevel + 1) * 100
   if (newXp >= nextThreshold) {
-    await sql.query('UPDATE user_profile SET level_xp = level_xp + 1')
+    await sql.query('UPDATE user_profile SET level_xp = level_xp + 1 WHERE user_id = $1', [userId])
   }
 
   // 5. Recalculer le niveau A/B/C du domaine
@@ -160,26 +160,26 @@ export async function saveAttempt(attempt: {
        SELECT ea.correct
        FROM exercise_attempts ea
        JOIN exercises e ON e.id = ea.exercise_id
-       WHERE e.domain = ANY($1)
+       WHERE e.domain = ANY($1) AND ea.user_id = $2
        ORDER BY ea.timestamp DESC
        LIMIT 20
      ) ea`,
-    [domainGroup]
+    [domainGroup, userId]
   )
 
   const { total, correct_count } = statRows[0] as { total: number; correct_count: number }
   if (total >= 5) {
     const pct = correct_count / total
     const newLevel = pct >= 0.8 ? 'C' : pct >= 0.5 ? 'B' : 'A'
-    await sql.query(`UPDATE user_profile SET ${levelColumn} = $1`, [newLevel])
+    await sql.query(`UPDATE user_profile SET ${levelColumn} = $1 WHERE user_id = $2`, [newLevel, userId])
   }
 }
 
-export async function saveExercise(exercise: Omit<Exercise, 'id' | 'created_at'>): Promise<Exercise> {
+export async function saveExercise(userId: string | null, exercise: Omit<Exercise, 'id' | 'created_at'>): Promise<Exercise> {
   const rows = await sql.query(
-    `INSERT INTO exercises (theme, domain, type, question, options, answer, explanation, level, source)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
-    [exercise.theme, exercise.domain, exercise.type, exercise.question,
+    `INSERT INTO exercises (user_id, theme, domain, type, question, options, answer, explanation, level, source)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
+    [userId, exercise.theme, exercise.domain, exercise.type, exercise.question,
      exercise.options, exercise.answer, exercise.explanation,
      exercise.level, exercise.source]
   )
@@ -202,10 +202,10 @@ export type ConversationMessage = {
   created_at: string
 }
 
-export async function createConversation(id: string): Promise<void> {
+export async function createConversation(userId: string, id: string): Promise<void> {
   await sql.query(
-    'INSERT INTO conversations (id) VALUES ($1) ON CONFLICT DO NOTHING',
-    [id]
+    'INSERT INTO conversations (id, user_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
+    [id, userId]
   )
 }
 
@@ -231,14 +231,16 @@ export async function updateConversationTitle(id: string, title: string): Promis
   )
 }
 
-export async function getConversations(): Promise<ConversationSummary[]> {
+export async function getConversations(userId: string): Promise<ConversationSummary[]> {
   const rows = await sql.query(
     `SELECT c.id, c.title, c.created_at, c.updated_at,
             COUNT(m.id)::text AS message_count
      FROM conversations c
      LEFT JOIN conversation_messages m ON m.conversation_id = c.id
+     WHERE c.user_id = $1
      GROUP BY c.id
-     ORDER BY c.updated_at DESC`
+     ORDER BY c.updated_at DESC`,
+    [userId]
   )
   return rows as ConversationSummary[]
 }
@@ -304,20 +306,21 @@ export type ExamSession = {
   timestamp: string
 }
 
-export async function getUserProfile(): Promise<UserProfile | null> {
-  const rows = await sql.query('SELECT * FROM user_profile LIMIT 1')
+export async function getUserProfile(userId: string): Promise<UserProfile | null> {
+  const rows = await sql.query('SELECT * FROM user_profile WHERE user_id = $1', [userId])
   return (rows[0] as UserProfile) ?? null
 }
 
-export async function getTodayMinutes(): Promise<number> {
+export async function getTodayMinutes(userId: string): Promise<number> {
   const rows = await sql.query(
     `SELECT COALESCE(SUM(duration_min), 0)::int AS total_min
-     FROM study_sessions WHERE date = CURRENT_DATE`,
+     FROM study_sessions WHERE user_id = $1 AND date = CURRENT_DATE`,
+    [userId]
   )
   return (rows[0] as { total_min: number | null }).total_min ?? 0
 }
 
-export async function getInProgressExercises(): Promise<InProgressExercise[]> {
+export async function getInProgressExercises(userId: string): Promise<InProgressExercise[]> {
   const rows = await sql.query(
     `WITH stats AS (
        SELECT exercise_id,
@@ -325,6 +328,7 @@ export async function getInProgressExercises(): Promise<InProgressExercise[]> {
               bool_or(correct) AS has_correct,
               MAX(timestamp) AS last_attempt
        FROM exercise_attempts
+       WHERE user_id = $1
        GROUP BY exercise_id
      )
      SELECT e.id, e.question, e.type, e.domain, e.level, s.attempt_count
@@ -333,19 +337,21 @@ export async function getInProgressExercises(): Promise<InProgressExercise[]> {
      WHERE NOT s.has_correct
      ORDER BY s.last_attempt DESC
      LIMIT 5`,
+    [userId]
   )
   return rows as InProgressExercise[]
 }
 
-export async function getInProgressSimulations(): Promise<ExamSession[]> {
+export async function getInProgressSimulations(userId: string): Promise<ExamSession[]> {
   const rows = await sql.query(
-    `SELECT * FROM exam_sessions WHERE ai_feedback IS NULL ORDER BY timestamp DESC LIMIT 3`,
+    `SELECT * FROM exam_sessions WHERE user_id = $1 AND ai_feedback IS NULL ORDER BY timestamp DESC LIMIT 3`,
+    [userId]
   )
   return rows as ExamSession[]
 }
 
-export async function updateDailyGoal(minutes: number): Promise<void> {
-  await sql.query('UPDATE user_profile SET daily_goal_min = $1', [minutes])
+export async function updateDailyGoal(userId: string, minutes: number): Promise<void> {
+  await sql.query('UPDATE user_profile SET daily_goal_min = $1 WHERE user_id = $2', [minutes, userId])
 }
 
 const XP_DECAY_PER_DAY = 10
@@ -354,9 +360,10 @@ const XP_DECAY_PER_DAY = 10
  * Déduit du XP pour chaque jour sans activité depuis la dernière vérification.
  * À appeler au chargement du dashboard. Retourne le XP perdu (0 si aucun).
  */
-export async function applyXpDecay(): Promise<number> {
+export async function applyXpDecay(userId: string): Promise<number> {
   const profileRows = await sql.query(
-    'SELECT last_checked_date FROM user_profile LIMIT 1'
+    'SELECT last_checked_date FROM user_profile WHERE user_id = $1',
+    [userId]
   )
   if (profileRows.length === 0) return 0
 
@@ -380,20 +387,20 @@ export async function applyXpDecay(): Promise<number> {
        '1 day'::interval
      ) AS d(day)
      WHERE NOT EXISTS (
-       SELECT 1 FROM study_sessions ss WHERE ss.date = d.day::date
+       SELECT 1 FROM study_sessions ss WHERE ss.date = d.day::date AND ss.user_id = $2
      )`,
-    [last_checked_date ?? null]
+    [last_checked_date ?? null, userId]
   )
 
   const inactiveDays = (inactiveRows[0] as { inactive_days: number }).inactive_days
 
   // Toujours mettre à jour la date de vérification
-  await sql.query('UPDATE user_profile SET last_checked_date = CURRENT_DATE')
+  await sql.query('UPDATE user_profile SET last_checked_date = CURRENT_DATE WHERE user_id = $1', [userId])
 
   if (inactiveDays === 0) return 0
 
   const xpLost = inactiveDays * XP_DECAY_PER_DAY
-  await sql.query('UPDATE user_profile SET xp = GREATEST(0, xp - $1)', [xpLost])
+  await sql.query('UPDATE user_profile SET xp = GREATEST(0, xp - $1) WHERE user_id = $2', [xpLost, userId])
 
   return xpLost
 }
@@ -417,20 +424,20 @@ export type FlashcardReviewStat = {
   last_known: boolean | null
 }
 
-export async function getFlashcards(filters: {
+export async function getFlashcards(userId: string, filters: {
   domain?: Domain
   level?: Level
   limit?: number
 } = {}): Promise<Flashcard[]> {
   const { domain, level, limit = 200 } = filters
-  const conditions: string[] = []
-  const params: unknown[] = []
-  let i = 1
+  const conditions: string[] = ['(user_id IS NULL OR user_id = $1)']
+  const params: unknown[] = [userId]
+  let i = 2
 
   if (domain) { conditions.push(`domain = $${i++}`); params.push(domain) }
   if (level) { conditions.push(`level = $${i++}`); params.push(level) }
 
-  const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''
+  const where = `WHERE ${conditions.join(' AND ')}`
   const rows = await sql.query(
     `SELECT * FROM flashcards ${where} ORDER BY created_at ASC LIMIT $${i}`,
     [...params, limit]
@@ -439,27 +446,30 @@ export async function getFlashcards(filters: {
 }
 
 export async function saveFlashcard(
+  userId: string | null,
   card: Omit<Flashcard, 'id' | 'created_at'>
 ): Promise<Flashcard> {
   const rows = await sql.query(
-    `INSERT INTO flashcards (front, back, domain, level, source)
-     VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-    [card.front, card.back, card.domain, card.level, card.source]
+    `INSERT INTO flashcards (user_id, front, back, domain, level, source)
+     VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+    [userId, card.front, card.back, card.domain, card.level, card.source]
   )
   return rows[0] as Flashcard
 }
 
 export async function saveFlashcardReview(
+  userId: string,
   flashcard_id: number,
   known: boolean
 ): Promise<void> {
   await sql.query(
-    'INSERT INTO flashcard_reviews (flashcard_id, known) VALUES ($1, $2)',
-    [flashcard_id, known]
+    'INSERT INTO flashcard_reviews (user_id, flashcard_id, known) VALUES ($1, $2, $3)',
+    [userId, flashcard_id, known]
   )
 }
 
 export async function getFlashcardReviewStats(
+  userId: string,
   ids: number[]
 ): Promise<FlashcardReviewStat[]> {
   if (ids.length === 0) return []
@@ -470,9 +480,9 @@ export async function getFlashcardReviewStats(
        SUM(CASE WHEN known THEN 1 ELSE 0 END)::int AS known_count,
        (array_agg(known ORDER BY timestamp DESC))[1] AS last_known
      FROM flashcard_reviews
-     WHERE flashcard_id = ANY($1::int[])
+     WHERE user_id = $1 AND flashcard_id = ANY($2::int[])
      GROUP BY flashcard_id`,
-    [ids]
+    [userId, ids]
   )
   return rows as FlashcardReviewStat[]
 }
@@ -480,14 +490,15 @@ export async function getFlashcardReviewStats(
 // ─── Simulacros ───────────────────────────────────────────────────────────────
 
 export async function createSimulacro(
+  userId: string,
   type: string,
   title: string,
   subject: string
 ): Promise<ExamSession> {
   const rows = await sql.query(
-    `INSERT INTO exam_sessions (type, title, subject, content)
-     VALUES ($1, $2, $3, '') RETURNING *`,
-    [type, title, subject]
+    `INSERT INTO exam_sessions (user_id, type, title, subject, content)
+     VALUES ($1, $2, $3, $4, '') RETURNING *`,
+    [userId, type, title, subject]
   )
   return rows[0] as ExamSession
 }
@@ -513,13 +524,14 @@ export async function saveSimulacroFeedback(
   )
 }
 
-export async function getSimulacros(): Promise<ExamSession[]> {
+export async function getSimulacros(userId: string): Promise<ExamSession[]> {
   const rows = await sql.query(
     `SELECT id, type, title, subject, content, ai_feedback, score, timestamp
      FROM exam_sessions
-     WHERE subject IS NOT NULL
+     WHERE user_id = $1 AND subject IS NOT NULL
      ORDER BY timestamp DESC
-     LIMIT 50`
+     LIMIT 50`,
+    [userId]
   )
   return rows as ExamSession[]
 }
@@ -564,16 +576,19 @@ export type FlashcardGlobalStats = {
   known_count: number
 }
 
-export async function getGlobalStats(): Promise<GlobalStats> {
+export async function getGlobalStats(userId: string): Promise<GlobalStats> {
   const [attemptsRow, studyRow] = await Promise.all([
     sql.query(
       `SELECT COUNT(*)::int AS total_attempts,
               SUM(CASE WHEN correct THEN 1 ELSE 0 END)::int AS correct_count,
               COUNT(DISTINCT exercise_id)::int AS unique_exercises
-       FROM exercise_attempts`
+       FROM exercise_attempts
+       WHERE user_id = $1`,
+      [userId]
     ),
     sql.query(
-      `SELECT COALESCE(SUM(duration_min), 0)::int AS total_min FROM study_sessions`
+      `SELECT COALESCE(SUM(duration_min), 0)::int AS total_min FROM study_sessions WHERE user_id = $1`,
+      [userId]
     ),
   ])
   const a = attemptsRow[0] as { total_attempts: number; correct_count: number; unique_exercises: number }
@@ -585,39 +600,43 @@ export async function getGlobalStats(): Promise<GlobalStats> {
   }
 }
 
-export async function getDomainStats(): Promise<DomainStat[]> {
+export async function getDomainStats(userId: string): Promise<DomainStat[]> {
   const rows = await sql.query(
     `SELECT e.domain,
             COUNT(ea.id)::int AS attempts,
             SUM(CASE WHEN ea.correct THEN 1 ELSE 0 END)::int AS correct_count
      FROM exercise_attempts ea
      JOIN exercises e ON e.id = ea.exercise_id
+     WHERE ea.user_id = $1
      GROUP BY e.domain
-     ORDER BY e.domain`
+     ORDER BY e.domain`,
+    [userId]
   )
   return rows as DomainStat[]
 }
 
-export async function getDailyActivity(days: number = 7): Promise<DailyActivity[]> {
+export async function getDailyActivity(userId: string, days: number = 7): Promise<DailyActivity[]> {
   const rows = await sql.query(
     `SELECT date::text,
             SUM(duration_min)::int AS duration_min,
             SUM(exercises_done)::int AS exercises_done
      FROM study_sessions
-     WHERE date >= CURRENT_DATE - INTERVAL '${days - 1} days'
+     WHERE user_id = $1 AND date >= CURRENT_DATE - INTERVAL '${days - 1} days'
      GROUP BY date
-     ORDER BY date`
+     ORDER BY date`,
+    [userId]
   )
   return rows as DailyActivity[]
 }
 
-export async function getSimulacroGlobalStats(): Promise<SimulacroGlobalStats> {
+export async function getSimulacroGlobalStats(userId: string): Promise<SimulacroGlobalStats> {
   const rows = await sql.query(
     `SELECT COUNT(*)::int AS total,
             COUNT(CASE WHEN ai_feedback IS NOT NULL THEN 1 END)::int AS corrected,
             ROUND(AVG(score)::numeric, 1) AS avg_score
      FROM exam_sessions
-     WHERE subject IS NOT NULL`
+     WHERE user_id = $1 AND subject IS NOT NULL`,
+    [userId]
   )
   const r = rows[0] as SimulacroGlobalStats
   return {
@@ -627,15 +646,15 @@ export async function getSimulacroGlobalStats(): Promise<SimulacroGlobalStats> {
   }
 }
 
-export async function createUserProfile(data: {
+export async function createUserProfile(userId: string, data: {
   level_langue: 'A' | 'B' | 'C'
   level_civi: 'A' | 'B' | 'C'
   level_didactique: 'A' | 'B' | 'C'
 }): Promise<UserProfile> {
   const rows = await sql.query(
-    `INSERT INTO user_profile (level_langue, level_civi, level_didactique)
-     VALUES ($1, $2, $3) RETURNING *`,
-    [data.level_langue, data.level_civi, data.level_didactique]
+    `INSERT INTO user_profile (user_id, level_langue, level_civi, level_didactique)
+     VALUES ($1, $2, $3, $4) RETURNING *`,
+    [userId, data.level_langue, data.level_civi, data.level_didactique]
   )
   return rows[0] as UserProfile
 }
@@ -649,7 +668,7 @@ export type StudyPlanItem = {
   target_date: string
 }
 
-export async function saveStudyPlan(items: {
+export async function saveStudyPlan(userId: string, items: {
   week_number: number
   domain: string
   objective: string
@@ -657,17 +676,19 @@ export async function saveStudyPlan(items: {
 }[]): Promise<void> {
   for (const item of items) {
     await sql.query(
-      `INSERT INTO study_plan (week_number, domain, objective, target_date) VALUES ($1, $2, $3, $4)`,
-      [item.week_number, item.domain, item.objective, item.target_date]
+      `INSERT INTO study_plan (user_id, week_number, domain, objective, target_date) VALUES ($1, $2, $3, $4, $5)`,
+      [userId, item.week_number, item.domain, item.objective, item.target_date]
     )
   }
 }
 
-export async function getFlashcardGlobalStats(): Promise<FlashcardGlobalStats> {
+export async function getFlashcardGlobalStats(userId: string): Promise<FlashcardGlobalStats> {
   const rows = await sql.query(
     `SELECT COUNT(*)::int AS total_reviews,
             SUM(CASE WHEN known THEN 1 ELSE 0 END)::int AS known_count
-     FROM flashcard_reviews`
+     FROM flashcard_reviews
+     WHERE user_id = $1`,
+    [userId]
   )
   const r = rows[0] as FlashcardGlobalStats
   return {
