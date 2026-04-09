@@ -3,18 +3,20 @@ export const dynamic = 'force-dynamic'
 import Link from 'next/link'
 import { Target } from 'lucide-react'
 import { getUserProfile, getTodayMinutes, getInProgressExercises, getInProgressSimulations, applyXpDecay } from '@/lib/db'
+import { getEffectiveUserId } from '@/lib/session'
 import { XPLevelCard } from '@/components/dashboard/xp-level-card'
 import { DomainLevelsCard } from '@/components/dashboard/domain-levels-card'
 import { DailyGoalCard } from '@/components/dashboard/daily-goal-card'
 import { InProgressList } from '@/components/dashboard/in-progress-list'
 
 export default async function DashboardPage() {
-  const xpLost = await applyXpDecay()
+  const userId = await getEffectiveUserId()
+  const xpLost = await applyXpDecay(userId)
   const [profile, todayMin, inProgressExercises, inProgressSims] = await Promise.all([
-    getUserProfile(),
-    getTodayMinutes(),
-    getInProgressExercises(),
-    getInProgressSimulations(),
+    getUserProfile(userId),
+    getTodayMinutes(userId),
+    getInProgressExercises(userId),
+    getInProgressSimulations(userId),
   ])
 
   // Onboarding CTA
