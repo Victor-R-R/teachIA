@@ -42,7 +42,7 @@ export async function getUserDetail(userId: string): Promise<UserDetail | null> 
   const stats = await sql`SELECT COUNT(*) as total, COUNT(*) FILTER (WHERE correct) as correct FROM exercise_attempts WHERE user_id = ${userId}`
   return {
     user: users[0] as UserDetail['user'],
-    profile: profiles[0] ?? null,
+    profile: (profiles[0] as UserDetail['profile']) ?? null,
     stats: { total: Number(stats[0].total), correct: Number(stats[0].correct) },
   }
 }
