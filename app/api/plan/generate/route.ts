@@ -2,6 +2,7 @@ import { generateText, Output } from 'ai'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { createUserProfile, saveStudyPlan } from '@/lib/db'
+import { getEffectiveUserId } from '@/lib/session'
 
 const PlanWeekSchema = z.object({
   week_number: z.number().int().positive(),
@@ -48,6 +49,8 @@ export async function POST(req: NextRequest) {
   })
 
   try {
+    const userId = await getEffectiveUserId()
+
     const { output } = await generateText({
       model: 'anthropic/claude-sonnet-4.6',
       output: Output.object({ schema: PlanSchema }),
@@ -72,7 +75,7 @@ Répartis les domaines de façon équilibrée mais en accordant plus de semaines
     })
 
     // Sauvegarder le profil utilisateur
-    await createUserProfile({ level_langue, level_civi, level_didactique })
+    await createUserProfile(userId, { level_langue, level_civi, level_didactique })
 
     // Calculer les dates cibles et sauvegarder le plan
     const startDate = new Date()
@@ -87,7 +90,7 @@ Répartis les domaines de façon équilibrée mais en accordant plus de semaines
       }
     })
 
-    await saveStudyPlan(planItems)
+    await saveStudyPlan(userId, planItems)
 
     return NextResponse.json({ success: true, weeks: planItems.length })
   } catch (err) {
