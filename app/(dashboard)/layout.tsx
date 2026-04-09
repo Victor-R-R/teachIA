@@ -8,13 +8,14 @@ import { ImpersonationBanner } from '@/components/impersonation-banner'
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
   const session = await auth()
   const userRole = session?.user?.role || 'student'
+  const userName = session?.user?.name ?? null
 
   return (
     <>
       <ImpersonationBanner />
       <div className="flex flex-col lg:flex-row h-screen overflow-hidden">
-        <MobileHeader userRole={userRole} />
-        <Sidebar userRole={userRole} />
+        <MobileHeader userRole={userRole} userName={userName} />
+        <Sidebar userRole={userRole} userName={userName} />
         <main id="main-content" className="flex-1 overflow-y-auto bg-white p-4 lg:p-6">
           <ScrollRestorer />
           {children}

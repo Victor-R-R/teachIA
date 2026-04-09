@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
-import { Menu, LayoutDashboard, MessageCircle, BookOpen, CreditCard, Target, BarChart2, History, Shield } from 'lucide-react'
+import { Menu, LayoutDashboard, MessageCircle, BookOpen, CreditCard, Target, BarChart2, History, Shield, User } from 'lucide-react'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { cn } from '@/lib/utils'
 
@@ -19,9 +19,10 @@ const NAV_ITEMS = [
 
 interface MobileHeaderProps {
   userRole?: string
+  userName?: string | null
 }
 
-export function MobileHeader({ userRole = 'student' }: MobileHeaderProps) {
+export function MobileHeader({ userRole = 'student', userName }: MobileHeaderProps) {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
   const isSuperAdmin = userRole === 'superadmin'
@@ -38,11 +39,19 @@ export function MobileHeader({ userRole = 'student' }: MobileHeaderProps) {
         >
           <Menu className="h-5 w-5" />
         </button>
-        <span className="mx-auto text-violet-600 font-semibold text-lg tracking-tight">teachIA</span>
+        <div className="mx-auto text-center leading-none">
+          {userName && (
+            <p className="text-xs text-slate-400 truncate max-w-32 mx-auto">{userName}</p>
+          )}
+          <span className="text-violet-600 font-semibold text-lg tracking-tight">teachIA</span>
+        </div>
       </header>
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent side="left" className="w-52 p-0">
           <SheetHeader className="px-4 py-5 border-b border-slate-100">
+            {userName && (
+              <p className="text-xs text-slate-400 truncate text-left">{userName}</p>
+            )}
             <SheetTitle className="text-violet-600 font-semibold text-lg tracking-tight text-left">
               teachIA
             </SheetTitle>
@@ -68,8 +77,21 @@ export function MobileHeader({ userRole = 'student' }: MobileHeaderProps) {
                 </Link>
               ))}
             </div>
-            {isSuperAdmin && (
-              <div className="border-t border-slate-100 mt-auto pt-4 space-y-0.5">
+            <div className="border-t border-slate-100 mt-auto pt-4 space-y-0.5">
+              <Link
+                href="/compte"
+                onClick={() => setOpen(false)}
+                className={cn(
+                  'flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors cursor-pointer',
+                  pathname === '/compte'
+                    ? 'bg-violet-50 text-violet-700 font-medium'
+                    : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
+                )}
+              >
+                <User className="h-4 w-4 shrink-0" />
+                Mon compte
+              </Link>
+              {isSuperAdmin && (
                 <Link
                   href="/admin"
                   onClick={() => setOpen(false)}
@@ -83,8 +105,8 @@ export function MobileHeader({ userRole = 'student' }: MobileHeaderProps) {
                   <Shield className="h-4 w-4 shrink-0" />
                   Administration
                 </Link>
-              </div>
-            )}
+              )}
+            </div>
           </nav>
         </SheetContent>
       </Sheet>
