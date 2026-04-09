@@ -112,20 +112,18 @@ export async function saveAttempt(userId: string, attempt: {
     [userId, exercise_id, correct, time_spent, score_correct ?? null, score_total ?? null]
   )
 
-  // 2. Mettre à jour study_sessions (si durée > 0)
-  if (time_spent !== null) {
-    const durationMin = Math.floor(time_spent / 60)
-    if (durationMin > 0) {
-      await sql.query(
-        `INSERT INTO study_sessions (date, domain, user_id, duration_min, exercises_done, correct_count)
-         VALUES (CURRENT_DATE, $1, $2, $3, 1, $4)
-         ON CONFLICT (date, domain, user_id) DO UPDATE SET
-           duration_min = study_sessions.duration_min + EXCLUDED.duration_min,
-           exercises_done = study_sessions.exercises_done + 1,
-           correct_count = study_sessions.correct_count + EXCLUDED.correct_count`,
-        [exercise_domain, userId, durationMin, correct ? 1 : 0]
-      )
-    }
+  // 2. Mettre à jour study_sessions (au moins 1 min dès qu'un exercice est fait)
+  if (time_spent !== null && time_spent > 0) {
+    const durationMin = Math.max(1, Math.round(time_spent / 60))
+    await sql.query(
+      `INSERT INTO study_sessions (date, domain, user_id, duration_min, exercises_done, correct_count)
+       VALUES (CURRENT_DATE, $1, $2, $3, 1, $4)
+       ON CONFLICT (date, domain, user_id) DO UPDATE SET
+         duration_min = study_sessions.duration_min + EXCLUDED.duration_min,
+         exercises_done = study_sessions.exercises_done + 1,
+         correct_count = study_sessions.correct_count + EXCLUDED.correct_count`,
+      [exercise_domain, userId, durationMin, correct ? 1 : 0]
+    )
   }
 
   // 3. Arrêt si réponse incorrecte
