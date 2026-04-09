@@ -11,6 +11,7 @@ import {
   BarChart2,
   History,
   Shield,
+  User,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -26,15 +27,19 @@ const NAV_ITEMS = [
 
 interface SidebarProps {
   userRole?: string
+  userName?: string | null
 }
 
-export function Sidebar({ userRole = 'student' }: SidebarProps) {
+export function Sidebar({ userRole = 'student', userName }: SidebarProps) {
   const pathname = usePathname()
   const isSuperAdmin = userRole === 'superadmin'
 
   return (
     <aside className="hidden lg:flex flex-col w-52 shrink-0 bg-white border-r border-slate-200 h-full">
       <div className="px-4 py-5 border-b border-slate-100">
+        {userName && (
+          <p className="text-xs text-slate-400 truncate mb-0.5">{userName}</p>
+        )}
         <span className="text-violet-600 font-semibold text-lg tracking-tight">teachIA</span>
       </div>
       <nav aria-label="Navigation principale" className="flex-1 px-2 py-4 space-y-0.5">
@@ -57,8 +62,20 @@ export function Sidebar({ userRole = 'student' }: SidebarProps) {
           </Link>
         ))}
       </nav>
-      {isSuperAdmin && (
-        <div className="border-t border-slate-100 px-2 py-4 space-y-0.5">
+      <div className="border-t border-slate-100 px-2 py-3 space-y-0.5">
+        <Link
+          href="/compte"
+          className={cn(
+            'flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors cursor-pointer',
+            pathname === '/compte'
+              ? 'bg-violet-50 text-violet-700 font-medium'
+              : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
+          )}
+        >
+          <User className="h-4 w-4 shrink-0" />
+          Mon compte
+        </Link>
+        {isSuperAdmin && (
           <Link
             href="/admin"
             className={cn(
@@ -71,8 +88,8 @@ export function Sidebar({ userRole = 'student' }: SidebarProps) {
             <Shield className="h-4 w-4 shrink-0" />
             Administration
           </Link>
-        </div>
-      )}
+        )}
+      </div>
     </aside>
   )
 }
