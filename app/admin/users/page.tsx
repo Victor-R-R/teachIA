@@ -1,10 +1,10 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { listUsers } from '@/lib/admin-db'
 import { Badge } from '@/components/ui/badge'
 import { blockUserAction, unblockUserAction, deleteUserAction } from './actions'
 import { ImpersonateButton } from './impersonate-button'
 import { DeleteUserButton } from './delete-user-button'
+import { UserAvatar } from './user-avatar'
 
 export default async function AdminUsersPage() {
   const users = await listUsers()
@@ -31,19 +31,7 @@ export default async function AdminUsersPage() {
                 {/* User */}
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
-                    {user.image ? (
-                      <Image
-                        src={user.image}
-                        alt={user.name ?? user.email}
-                        width={32}
-                        height={32}
-                        className="rounded-full"
-                      />
-                    ) : (
-                      <div className="h-8 w-8 rounded-full bg-slate-200 flex items-center justify-center text-xs font-medium text-slate-600">
-                        {(user.name ?? user.email).charAt(0).toUpperCase()}
-                      </div>
-                    )}
+                    <UserAvatar name={user.name} />
                     <div>
                       <p className="font-medium text-slate-900">{user.name ?? '—'}</p>
                       <p className="text-xs text-slate-500">{user.email}</p>
