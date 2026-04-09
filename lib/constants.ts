@@ -22,7 +22,7 @@ export const DOMAIN_COLORS: Record<string, string> = {
 }
 
 export const LEVEL_COLORS: Record<string, string> = {
-  A: 'bg-red-50 text-red-600 border-red-200',
+  A: 'bg-green-50 text-green-600 border-green-200',
   B: 'bg-amber-50 text-amber-600 border-amber-200',
-  C: 'bg-green-50 text-green-600 border-green-200',
+  C: 'bg-red-50 text-red-600 border-red-200',
 }
