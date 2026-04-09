@@ -5,11 +5,12 @@ export default auth((req) => {
   const { pathname } = req.nextUrl
   const session = req.auth
 
-  // Auth.js routes and static assets are always public
+  // Public routes — never redirect these
   if (
     pathname.startsWith('/api/auth') ||
     pathname.startsWith('/_next') ||
-    pathname === '/favicon.ico'
+    pathname === '/favicon.ico' ||
+    pathname === '/login'
   ) {
     return NextResponse.next()
   }
@@ -17,9 +18,7 @@ export default auth((req) => {
   // Unauthenticated → redirect to login
   if (!session) {
     const loginUrl = new URL('/login', req.url)
-    if (pathname !== '/login') {
-      loginUrl.searchParams.set('from', pathname)
-    }
+    loginUrl.searchParams.set('from', pathname)
     return NextResponse.redirect(loginUrl)
   }
 
