@@ -7,6 +7,7 @@ import {
   getSimulacroGlobalStats,
   getFlashcardGlobalStats,
 } from '@/lib/db'
+import { getEffectiveUserId } from '@/lib/session'
 import { DOMAIN_LABELS, DOMAIN_COLORS } from '@/lib/constants'
 import { pct, formatMinutes } from '@/lib/utils'
 import { Card, CardContent } from '@/components/ui/card'
@@ -32,12 +33,13 @@ function buildWeekData(activity: { date: string; duration_min: number; exercises
 }
 
 export default async function StatsPage() {
+  const userId = await getEffectiveUserId()
   const [global, domains, activity, simulacros, flashcards] = await Promise.all([
-    getGlobalStats(),
-    getDomainStats(),
-    getDailyActivity(7),
-    getSimulacroGlobalStats(),
-    getFlashcardGlobalStats(),
+    getGlobalStats(userId),
+    getDomainStats(userId),
+    getDailyActivity(userId, 7),
+    getSimulacroGlobalStats(userId),
+    getFlashcardGlobalStats(userId),
   ])
 
   const successRate = pct(global.correct_count, global.total_attempts)

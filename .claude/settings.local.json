@@ -49,7 +49,8 @@
       "mcp__Neon__list_projects",
       "Bash(node:*)",
       "Bash(python3:*)",
-      "Bash(cat /Users/victorrubia/teachIA/app/api/auth/[...nextauth]/route.ts)"
+      "Bash(cat /Users/victorrubia/teachIA/app/api/auth/[...nextauth]/route.ts)",
+      "Bash(find /Users/victorrubia/teachIA/app -path */stats* -type f \\\\\\(-name *.ts -o -name *.tsx \\\\\\))"
     ]
   }
 }

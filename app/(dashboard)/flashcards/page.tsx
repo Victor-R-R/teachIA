@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import { getFlashcards, getFlashcardReviewStats } from '@/lib/db'
+import { getEffectiveUserId } from '@/lib/session'
 import type { Domain, Level } from '@/lib/constants'
 import { DOMAINS, LEVELS, DOMAIN_LABELS } from '@/lib/constants'
 import { FlashcardViewer } from '@/components/flashcards/flashcard-viewer'
@@ -13,12 +14,13 @@ export default async function FlashcardsPage({
 }: {
   searchParams: Promise<{ domain?: string; level?: string }>
 }) {
+  const userId = await getEffectiveUserId()
   const params = await searchParams
   const domain = DOMAINS.includes(params.domain as Domain) ? (params.domain as Domain) : undefined
   const level = LEVELS.includes(params.level as Level) ? (params.level as Level) : undefined
 
-  const cards = await getFlashcards({ domain, level })
-  const stats = await getFlashcardReviewStats(cards.map(c => c.id))
+  const cards = await getFlashcards(userId, { domain, level })
+  const stats = await getFlashcardReviewStats(userId, cards.map(c => c.id))
   const statsMap = new Map(stats.map(s => [s.flashcard_id, s]))
 
   const knownTotal = stats.filter(s => s.last_known === true).length
