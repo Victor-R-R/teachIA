@@ -4,6 +4,7 @@ import { listUsers } from '@/lib/admin-db'
 import { Badge } from '@/components/ui/badge'
 import { blockUserAction, unblockUserAction, deleteUserAction } from './actions'
 import { ImpersonateButton } from './impersonate-button'
+import { DeleteUserButton } from './delete-user-button'
 
 export default async function AdminUsersPage() {
   const users = await listUsers()
@@ -112,24 +113,7 @@ export default async function AdminUsersPage() {
                     <ImpersonateButton userId={user.id} email={user.email ?? ''} />
 
                     {/* Delete */}
-                    <form
-                      action={async () => {
-                        'use server'
-                        await deleteUserAction(user.id)
-                      }}
-                    >
-                      <button
-                        type="submit"
-                        className="rounded px-2 py-1 text-xs font-medium text-red-600 hover:bg-red-50"
-                        onClick={(e) => {
-                          if (!confirm(`Supprimer ${user.email} ? Cette action est irréversible.`)) {
-                            e.preventDefault()
-                          }
-                        }}
-                      >
-                        Supprimer
-                      </button>
-                    </form>
+                    <DeleteUserButton userId={user.id} email={user.email ?? ''} />
                   </div>
                 </td>
               </tr>
