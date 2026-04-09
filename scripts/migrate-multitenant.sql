@@ -2,23 +2,24 @@
 
 -- ─── Auth.js tables ──────────────────────────────────────────────────────────
 -- Users table: Auth.js required columns + our custom role/blocked
+-- Column names must match @auth/pg-adapter expectations exactly (camelCase)
 CREATE TABLE IF NOT EXISTS users (
-  id                TEXT        PRIMARY KEY,
-  name              TEXT,
-  email             TEXT        UNIQUE NOT NULL,
-  email_verified    TIMESTAMPTZ,
-  image             TEXT,
-  role              TEXT        NOT NULL DEFAULT 'student'
-                                CHECK (role IN ('student', 'superadmin')),
-  blocked           BOOLEAN     NOT NULL DEFAULT false,
-  created_at        TIMESTAMPTZ DEFAULT NOW()
+  id              TEXT        PRIMARY KEY,
+  name            TEXT,
+  email           TEXT        UNIQUE NOT NULL,
+  "emailVerified" TIMESTAMPTZ,
+  image           TEXT,
+  role            TEXT        NOT NULL DEFAULT 'student'
+                              CHECK (role IN ('student', 'superadmin')),
+  blocked         BOOLEAN     NOT NULL DEFAULT false,
+  created_at      TIMESTAMPTZ DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS accounts (
-  user_id             TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  "userId"            TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   type                TEXT NOT NULL,
   provider            TEXT NOT NULL,
-  provider_account_id TEXT NOT NULL,
+  "providerAccountId" TEXT NOT NULL,
   refresh_token       TEXT,
   access_token        TEXT,
   expires_at          INTEGER,
@@ -26,13 +27,13 @@ CREATE TABLE IF NOT EXISTS accounts (
   scope               TEXT,
   id_token            TEXT,
   session_state       TEXT,
-  PRIMARY KEY (provider, provider_account_id)
+  PRIMARY KEY (provider, "providerAccountId")
 );
 
 CREATE TABLE IF NOT EXISTS sessions (
-  session_token TEXT        PRIMARY KEY,
-  user_id       TEXT        NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  expires       TIMESTAMPTZ NOT NULL
+  "sessionToken" TEXT        PRIMARY KEY,
+  "userId"       TEXT        NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  expires        TIMESTAMPTZ NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS verification_tokens (
