@@ -29,7 +29,7 @@ export default async function ExercisePage({
   const status = getExerciseStatus(statsRows[0])
   const attemptCount = statsRows[0]?.attempt_count ?? 0
 
-  async function handleComplete(correct: boolean, timeSpent?: number) {
+  async function handleComplete(correct: boolean, timeSpent?: number, scoreCorrect?: number, scoreTotal?: number) {
     'use server'
     const currentUserId = await getEffectiveUserId()
     await saveAttempt(currentUserId, {
@@ -38,6 +38,8 @@ export default async function ExercisePage({
       time_spent: timeSpent ?? null,
       exercise_level: exercise!.level,
       exercise_domain: exercise!.domain,
+      score_correct: scoreCorrect,
+      score_total: scoreTotal,
     })
   }
 

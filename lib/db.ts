@@ -39,6 +39,8 @@ export type AttemptStats = {
   exercise_id: number
   attempt_count: number
   has_correct: boolean
+  best_score_correct: number | null
+  best_score_total: number | null
 }
 
 export type ExerciseStatus = 'not_started' | 'in_progress' | 'completed'
@@ -52,7 +54,11 @@ export function getExerciseStatus(stats: AttemptStats | undefined): ExerciseStat
 export async function getAttemptStatsByExercises(userId: string, ids: number[]): Promise<AttemptStats[]> {
   if (ids.length === 0) return []
   const rows = await sql.query(
-    `SELECT exercise_id, COUNT(*)::int AS attempt_count, bool_or(correct) AS has_correct
+    `SELECT exercise_id,
+            COUNT(*)::int AS attempt_count,
+            bool_or(correct) AS has_correct,
+            MAX(score_correct)::int AS best_score_correct,
+            MAX(score_total)::int AS best_score_total
      FROM exercise_attempts
      WHERE user_id = $1 AND exercise_id = ANY($2::int[])
      GROUP BY exercise_id`,
@@ -95,13 +101,15 @@ export async function saveAttempt(userId: string, attempt: {
   time_spent: number | null
   exercise_level: 'A' | 'B' | 'C'
   exercise_domain: string
+  score_correct?: number
+  score_total?: number
 }): Promise<void> {
-  const { exercise_id, correct, time_spent, exercise_level, exercise_domain } = attempt
+  const { exercise_id, correct, time_spent, exercise_level, exercise_domain, score_correct, score_total } = attempt
 
   // 1. Enregistrer la tentative
   await sql.query(
-    'INSERT INTO exercise_attempts (user_id, exercise_id, correct, time_spent) VALUES ($1, $2, $3, $4)',
-    [userId, exercise_id, correct, time_spent]
+    'INSERT INTO exercise_attempts (user_id, exercise_id, correct, time_spent, score_correct, score_total) VALUES ($1, $2, $3, $4, $5, $6)',
+    [userId, exercise_id, correct, time_spent, score_correct ?? null, score_total ?? null]
   )
 
   // 2. Mettre à jour study_sessions (si durée > 0)

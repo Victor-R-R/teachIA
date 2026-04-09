@@ -142,10 +142,16 @@ export default async function ExercicesPage({
                       </Badge>
                     </div>
                     {(() => {
-                      const status = getExerciseStatus(statsMap.get(ex.id))
+                      const stats = statsMap.get(ex.id)
+                      const status = getExerciseStatus(stats)
                       return status !== 'not_started' ? (
-                        <div className="mt-3">
+                        <div className="mt-3 flex items-center gap-2">
                           <ExerciseProgressBar status={status} height={3} />
+                          {stats?.best_score_correct != null && stats?.best_score_total != null && (
+                            <span className="text-xs text-slate-400 shrink-0">
+                              {stats.best_score_correct}/{stats.best_score_total}
+                            </span>
+                          )}
                         </div>
                       ) : null
                     })()}
