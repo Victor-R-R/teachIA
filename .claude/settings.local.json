@@ -41,7 +41,12 @@
       "Bash(find ~ -name *.json -path *vercel*)",
       "Bash(find ~/.config -name *.json)",
       "Bash(vercel build:*)",
-      "Bash(curl -sI https://teach-ia.vercel.app)"
+      "Bash(curl -sI https://teach-ia.vercel.app)",
+      "Bash(find /Users/victorrubia/teachIA -maxdepth 2 -name middleware.* -type f)",
+      "Bash(find . -maxdepth 1 -name *.ts -o -name *.tsx)",
+      "Bash(xargs ls:*)",
+      "mcp__Neon__run_sql",
+      "mcp__Neon__list_projects"
     ]
   }
 }
