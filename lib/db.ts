@@ -696,3 +696,47 @@ export async function getFlashcardGlobalStats(userId: string): Promise<Flashcard
     known_count: r?.known_count ?? 0,
   }
 }
+
+// ─── Catalogue partagé (admin) ───────────────────────────────────────────────
+
+export async function getCatalogExercises(filters: {
+  domain?: Domain
+  level?: Level
+  type?: ExerciseType
+} = {}): Promise<Exercise[]> {
+  const { domain, level, type } = filters
+  const conditions: string[] = ['user_id IS NULL']
+  const params: unknown[] = []
+  let i = 1
+
+  if (domain) { conditions.push(`domain = $${i++}`); params.push(domain) }
+  if (level) { conditions.push(`level = $${i++}`); params.push(level) }
+  if (type) { conditions.push(`type = $${i++}`); params.push(type) }
+
+  const where = `WHERE ${conditions.join(' AND ')}`
+  const rows = await sql.query(
+    `SELECT * FROM exercises ${where} ORDER BY domain, level, created_at DESC`,
+    params
+  )
+  return rows as Exercise[]
+}
+
+export async function getCatalogFlashcards(filters: {
+  domain?: Domain
+  level?: Level
+} = {}): Promise<Flashcard[]> {
+  const { domain, level } = filters
+  const conditions: string[] = ['user_id IS NULL']
+  const params: unknown[] = []
+  let i = 1
+
+  if (domain) { conditions.push(`domain = $${i++}`); params.push(domain) }
+  if (level) { conditions.push(`level = $${i++}`); params.push(level) }
+
+  const where = `WHERE ${conditions.join(' AND ')}`
+  const rows = await sql.query(
+    `SELECT * FROM flashcards ${where} ORDER BY domain, level, created_at ASC`,
+    params
+  )
+  return rows as Flashcard[]
+}
