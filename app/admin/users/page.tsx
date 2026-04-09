@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { listUsers } from '@/lib/admin-db'
 import { Badge } from '@/components/ui/badge'
 import { blockUserAction, unblockUserAction, deleteUserAction } from './actions'
+import { ImpersonateButton } from './impersonate-button'
 
 export default async function AdminUsersPage() {
   const users = await listUsers()
@@ -108,12 +109,7 @@ export default async function AdminUsersPage() {
                     </form>
 
                     {/* Impersonate */}
-                    <Link
-                      href={`/api/admin/impersonate?userId=${user.id}`}
-                      className="rounded px-2 py-1 text-xs font-medium text-violet-600 hover:bg-violet-50"
-                    >
-                      Imp.
-                    </Link>
+                    <ImpersonateButton userId={user.id} email={user.email ?? ''} />
 
                     {/* Delete */}
                     <form
