@@ -10,6 +10,7 @@ import {
   Target,
   BarChart2,
   History,
+  Shield,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -23,8 +24,13 @@ const NAV_ITEMS = [
   { href: '/stats', label: 'Statistiques', icon: BarChart2 },
 ]
 
-export function Sidebar() {
+interface SidebarProps {
+  userRole?: string
+}
+
+export function Sidebar({ userRole = 'student' }: SidebarProps) {
   const pathname = usePathname()
+  const isSuperAdmin = userRole === 'superadmin'
 
   return (
     <aside className="hidden lg:flex flex-col w-52 shrink-0 bg-white border-r border-slate-200 h-full">
@@ -51,6 +57,22 @@ export function Sidebar() {
           </Link>
         ))}
       </nav>
+      {isSuperAdmin && (
+        <div className="border-t border-slate-100 px-2 py-4 space-y-0.5">
+          <Link
+            href="/admin"
+            className={cn(
+              'flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors cursor-pointer',
+              pathname.startsWith('/admin')
+                ? 'bg-amber-50 text-amber-700 font-medium'
+                : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
+            )}
+          >
+            <Shield className="h-4 w-4 shrink-0" />
+            Administration
+          </Link>
+        </div>
+      )}
     </aside>
   )
 }

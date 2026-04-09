@@ -1,6 +1,7 @@
 import { streamText, convertToModelMessages, generateText } from 'ai'
 import { NextRequest, after } from 'next/server'
 import { createConversation, saveMessage, updateConversationTitle, getMessageCount, hasTitle } from '@/lib/db'
+import { getEffectiveUserId } from '@/lib/session'
 
 const SYSTEM_PROMPT = `Tu es le professeur IA intégré à TeachIA, une plateforme de préparation au CAPES d'espagnol. Tu incarnes un professeur passionné, exigeant et bienveillant, expert en langue espagnole ET en civilisation hispanique.
 
@@ -448,6 +449,7 @@ export async function POST(req: NextRequest) {
     })
   }
 
+  const userId = await getEffectiveUserId()
   const lastUserMessage = [...messages].reverse().find(
     (m: unknown) => (m as { role?: string }).role === 'user'
   )
@@ -467,7 +469,7 @@ export async function POST(req: NextRequest) {
         if (!conversationId || isInit) return
         after(async () => {
           try {
-            await createConversation(conversationId!)
+            await createConversation(userId, conversationId!)
             await saveMessage(conversationId!, 'user', userText)
             await saveMessage(conversationId!, 'assistant', text)
             const count = await getMessageCount(conversationId!)

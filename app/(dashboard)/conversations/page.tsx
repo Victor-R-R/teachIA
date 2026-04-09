@@ -1,10 +1,12 @@
 export const dynamic = 'force-dynamic'
 
 import { getConversations } from '@/lib/db'
+import { getEffectiveUserId } from '@/lib/session'
 import { ConversationsList } from '@/components/conversations/conversations-list'
 
 export default async function ConversationsPage() {
-  const conversations = await getConversations()
+  const userId = await getEffectiveUserId()
+  const conversations = await getConversations(userId)
   return (
     <div className="h-full flex flex-col">
       <div className="mb-6">

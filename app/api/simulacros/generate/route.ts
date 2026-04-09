@@ -1,6 +1,7 @@
 import { generateText, Output } from 'ai'
 import { NextRequest, NextResponse } from 'next/server'
 import { createSimulacro } from '@/lib/db'
+import { getEffectiveUserId } from '@/lib/session'
 import { z } from 'zod'
 
 const SIMULACRO_TYPES = ['composition', 'theme', 'version'] as const
@@ -70,6 +71,8 @@ Le "subject" : consigne + texte espagnol numéroté + question de choix de tradu
 }
 
 export async function POST(req: NextRequest) {
+  const userId = await getEffectiveUserId()
+
   let body: unknown
   try {
     body = await req.json()
@@ -95,7 +98,7 @@ export async function POST(req: NextRequest) {
       prompt: getPrompt(type),
     })
 
-    const session = await createSimulacro(type, output.title, output.subject)
+    const session = await createSimulacro(userId, type, output.title, output.subject)
     return NextResponse.json({ id: session.id, title: output.title, subject: output.subject })
   } catch (err) {
     console.error('simulacro generate error:', err)

@@ -1,6 +1,7 @@
 import { generateText, Output } from 'ai'
 import { NextRequest, NextResponse } from 'next/server'
 import { saveExercise } from '@/lib/db'
+import { getEffectiveUserId } from '@/lib/session'
 import { z } from 'zod'
 
 const ExerciseSchema = z.object({
@@ -36,6 +37,7 @@ export async function POST(req: NextRequest) {
   const { theme, domain, type, level } = parsed.data
 
   try {
+    const userId = await getEffectiveUserId()
     const { output } = await generateText({
       model: 'anthropic/claude-sonnet-4.6',
       output: Output.object({ schema: ExerciseSchema }),
@@ -49,7 +51,7 @@ Pour un lacunaire : une phrase avec "___" pour le mot manquant.
 L'explication doit être pédagogique (2-3 phrases), jamais condescendante.`,
     })
 
-    const saved = await saveExercise({ ...output, source: 'ai_generated', title: null, questions: null })
+    const saved = await saveExercise(userId, { ...output, source: 'ai_generated', title: null, questions: null })
     return NextResponse.json(saved)
   } catch {
     return NextResponse.json({ error: 'Failed to generate exercise' }, { status: 500 })

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { createUserProfile } from '@/lib/db'
+import { getEffectiveUserId } from '@/lib/session'
 
 const Schema = z.object({
   level_langue: z.enum(['A', 'B', 'C']),
@@ -20,7 +21,8 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    await createUserProfile(parsed.data)
+    const userId = await getEffectiveUserId()
+    await createUserProfile(userId, parsed.data)
     return NextResponse.json({ success: true })
   } catch (err) {
     console.error('onboarding/save error:', err)

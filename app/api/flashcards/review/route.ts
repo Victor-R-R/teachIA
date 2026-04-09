@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { saveFlashcardReview } from '@/lib/db'
+import { getEffectiveUserId } from '@/lib/session'
 import { z } from 'zod'
 
 const ReviewSchema = z.object({
@@ -21,7 +22,8 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    await saveFlashcardReview(parsed.data.flashcard_id, parsed.data.known)
+    const userId = await getEffectiveUserId()
+    await saveFlashcardReview(userId, parsed.data.flashcard_id, parsed.data.known)
     return NextResponse.json({ ok: true })
   } catch {
     return NextResponse.json({ error: 'Failed to save review' }, { status: 500 })

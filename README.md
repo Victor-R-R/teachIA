@@ -13,7 +13,8 @@
 | 🤖 | **Professeur IA** | Chat streaming avec un expert CAPES. Bouton "Démarrer" sur chaque exercice CAPES pour lancer l'exercice directement avec l'IA |
 | 💬 | **Conversations persistantes** | Chaque session de chat est sauvegardée en DB, restaurable via `/chat?id=xxx` |
 | 📋 | **Historique `/conversations`** | Liste toutes les sessions passées avec titre généré par IA, date et suppression |
-| 🔒 | **Auth solo** | Protection par mot de passe unique + cookie JWT signé |
+| 🔒 | **Auth multi-tenant** | Google OAuth (Auth.js v5) — sessions DB, isolation par `user_id`, rôles `student`/`superadmin` |
+| 🛡️ | **Panel admin** | Dashboard stats, liste utilisateurs, impersonation, catalogue partagé et réglages globaux |
 | 🎨 | **Thème clair** | Interface light mode avec accent violet, sidebar blanche et cartes épurées |
 | 📱 | **Responsive mobile/tablette** | Navigation par header + drawer sur mobile, layout adaptatif < 1024px |
 | 🏆 | **Dashboard gamifié** | Niveau XP (Débutant → Professeur) + niveaux A/B/C par domaine mis à jour dynamiquement, objectif quotidien configurable, exercices en cours |
@@ -42,7 +43,7 @@
 | IA | Vercel AI SDK v6 + AI Gateway OIDC |
 | Modèle | `anthropic/claude-sonnet-4.6` |
 | Chat UI | AI Elements |
-| Auth | `jose` JWT + cookie httpOnly |
+| Auth | Auth.js v5 (`next-auth@^5`) + `@auth/pg-adapter` + Google OAuth |
 
 ---
 

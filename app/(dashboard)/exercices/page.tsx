@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import Link from 'next/link'
 import { getExercises, getAttemptStatsByExercises, getExerciseStatus } from '@/lib/db'
+import { getEffectiveUserId } from '@/lib/session'
 import { EXERCISES } from '@/lib/exercises'
 import type { Level as CAPESLevel } from '@/lib/exercises'
 import { ExerciseProgressBar } from '@/components/exercises/exercise-progress-bar'
@@ -40,9 +41,10 @@ export default async function ExercicesPage({
 }) {
   const params = await searchParams
   const level = LEVELS.includes(params.level as Level) ? (params.level as Level) : undefined
+  const userId = await getEffectiveUserId()
 
-  const dbExercises = await getExercises({ level, limit: 100 })
-  const statsRows = await getAttemptStatsByExercises(dbExercises.map(e => e.id))
+  const dbExercises = await getExercises(userId, { level, limit: 100 })
+  const statsRows = await getAttemptStatsByExercises(userId, dbExercises.map(e => e.id))
   const statsMap = new Map(statsRows.map(s => [s.exercise_id, s]))
   const completedCount = statsRows.filter(s => s.has_correct).length
 
@@ -140,10 +142,16 @@ export default async function ExercicesPage({
                       </Badge>
                     </div>
                     {(() => {
-                      const status = getExerciseStatus(statsMap.get(ex.id))
+                      const stats = statsMap.get(ex.id)
+                      const status = getExerciseStatus(stats)
                       return status !== 'not_started' ? (
-                        <div className="mt-3">
+                        <div className="mt-3 flex items-center gap-2">
                           <ExerciseProgressBar status={status} height={3} />
+                          {stats?.best_score_correct != null && stats?.best_score_total != null && (
+                            <span className="text-xs text-slate-400 shrink-0">
+                              {stats.best_score_correct}/{stats.best_score_total}
+                            </span>
+                          )}
                         </div>
                       ) : null
                     })()}

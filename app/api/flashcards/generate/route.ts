@@ -1,6 +1,7 @@
 import { generateText, Output } from 'ai'
 import { NextRequest, NextResponse } from 'next/server'
 import { saveFlashcard } from '@/lib/db'
+import { getEffectiveUserId } from '@/lib/session'
 import { z } from 'zod'
 
 const FlashcardSchema = z.object({
@@ -43,6 +44,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    const userId = await getEffectiveUserId()
     const { output } = await generateText({
       model: 'anthropic/claude-sonnet-4.6',
       output: Output.object({ schema: BatchSchema }),
@@ -60,7 +62,7 @@ Renvoie exactement ${count} cartes dans le tableau "cards".`,
 
     const saved = await Promise.all(
       output.cards.map(card =>
-        saveFlashcard({ ...card, source: 'ai_generated' })
+        saveFlashcard(userId, { ...card, source: 'ai_generated' })
       )
     )
 

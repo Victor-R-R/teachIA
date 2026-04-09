@@ -46,7 +46,11 @@
       "Bash(find . -maxdepth 1 -name *.ts -o -name *.tsx)",
       "Bash(xargs ls:*)",
       "mcp__Neon__run_sql",
-      "mcp__Neon__list_projects"
+      "mcp__Neon__list_projects",
+      "Bash(node:*)",
+      "Bash(python3:*)",
+      "Bash(cat /Users/victorrubia/teachIA/app/api/auth/[...nextauth]/route.ts)",
+      "Bash(find /Users/victorrubia/teachIA/app -path */stats* -type f \\\\\\(-name *.ts -o -name *.tsx \\\\\\))"
     ]
   }
 }

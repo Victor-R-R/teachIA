@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
-import { Menu, LayoutDashboard, MessageCircle, BookOpen, CreditCard, Target, BarChart2, History } from 'lucide-react'
+import { Menu, LayoutDashboard, MessageCircle, BookOpen, CreditCard, Target, BarChart2, History, Shield } from 'lucide-react'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { cn } from '@/lib/utils'
 
@@ -17,9 +17,14 @@ const NAV_ITEMS = [
   { href: '/stats', label: 'Statistiques', icon: BarChart2 },
 ]
 
-export function MobileHeader() {
+interface MobileHeaderProps {
+  userRole?: string
+}
+
+export function MobileHeader({ userRole = 'student' }: MobileHeaderProps) {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
+  const isSuperAdmin = userRole === 'superadmin'
 
   return (
     <>
@@ -42,25 +47,44 @@ export function MobileHeader() {
               teachIA
             </SheetTitle>
           </SheetHeader>
-          <nav aria-label="Navigation principale" className="px-2 py-4 space-y-0.5">
-            {NAV_ITEMS.map(({ href, label, icon: Icon }) => (
-              <Link
-                key={href}
-                href={href}
-                onClick={() => setOpen(false)}
-                className={cn(
-                  'flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors cursor-pointer',
-                  pathname === href ||
-                  (href === '/chat' && pathname.startsWith('/chat')) ||
-                  (href === '/exercices' && pathname.startsWith('/exercices'))
-                    ? 'bg-violet-50 text-violet-700 font-medium'
-                    : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
-                )}
-              >
-                <Icon className="h-4 w-4 shrink-0" />
-                {label}
-              </Link>
-            ))}
+          <nav aria-label="Navigation principale" className="px-2 py-4 space-y-0.5 flex flex-col h-full">
+            <div className="space-y-0.5">
+              {NAV_ITEMS.map(({ href, label, icon: Icon }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={() => setOpen(false)}
+                  className={cn(
+                    'flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors cursor-pointer',
+                    pathname === href ||
+                    (href === '/chat' && pathname.startsWith('/chat')) ||
+                    (href === '/exercices' && pathname.startsWith('/exercices'))
+                      ? 'bg-violet-50 text-violet-700 font-medium'
+                      : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
+                  )}
+                >
+                  <Icon className="h-4 w-4 shrink-0" />
+                  {label}
+                </Link>
+              ))}
+            </div>
+            {isSuperAdmin && (
+              <div className="border-t border-slate-100 mt-auto pt-4 space-y-0.5">
+                <Link
+                  href="/admin"
+                  onClick={() => setOpen(false)}
+                  className={cn(
+                    'flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors cursor-pointer',
+                    pathname.startsWith('/admin')
+                      ? 'bg-amber-50 text-amber-700 font-medium'
+                      : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
+                  )}
+                >
+                  <Shield className="h-4 w-4 shrink-0" />
+                  Administration
+                </Link>
+              </div>
+            )}
           </nav>
         </SheetContent>
       </Sheet>

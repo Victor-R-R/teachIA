@@ -1,26 +1,70 @@
-import { SignJWT, jwtVerify } from 'jose'
+import NextAuth from 'next-auth'
+import Google from 'next-auth/providers/google'
+import PostgresAdapter from '@auth/pg-adapter'
+import { Pool } from '@neondatabase/serverless'
 
-function getSecret(): Uint8Array {
-  const secret = process.env.AUTH_SECRET
-  if (!secret) throw new Error('AUTH_SECRET env var is not set')
-  if (secret.length < 32) throw new Error('AUTH_SECRET must be at least 32 characters')
-  return new TextEncoder().encode(secret)
-}
+const pool = new Pool({ connectionString: process.env.DATABASE_URL! })
 
-export async function createSession(): Promise<string> {
-  return new SignJWT({ authorized: true })
-    .setProtectedHeader({ alg: 'HS256' })
-    .setIssuedAt()
-    .setExpirationTime('30d')
-    .sign(getSecret())
-}
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: PostgresAdapter(pool),
+  providers: [
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+  ],
+  session: { strategy: 'database' },
+  pages: {
+    signIn: '/login',
+  },
+  callbacks: {
+    async signIn({ user }) {
+      // Block blocked users
+      if (!user?.id) return true
+      try {
+        const result = await pool.query(
+          'SELECT blocked FROM users WHERE id = $1',
+          [user.id]
+        )
+        if (result.rows[0]?.blocked === true) return false
+      } catch {
+        // User may not exist yet (first sign-in), allow through
+      }
+      return true
+    },
+    async session({ session, user }) {
+      // Attach id and role to session
+      session.user.id = user.id
+      const result = await pool.query(
+        'SELECT role FROM users WHERE id = $1',
+        [user.id]
+      )
+      const role = result.rows[0]?.role ?? 'student'
+      // Promote to superadmin if email matches env var
+      if (
+        process.env.SUPERADMIN_EMAIL &&
+        session.user.email === process.env.SUPERADMIN_EMAIL &&
+        role !== 'superadmin'
+      ) {
+        await pool.query(
+          "UPDATE users SET role = 'superadmin' WHERE id = $1",
+          [user.id]
+        )
+        session.user.role = 'superadmin'
+      } else {
+        session.user.role = role
+      }
+      return session
+    },
+  },
+})
 
-export async function validateSession(token: string): Promise<boolean> {
-  if (!token) return false
-  try {
-    await jwtVerify(token, getSecret())
-    return true
-  } catch {
-    return false
+// TypeScript augmentation
+declare module 'next-auth' {
+  interface Session {
+    user: {
+      id: string
+      role: 'student' | 'superadmin'
+    } & import('next-auth').DefaultSession['user']
   }
 }

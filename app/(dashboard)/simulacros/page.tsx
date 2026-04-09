@@ -62,8 +62,11 @@ function ScoreBadge({ score }: { score: number | null }) {
   )
 }
 
+import { getEffectiveUserId } from '@/lib/session'
+
 export default async function SimulacrosPage() {
-  const sessions = await getSimulacros()
+  const userId = await getEffectiveUserId()
+  const sessions = await getSimulacros(userId)
 
   const stats = {
     total: sessions.length,
