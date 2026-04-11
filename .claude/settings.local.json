@@ -50,7 +50,13 @@
       "Bash(node:*)",
       "Bash(python3:*)",
       "Bash(cat /Users/victorrubia/teachIA/app/api/auth/[...nextauth]/route.ts)",
-      "Bash(find /Users/victorrubia/teachIA/app -path */stats* -type f \\\\\\(-name *.ts -o -name *.tsx \\\\\\))"
+      "Bash(find /Users/victorrubia/teachIA/app -path */stats* -type f \\\\\\(-name *.ts -o -name *.tsx \\\\\\))",
+      "Bash(vercel env:*)",
+      "Bash(vercel domains:*)",
+      "Bash(vercel --prod --prebuilt)",
+      "Bash(/dev/null printf:*)",
+      "Bash(vercel --prod)",
+      "Bash(vercel --prod --yes)"
     ]
   }
 }
