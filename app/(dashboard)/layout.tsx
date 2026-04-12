@@ -15,7 +15,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
   return (
     <>
       <ImpersonationBanner />
-      <div className="flex flex-col lg:flex-row h-screen overflow-hidden">
+      <div className="flex flex-col lg:flex-row h-screen h-[100dvh] overflow-hidden">
         <MobileHeader userRole={userRole} userName={userName} userEmail={userEmail} userImage={userImage} />
         <Sidebar userRole={userRole} userName={userName} userEmail={userEmail} userImage={userImage} />
         <main id="main-content" className="flex-1 overflow-y-auto bg-white p-4 lg:p-6 flex flex-col">

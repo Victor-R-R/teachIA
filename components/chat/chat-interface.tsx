@@ -63,11 +63,7 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
     setInput('')
   }
 
-  const visibleMessages = messages.filter(m => {
-    if (m.role !== 'user') return true
-    const text = m.parts?.find(p => p.type === 'text')?.text
-    return text !== INIT_MARKER
-  })
+  const visibleMessages = messages
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
