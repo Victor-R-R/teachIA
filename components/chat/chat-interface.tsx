@@ -15,7 +15,6 @@ import {
 } from '@/components/ai-elements/message'
 import type { UIMessage } from 'ai'
 
-const INIT_MARKER = '[[INIT]]'
 
 type Props = {
   conversationId?: string
@@ -28,7 +27,7 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
   const bottomRef = useRef<HTMLDivElement>(null)
   const [input, setInput] = useState('')
   const convId = useRef<string>(initialId ?? nanoid())
-  const initSent = useRef(initialMessages.length > 0)
+  const initSent = useRef(initialMessages.length > 0 || !initialPrompt)
 
   const { messages, sendMessage, status } = useChat({
     transport: new DefaultChatTransport({
@@ -45,9 +44,9 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
   }, [initialId, router])
 
   useEffect(() => {
-    if (!initSent.current) {
+    if (!initSent.current && initialPrompt) {
       initSent.current = true
-      sendMessage({ text: initialPrompt ?? INIT_MARKER }).catch(console.error)
+      sendMessage({ text: initialPrompt }).catch(console.error)
     }
   }, [sendMessage, initialPrompt])
 
@@ -71,8 +70,8 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
   })
 
   return (
-    <>
-      <div className="space-y-4 pb-24">
+    <div className="flex flex-col flex-1 min-h-0">
+      <div className="flex-1 overflow-y-auto space-y-4 pb-4">
         {visibleMessages.map(message => (
           <Message key={message.id} from={message.role}>
             <MessageContent>
@@ -89,7 +88,7 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
 
       <form
         onSubmit={handleSubmit}
-        className="sticky bottom-0 bg-white border-t border-slate-200 pt-3 pb-3 flex gap-2"
+        className="shrink-0 bg-white border-t border-slate-200 pt-3 pb-3 flex gap-2"
       >
         <Input
           value={input}
@@ -110,6 +109,6 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
           }
         </Button>
       </form>
-    </>
+    </div>
   )
 }

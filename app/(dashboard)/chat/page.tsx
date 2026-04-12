@@ -33,8 +33,8 @@ export default async function ChatPage({ searchParams }: Props) {
     : undefined
 
   return (
-    <div>
-      <div className="mb-4">
+    <div className="flex flex-col flex-1 min-h-0">
+      <div className="mb-4 shrink-0">
         <h1 className="text-2xl font-semibold text-slate-900">Professeur IA</h1>
         <p className="text-slate-500 text-sm">
           {exercise ? `Exercice : ${exercise.titre}` : "Pose n'importe quelle question sur le CAPES d'espagnol."}
