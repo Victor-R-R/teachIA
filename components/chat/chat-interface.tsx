@@ -15,6 +15,7 @@ import {
 } from '@/components/ai-elements/message'
 import type { UIMessage } from 'ai'
 
+const INIT_MARKER = '[[INIT]]'
 
 type Props = {
   conversationId?: string
@@ -27,7 +28,7 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
   const bottomRef = useRef<HTMLDivElement>(null)
   const [input, setInput] = useState('')
   const convId = useRef<string>(initialId ?? nanoid())
-  const initSent = useRef(initialMessages.length > 0 || !initialPrompt)
+  const initSent = useRef(!!initialId)
 
   const { messages, sendMessage, status, error } = useChat({
     transport: new DefaultChatTransport({
@@ -44,9 +45,9 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
   }, [initialId, router])
 
   useEffect(() => {
-    if (!initSent.current && initialPrompt) {
+    if (!initSent.current) {
       initSent.current = true
-      sendMessage({ text: initialPrompt }).catch(console.error)
+      sendMessage({ text: initialPrompt ?? INIT_MARKER }).catch(console.error)
     }
   }, [sendMessage, initialPrompt])
 
@@ -63,7 +64,11 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
     setInput('')
   }
 
-  const visibleMessages = messages
+  const visibleMessages = messages.filter(m => {
+    if (m.role !== 'user') return true
+    const text = m.parts?.find(p => p.type === 'text')?.text
+    return text !== INIT_MARKER
+  })
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
