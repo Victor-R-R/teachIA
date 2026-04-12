@@ -40,7 +40,7 @@ export default async function ChatPage({ searchParams }: Props) {
           {exercise ? `Exercice : ${exercise.titre}` : "Pose n'importe quelle question sur le CAPES d'espagnol."}
         </p>
       </div>
-      <div className="flex-1 min-h-0">
+      <div className="flex-1 min-h-0 flex flex-col">
         <ChatInterface conversationId={id} initialMessages={initialMessages} initialPrompt={initialPrompt} />
       </div>
     </div>
