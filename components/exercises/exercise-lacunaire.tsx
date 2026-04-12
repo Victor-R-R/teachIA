@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ExerciseFeedback } from './exercise-feedback'
@@ -10,13 +10,14 @@ type Props = {
   question: string  // Contains "___" as placeholder
   answer: string
   explanation: string
-  onComplete: (correct: boolean) => void | Promise<void>
+  onComplete: (correct: boolean, timeSpent: number) => void | Promise<void>
 }
 
 export function ExerciseLacunaire({ id, question, answer, explanation, onComplete }: Props) {
   const [value, setValue] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [aiExplanation, setAiExplanation] = useState<string>()
+  const startRef = useRef(Date.now())
 
   const parts = question.split('___')
 
@@ -24,7 +25,8 @@ export function ExerciseLacunaire({ id, question, answer, explanation, onComplet
     if (!value.trim()) return
     setSubmitted(true)
     const correct = value.trim().toLowerCase() === answer.toLowerCase()
-    await onComplete(correct)
+    const timeSpent = Math.floor((Date.now() - startRef.current) / 1000)
+    await onComplete(correct, timeSpent)
 
     if (!correct) {
       try {
