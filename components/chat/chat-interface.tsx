@@ -29,7 +29,7 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
   const convId = useRef<string>(initialId ?? nanoid())
   const initSent = useRef(initialMessages.length > 0 || !initialPrompt)
 
-  const { messages, sendMessage, status } = useChat({
+  const { messages, sendMessage, status, error } = useChat({
     transport: new DefaultChatTransport({
       api: '/api/chat',
       body: { conversationId: convId.current },
@@ -68,6 +68,13 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
   return (
     <div className="flex flex-col flex-1 min-h-0">
       <div className="flex-1 overflow-y-auto space-y-4 pb-4">
+        {error && (
+          <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg p-3">
+            {error.message?.includes('Insufficient funds') || error.message?.includes('insufficient_funds')
+              ? 'Le service IA est temporairement indisponible. Réessaie dans quelques instants.'
+              : 'Une erreur est survenue. Recharge la page et réessaie.'}
+          </div>
+        )}
         {visibleMessages.map(message => (
           <Message key={message.id} from={message.role}>
             <MessageContent>
