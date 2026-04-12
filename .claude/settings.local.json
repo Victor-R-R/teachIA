@@ -56,7 +56,10 @@
       "Bash(vercel --prod --prebuilt)",
       "Bash(/dev/null printf:*)",
       "Bash(vercel --prod)",
-      "Bash(vercel --prod --yes)"
+      "Bash(vercel --prod --yes)",
+      "Bash(find /Users/victorrubia/.claude -name *.md -path *neon*)",
+      "Bash(find /Users/victorrubia/.local -name *.md -path *neon*)",
+      "Bash(find /Users/victorrubia/.claude/plugins/cache/claude-plugins-official -type d -name neon*)"
     ]
   }
 }
