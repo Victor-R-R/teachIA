@@ -14,6 +14,7 @@ export default async function AdminUsersPage() {
       <h1 className="text-2xl font-semibold text-slate-900">Utilisateurs</h1>
 
       <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-slate-200 bg-slate-50 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
@@ -108,6 +109,8 @@ export default async function AdminUsersPage() {
             ))}
           </tbody>
         </table>
+
+        </div>
 
         {users.length === 0 && (
           <p className="px-4 py-8 text-center text-sm text-slate-500">Aucun utilisateur trouvé.</p>
