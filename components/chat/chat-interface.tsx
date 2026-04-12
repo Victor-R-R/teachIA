@@ -71,7 +71,7 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
   })
 
   return (
-    <div className="flex flex-col h-full max-h-[calc(100dvh-3.5rem)] lg:max-h-[calc(100vh-6rem)]">
+    <div className="flex flex-col flex-1 min-h-0">
       <div className="flex-1 overflow-y-auto space-y-4 pb-4">
         {visibleMessages.map(message => (
           <Message key={message.id} from={message.role}>
