@@ -12,7 +12,7 @@ import type { Level } from '@/lib/constants'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { buttonVariants } from '@/components/ui/button'
-import { BookOpen, ArrowRight, MessageCircle } from 'lucide-react'
+import { BookOpen, ArrowRight, MessageCircle, PenLine, Languages, BookA, Landmark, GraduationCap, Video, Users, Globe } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const DB_TYPE_LABELS: Record<string, string> = {
@@ -32,6 +32,28 @@ const CAPES_TYPE_LABELS: Record<string, string> = {
   didactique: 'Didactique',
   lecon: 'Leçon audiovisuelle',
   entretien: 'Entretien',
+}
+
+const CAPES_TYPE_ICONS: Record<string, React.ElementType> = {
+  composition: PenLine,
+  version: Languages,
+  theme: Globe,
+  grammaire: BookA,
+  civilisation: Landmark,
+  didactique: GraduationCap,
+  lecon: Video,
+  entretien: Users,
+}
+
+const CAPES_TYPE_COLORS: Record<string, { bg: string; icon: string; border: string }> = {
+  composition: { bg: 'bg-violet-50', icon: 'text-violet-600', border: 'border-violet-100' },
+  version:     { bg: 'bg-blue-50',   icon: 'text-blue-600',   border: 'border-blue-100' },
+  theme:       { bg: 'bg-indigo-50', icon: 'text-indigo-600', border: 'border-indigo-100' },
+  grammaire:   { bg: 'bg-amber-50',  icon: 'text-amber-600',  border: 'border-amber-100' },
+  civilisation:{ bg: 'bg-emerald-50',icon: 'text-emerald-600',border: 'border-emerald-100' },
+  didactique:  { bg: 'bg-rose-50',   icon: 'text-rose-600',   border: 'border-rose-100' },
+  lecon:       { bg: 'bg-sky-50',    icon: 'text-sky-600',    border: 'border-sky-100' },
+  entretien:   { bg: 'bg-slate-50',  icon: 'text-slate-600',  border: 'border-slate-200' },
 }
 
 export default async function ExercicesPage({
@@ -170,36 +192,41 @@ export default async function ExercicesPage({
             <MessageCircle className="h-3.5 w-3.5" /> Exercices CAPES — Professeur IA ({capesExercises.length})
           </h2>
           <div className="grid gap-3">
-            {capesExercises.map(ex => (
-              <Card key={ex.id} className="bg-white border-slate-200 hover:border-violet-300 hover:shadow-sm transition-all">
-                <CardContent className="p-4">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1 min-w-0">
-                      <p className="text-slate-900 text-sm font-medium mb-2">{ex.titre}</p>
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <Badge variant="outline" className="text-xs text-slate-500 border-slate-200">
-                          {CAPES_TYPE_LABELS[ex.type] ?? ex.type}
-                        </Badge>
+            {capesExercises.map(ex => {
+              const colors = CAPES_TYPE_COLORS[ex.type] ?? CAPES_TYPE_COLORS.entretien
+              const Icon = CAPES_TYPE_ICONS[ex.type] ?? BookOpen
+              return (
+                <Card key={ex.id} className="bg-white border-slate-200 hover:border-violet-300 hover:shadow-sm transition-all">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-3">
+                      <div className={cn('flex items-center justify-center h-9 w-9 rounded-lg shrink-0', colors.bg, colors.border, 'border')}>
+                        <Icon className={cn('h-4 w-4', colors.icon)} />
                       </div>
-                    </div>
-                    <div className="flex items-center gap-2 shrink-0">
-                      <Badge className={`text-xs ${LEVEL_COLORS[ex.niveau]}`}>
-                        {ex.niveau}
-                      </Badge>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-slate-900 text-sm font-medium leading-snug">{ex.titre}</p>
+                        <div className="flex items-center gap-2 mt-1 flex-wrap">
+                          <span className={cn('text-xs font-medium px-1.5 py-0.5 rounded', colors.bg, colors.icon)}>
+                            {CAPES_TYPE_LABELS[ex.type] ?? ex.type}
+                          </span>
+                          <Badge className={cn('text-xs', LEVEL_COLORS[ex.niveau])}>
+                            {ex.niveau}
+                          </Badge>
+                        </div>
+                      </div>
                       <Link
-                        href={`/chat?exercise=${ex.id}`}
+                        href={`/exercices/capes/${ex.id}`}
                         className={cn(
                           buttonVariants({ size: 'sm' }),
-                          'bg-violet-600 hover:bg-violet-700 text-white gap-1'
+                          'bg-violet-600 hover:bg-violet-700 text-white gap-1 shrink-0'
                         )}
                       >
                         Démarrer <ArrowRight className="h-3.5 w-3.5" />
                       </Link>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              )
+            })}
           </div>
         </div>
       )}

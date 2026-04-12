@@ -21,9 +21,10 @@ type Props = {
   conversationId?: string
   initialMessages?: UIMessage[]
   initialPrompt?: string
+  redirectBase?: string
 }
 
-export function ChatInterface({ conversationId: initialId, initialMessages = [], initialPrompt }: Props) {
+export function ChatInterface({ conversationId: initialId, initialMessages = [], initialPrompt, redirectBase = '/chat' }: Props) {
   const router = useRouter()
   const bottomRef = useRef<HTMLDivElement>(null)
   const [input, setInput] = useState('')
@@ -40,9 +41,9 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
 
   useEffect(() => {
     if (!initialId) {
-      router.replace(`/chat?id=${convId.current}`)
+      router.replace(`${redirectBase}?id=${convId.current}`)
     }
-  }, [initialId, router])
+  }, [initialId, redirectBase, router])
 
   useEffect(() => {
     if (!initSent.current) {
@@ -75,9 +76,7 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
       <div className="flex-1 overflow-y-auto space-y-4 pb-4">
         {error && (
           <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg p-3">
-            {error.message?.includes('Insufficient funds') || error.message?.includes('insufficient_funds')
-              ? 'Le service IA est temporairement indisponible. Réessaie dans quelques instants.'
-              : 'Une erreur est survenue. Recharge la page et réessaie.'}
+            {error.message}
           </div>
         )}
         {visibleMessages.map(message => (
