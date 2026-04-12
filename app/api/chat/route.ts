@@ -1,5 +1,7 @@
 import { streamText, convertToModelMessages, generateText } from 'ai'
-import { google } from '@ai-sdk/google'
+import { createGroq } from '@ai-sdk/groq'
+
+const groq = createGroq({ apiKey: process.env.GROQ_API_KEY })
 import { NextRequest, after } from 'next/server'
 import { createConversation, saveMessage, updateConversationTitle, getMessageCount, hasTitle } from '@/lib/db'
 import { getEffectiveUserId } from '@/lib/session'
@@ -462,7 +464,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const result = streamText({
-      model: google('gemini-2.0-flash'),
+      model: groq('llama-3.3-70b-versatile'),
       system: SYSTEM_PROMPT,
       messages: await convertToModelMessages(messages),
       maxOutputTokens: 1024,
@@ -476,7 +478,7 @@ export async function POST(req: NextRequest) {
             const count = await getMessageCount(conversationId!)
             if (count >= 6 && !(await hasTitle(conversationId!))) {
               const { text: title } = await generateText({
-                model: google('gemini-2.0-flash'),
+                model: groq('llama-3.3-70b-versatile'),
                 prompt: `En 5 mots maximum en français, donne un titre court et précis à cette conversation de préparation CAPES d'espagnol. Réponds uniquement avec le titre, sans ponctuation ni guillemets:\n\n"${text.slice(0, 400)}"`,
                 maxOutputTokens: 30,
               })
@@ -489,8 +491,10 @@ export async function POST(req: NextRequest) {
       },
     })
     return result.toUIMessageStreamResponse()
-  } catch {
-    return new Response(JSON.stringify({ error: 'Streaming failed' }), {
+  } catch (err) {
+    console.error('[chat] streamText error:', err)
+    const message = err instanceof Error ? err.message : String(err)
+    return new Response(JSON.stringify({ error: message }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     })
