@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { ExerciseFeedback } from './exercise-feedback'
 
@@ -9,19 +9,21 @@ type Props = {
   question: string
   answer: string
   explanation: string
-  onComplete: (correct: boolean) => void | Promise<void>
+  onComplete: (correct: boolean, timeSpent: number) => void | Promise<void>
 }
 
 export function ExerciseVraiFaux({ id, question, answer, explanation, onComplete }: Props) {
   const [selected, setSelected] = useState<string | null>(null)
   const [submitted, setSubmitted] = useState(false)
   const [aiExplanation, setAiExplanation] = useState<string>()
+  const startRef = useRef(Date.now())
 
   async function handleSubmit() {
     if (!selected) return
     setSubmitted(true)
     const correct = selected === answer
-    await onComplete(correct)
+    const timeSpent = Math.floor((Date.now() - startRef.current) / 1000)
+    await onComplete(correct, timeSpent)
 
     if (!correct) {
       try {
