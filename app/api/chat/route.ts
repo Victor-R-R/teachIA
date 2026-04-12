@@ -1,5 +1,5 @@
 import { streamText, convertToModelMessages, generateText } from 'ai'
-import { anthropic } from '@ai-sdk/anthropic'
+import { google } from '@ai-sdk/google'
 import { NextRequest, after } from 'next/server'
 import { createConversation, saveMessage, updateConversationTitle, getMessageCount, hasTitle } from '@/lib/db'
 import { getEffectiveUserId } from '@/lib/session'
@@ -462,7 +462,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const result = streamText({
-      model: anthropic('claude-sonnet-4.6'),
+      model: google('gemini-2.0-flash'),
       system: SYSTEM_PROMPT,
       messages: await convertToModelMessages(messages),
       maxOutputTokens: 1024,
@@ -476,7 +476,7 @@ export async function POST(req: NextRequest) {
             const count = await getMessageCount(conversationId!)
             if (count >= 6 && !(await hasTitle(conversationId!))) {
               const { text: title } = await generateText({
-                model: anthropic('claude-haiku-4.5'),
+                model: google('gemini-2.0-flash'),
                 prompt: `En 5 mots maximum en français, donne un titre court et précis à cette conversation de préparation CAPES d'espagnol. Réponds uniquement avec le titre, sans ponctuation ni guillemets:\n\n"${text.slice(0, 400)}"`,
                 maxOutputTokens: 30,
               })
