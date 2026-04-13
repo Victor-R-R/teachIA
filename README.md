@@ -12,7 +12,7 @@
 | ⚡ | **Génération par IA** | Crée un exercice sur n'importe quel thème en quelques secondes |
 | 🤖 | **Professeur IA** | Chat streaming avec un expert CAPES (Gemini 2.5 Flash). Bouton "Démarrer" sur chaque exercice pour lancer directement avec l'IA |
 | 💬 | **Conversations persistantes** | Sessions sauvegardées en DB, restaurables via `/chat?id=xxx` |
-| 📋 | **Historique `/conversations`** | Liste toutes les sessions avec titre IA, date et suppression |
+| 📋 | **Historique `/conversations`** | Titres intelligents : titre de l'exercice CAPES (avec icône de type) pour les sessions exercice, titre généré par IA (dès le 1er échange) pour les sessions Professeur IA, ou 1er message utilisateur en fallback |
 | 🏆 | **Dashboard gamifié** | XP (Débutant → Professeur), niveaux A/B/C par domaine, objectif quotidien configurable |
 | 🃏 | **Flashcards CAPES** | 53 cartes curées + génération IA par thème, flip 3D, tracking Connu/À revoir, filtres domaine/niveau |
 | 🎯 | **Simulacros CAPES** | Sujets IA conformes au jury 2025 — chronométré, correction structurée avec score /20 |
