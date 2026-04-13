@@ -251,7 +251,13 @@ export async function getConversations(userId: string): Promise<ConversationSumm
      ORDER BY c.updated_at DESC`,
     [userId]
   )
-  return rows as ConversationSummary[]
+  // Neon retourne des Date objects — on les sérialise en ISO string UTC
+  // pour éviter les problèmes de sérialisation React Server→Client
+  return (rows as ConversationSummary[]).map(r => ({
+    ...r,
+    updated_at: r.updated_at instanceof Date ? (r.updated_at as Date).toISOString() : r.updated_at,
+    created_at: r.created_at instanceof Date ? (r.created_at as Date).toISOString() : r.created_at,
+  }))
 }
 
 export async function getCAPESConversationMap(userId: string): Promise<Map<string, string>> {
