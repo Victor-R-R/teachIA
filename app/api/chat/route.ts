@@ -1,7 +1,7 @@
 import { streamText, convertToModelMessages, generateText } from 'ai'
-import { createGroq } from '@ai-sdk/groq'
+import { createGoogleGenerativeAI } from '@ai-sdk/google'
 
-const groq = createGroq({ apiKey: process.env.GROQ_API_KEY })
+const google = createGoogleGenerativeAI({ apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY })
 import { NextRequest, after } from 'next/server'
 import { createConversation, saveMessage, updateConversationTitle, getMessageCount, hasTitle } from '@/lib/db'
 import { getEffectiveUserId } from '@/lib/session'
@@ -524,7 +524,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const result = streamText({
-      model: groq('llama-3.3-70b-versatile'),
+      model: google('gemini-2.5-flash'),
       system: SYSTEM_PROMPT,
       messages: await convertToModelMessages(messages),
       maxOutputTokens: 1024,
@@ -538,7 +538,7 @@ export async function POST(req: NextRequest) {
             const count = await getMessageCount(conversationId!)
             if (count >= 6 && !(await hasTitle(conversationId!))) {
               const { text: title } = await generateText({
-                model: groq('llama-3.3-70b-versatile'),
+                model: google('gemini-2.5-flash'),
                 prompt: `En 5 mots maximum en français, donne un titre court et précis à cette conversation de préparation CAPES d'espagnol. Réponds uniquement avec le titre, sans ponctuation ni guillemets:\n\n"${text.slice(0, 400)}"`,
                 maxOutputTokens: 30,
               })

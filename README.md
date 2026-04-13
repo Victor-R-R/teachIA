@@ -10,7 +10,7 @@
 |---|---|---|
 | 📝 | **182 exercices** | 15 quiz interactifs (QCM/Vrai-Faux/Lacunaire) + 82 exercices CAPES ouverts (composition, version, thème, grammaire, civilisation, didactique, leçon, entretien) |
 | ⚡ | **Génération par IA** | Crée un exercice sur n'importe quel thème en quelques secondes |
-| 🤖 | **Professeur IA** | Chat streaming avec un expert CAPES. Bouton "Démarrer" sur chaque exercice pour lancer directement avec l'IA |
+| 🤖 | **Professeur IA** | Chat streaming avec un expert CAPES (Gemini 2.5 Flash). Bouton "Démarrer" sur chaque exercice pour lancer directement avec l'IA |
 | 💬 | **Conversations persistantes** | Sessions sauvegardées en DB, restaurables via `/chat?id=xxx` |
 | 📋 | **Historique `/conversations`** | Liste toutes les sessions avec titre IA, date et suppression |
 | 🏆 | **Dashboard gamifié** | XP (Débutant → Professeur), niveaux A/B/C par domaine, objectif quotidien configurable |
