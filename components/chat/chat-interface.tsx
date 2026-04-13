@@ -49,6 +49,7 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
   const convId = useRef<string>(initialId ?? nanoid())
   const lastTextRef = useRef<string>('')
   const [countdown, setCountdown] = useState<number | null>(null)
+  const greetedRef = useRef(false)
 
   const { messages, sendMessage, status, error } = useChat({
     transport: new DefaultChatTransport({
@@ -63,6 +64,15 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
       router.replace(`${redirectBase}?id=${convId.current}`)
     }
   }, [initialId, redirectBase, router])
+
+  // Greeting automatique pour une nouvelle conversation générale
+  useEffect(() => {
+    if (!greetedRef.current && !initialId && initialMessages.length === 0 && !exerciseContext && !initialPrompt) {
+      greetedRef.current = true
+      sendMessage({ text: '[[INIT]]' })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -94,6 +104,12 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
   }, [countdown, doRetry])
 
   const isStreaming = status === 'streaming' || status === 'submitted'
+
+  const displayMessages = messages.filter(m => {
+    if (m.role !== 'user') return true
+    const text = m.parts?.find((p): p is { type: 'text'; text: string } => p.type === 'text')?.text
+    return text !== '[[INIT]]'
+  })
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -127,14 +143,14 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
             )}
           </div>
         )}
-        {messages.length === 0 && (exerciseContext || initialPrompt) && (
+        {displayMessages.length === 0 && (exerciseContext || initialPrompt) && (
           <div className="flex items-center justify-center h-full py-8">
             <p className="text-sm text-slate-400 text-center">
               ✍️ Écris ta réponse ci-dessous pour commencer l&apos;exercice
             </p>
           </div>
         )}
-        {messages.map(message => (
+        {displayMessages.map(message => (
           <Message key={message.id} from={message.role}>
             <MessageContent>
               {message.parts?.map((part, index) =>

@@ -12,13 +12,21 @@ type Props = {
 }
 
 function formatDate(dateStr: string): string {
-  const date = new Date(dateStr)
+  // Neon peut retourner un objet Date ou une string sans 'Z'
+  let date: Date
+  if (dateStr instanceof Date) {
+    date = dateStr
+  } else {
+    const utc = dateStr.endsWith('Z') || /[+-]\d{2}:\d{2}$/.test(dateStr) ? dateStr : dateStr + 'Z'
+    date = new Date(utc)
+  }
   return date.toLocaleDateString('fr-FR', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
+    timeZone: 'Europe/Paris',
   })
 }
 
