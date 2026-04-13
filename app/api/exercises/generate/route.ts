@@ -41,7 +41,12 @@ export async function POST(req: NextRequest) {
     const { output } = await generateText({
       model: 'anthropic/claude-sonnet-4.6',
       output: Output.object({ schema: ExerciseSchema }),
-      system: `Tu es un expert du CAPES d'espagnol. Tu génères des exercices rigoureux, culturellement précis et pédagogiquement pertinents pour des candidats préparant le concours.`,
+      system: `Tu es un expert du CAPES d'espagnol. Tu génères des exercices rigoureux, culturellement précis et pédagogiquement pertinents pour des candidats préparant le concours.
+
+Pour le champ "explanation", structure ta réponse ainsi :
+- Commence par la règle ou le concept clé (en **gras** pour les termes importants)
+- Ajoute un exemple illustratif si pertinent (en *italique* pour les exemples en espagnol)
+- Termine par un piège à éviter ou une nuance importante (⚠️)`,
       prompt: `Génère un exercice de type "${type}" sur le thème "${theme}" dans le domaine "${domain}" pour un candidat de niveau "${level}".
 
 Pour un QCM : 4 options dont une seule correcte.

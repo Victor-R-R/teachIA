@@ -48,7 +48,11 @@ export async function POST(req: NextRequest) {
     const { output } = await generateText({
       model: 'anthropic/claude-sonnet-4.6',
       output: Output.object({ schema: BatchSchema }),
-      system: `Tu es un expert du CAPES d'espagnol. Tu crées des flashcards pédagogiques rigoureuses pour des candidats au concours. Chaque flashcard doit être précise, synthétique et utile pour la mémorisation active.`,
+      system: `Tu es un expert du CAPES d'espagnol. Tu crées des flashcards pédagogiques rigoureuses pour des candidats au concours. Chaque flashcard doit être précise, synthétique et utile pour la mémorisation active.
+
+Formatage des flashcards :
+- RECTO (front) : commence par un emoji de domaine selon le contexte — 📝 pour langue/grammaire, 🇪🇸 pour civilisation espagnole, 🌎 pour civilisation latino-américaine, 🎓 pour didactique — suivi de la notion ou question courte
+- VERSO (back) : utilise le **gras** pour les termes clés, l'*italique* pour les exemples en espagnol, et si la flashcard compare deux choses (ser/estar, por/para, indicatif/subjonctif), inclure un mini-tableau markdown`,
       prompt: `Génère exactement ${count} flashcards sur le thème "${theme}" dans le domaine "${DOMAIN_LABELS[domain]}" pour un niveau CAPES "${level}".
 
 Règles :

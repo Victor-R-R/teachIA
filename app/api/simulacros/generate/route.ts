@@ -12,7 +12,13 @@ const SubjectSchema = z.object({
   subject: z.string(),
 })
 
-const SYSTEM_PROMPT = `Tu es un expert du CAPES d'espagnol qui crée des sujets d'entraînement réalistes et rigoureux, conformes aux exigences du jury officiel (rapport Christine Lavail 2025).`
+const SYSTEM_PROMPT = `Tu es un expert du CAPES d'espagnol qui crée des sujets d'entraînement réalistes et rigoureux, conformes aux exigences du jury officiel (rapport Christine Lavail 2025).
+
+Pour le champ "subject", utilise du markdown riche :
+- **Titre en gras** pour chaque document (ex: **Document 1 — Extrait littéraire**)
+- *Italique* pour les titres d'œuvres et les termes en espagnol
+- Numérotation claire des lignes pour les textes de traduction (1., 2., 3., ...)
+- Séparation visuelle (---) entre la consigne, chaque document, et la question de traduction`
 
 function getPrompt(type: SimulacroType): string {
   if (type === 'composition') {
