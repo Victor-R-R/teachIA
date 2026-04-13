@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import Link from 'next/link'
-import { getExercises, getAttemptStatsByExercises, getExerciseStatus } from '@/lib/db'
+import { getExercises, getAttemptStatsByExercises, getExerciseStatus, getCAPESConversationMap } from '@/lib/db'
 import { getEffectiveUserId } from '@/lib/session'
 import { EXERCISES } from '@/lib/exercises'
 import type { Level as CAPESLevel } from '@/lib/exercises'
@@ -65,7 +65,10 @@ export default async function ExercicesPage({
   const level = LEVELS.includes(params.level as Level) ? (params.level as Level) : undefined
   const userId = await getEffectiveUserId()
 
-  const dbExercises = await getExercises(userId, { level, limit: 100 })
+  const [dbExercises, capesConvMap] = await Promise.all([
+    getExercises(userId, { level, limit: 100 }),
+    getCAPESConversationMap(userId),
+  ])
   const statsRows = await getAttemptStatsByExercises(userId, dbExercises.map(e => e.id))
   const statsMap = new Map(statsRows.map(s => [s.exercise_id, s]))
   const completedCount = statsRows.filter(s => s.has_correct).length
@@ -195,6 +198,11 @@ export default async function ExercicesPage({
             {capesExercises.map(ex => {
               const colors = CAPES_TYPE_COLORS[ex.type] ?? CAPES_TYPE_COLORS.entretien
               const Icon = CAPES_TYPE_ICONS[ex.type] ?? BookOpen
+              const existingConvId = capesConvMap.get(ex.id)
+              const started = !!existingConvId
+              const href = started
+                ? `/exercices/capes/${ex.id}?id=${existingConvId}`
+                : `/exercices/capes/${ex.id}`
               return (
                 <Card key={ex.id} className="bg-white border-slate-200 hover:border-violet-300 hover:shadow-sm transition-all">
                   <CardContent className="p-4">
@@ -214,13 +222,15 @@ export default async function ExercicesPage({
                         </div>
                       </div>
                       <Link
-                        href={`/exercices/capes/${ex.id}`}
+                        href={href}
                         className={cn(
                           buttonVariants({ size: 'sm' }),
-                          'bg-violet-600 hover:bg-violet-700 text-white gap-1 shrink-0'
+                          started
+                            ? 'bg-emerald-600 hover:bg-emerald-700 text-white gap-1 shrink-0'
+                            : 'bg-violet-600 hover:bg-violet-700 text-white gap-1 shrink-0'
                         )}
                       >
-                        Démarrer <ArrowRight className="h-3.5 w-3.5" />
+                        {started ? 'Reprendre' : 'Démarrer'} <ArrowRight className="h-3.5 w-3.5" />
                       </Link>
                     </div>
                   </CardContent>

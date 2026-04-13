@@ -254,6 +254,15 @@ export async function getConversations(userId: string): Promise<ConversationSumm
   return rows as ConversationSummary[]
 }
 
+export async function getCAPESConversationMap(userId: string): Promise<Map<string, string>> {
+  const rows = await sql.query(
+    `SELECT id, capes_exercise_id FROM conversations
+     WHERE user_id = $1 AND capes_exercise_id IS NOT NULL`,
+    [userId]
+  ) as { id: string; capes_exercise_id: string }[]
+  return new Map(rows.map(r => [r.capes_exercise_id, r.id]))
+}
+
 export async function getConversationMessages(id: string): Promise<ConversationMessage[]> {
   const rows = await sql.query(
     `SELECT * FROM conversation_messages WHERE conversation_id = $1 ORDER BY created_at ASC`,

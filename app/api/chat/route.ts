@@ -537,6 +537,7 @@ export async function POST(req: NextRequest) {
       system: systemPrompt,
       messages: await convertToModelMessages(messages),
       maxOutputTokens: 1024,
+      maxRetries: 0,
       async onFinish({ text }) {
         if (!conversationId || isInit) return
         after(async () => {
