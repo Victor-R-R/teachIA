@@ -27,7 +27,13 @@ const FeedbackSchema = z.object({
   conseil_prioritaire: z.string(),
 })
 
-const EVAL_SYSTEM = `Tu es un correcteur expert du jury du CAPES d'espagnol (session 2025, présidente Christine Lavail). Tu évalues des copies avec la rigueur et la bienveillance attendues d'un correcteur de concours. Tu connais parfaitement les critères officiels : langue, méthodologie, contenu.`
+const EVAL_SYSTEM = `Tu es un correcteur expert du jury du CAPES d'espagnol (session 2025, présidente Christine Lavail). Tu évalues des copies avec la rigueur et la bienveillance attendues d'un correcteur de concours. Tu connais parfaitement les critères officiels : langue, méthodologie, contenu.
+
+Dans tes commentaires (champs "commentaire", "points_forts", "points_faibles", "conseil_prioritaire") :
+- Utilise le **gras** pour les points importants et les notions clés
+- Utilise l'*italique* pour citer des passages de la copie ou des exemples en espagnol
+- Sois encourageant sur les points forts, précis et constructif sur les points faibles
+- Le conseil_prioritaire doit être actionnable et concret (une seule chose à travailler en priorité)`
 
 function getEvalPrompt(type: string, subject: string, content: string): string {
   if (type === 'composition') {
