@@ -2,18 +2,36 @@
 
 import { useChat } from '@ai-sdk/react'
 import { DefaultChatTransport } from 'ai'
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { nanoid } from 'nanoid'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Send, Loader2 } from 'lucide-react'
+import { Send, Loader2, Clock } from 'lucide-react'
 import {
   Message,
   MessageContent,
   MessageResponse,
 } from '@/components/ai-elements/message'
 import type { UIMessage } from 'ai'
+
+const DEFAULT_RETRY_DELAY = 30
+
+function isRetryableError(err: Error) {
+  return (
+    err.message.includes('high demand') ||
+    err.message.includes('UNAVAILABLE') ||
+    err.message.includes('503') ||
+    err.message.includes('quota') ||
+    err.message.includes('Quota')
+  )
+}
+
+function parseRetryDelay(err: Error): number {
+  const match = err.message.match(/retry in ([\d.]+)s/i)
+  if (match) return Math.ceil(parseFloat(match[1]))
+  return DEFAULT_RETRY_DELAY
+}
 
 type Props = {
   conversationId?: string
@@ -29,6 +47,8 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
   const bottomRef = useRef<HTMLDivElement>(null)
   const [input, setInput] = useState('')
   const convId = useRef<string>(initialId ?? nanoid())
+  const lastTextRef = useRef<string>('')
+  const [countdown, setCountdown] = useState<number | null>(null)
 
   const { messages, sendMessage, status, error } = useChat({
     transport: new DefaultChatTransport({
@@ -48,6 +68,31 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
+  // Démarrer le countdown sur erreur retryable
+  useEffect(() => {
+    if (error && isRetryableError(error)) {
+      setCountdown(parseRetryDelay(error))
+    }
+  }, [error])
+
+  // Décrémenter le countdown
+  useEffect(() => {
+    if (countdown === null || countdown <= 0) return
+    const t = setTimeout(() => setCountdown(c => (c ?? 1) - 1), 1000)
+    return () => clearTimeout(t)
+  }, [countdown])
+
+  // Réessai automatique quand countdown atteint 0
+  const doRetry = useCallback(() => {
+    if (!lastTextRef.current) return
+    setCountdown(null)
+    sendMessage({ text: lastTextRef.current })
+  }, [sendMessage])
+
+  useEffect(() => {
+    if (countdown === 0) doRetry()
+  }, [countdown, doRetry])
+
   const isStreaming = status === 'streaming' || status === 'submitted'
 
   function handleSubmit(e: React.FormEvent) {
@@ -56,6 +101,8 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
     const text = messages.length === 0 && initialPrompt
       ? `${initialPrompt}\n\n---\n\nMa réponse : ${input}`
       : input
+    lastTextRef.current = text
+    setCountdown(null)
     sendMessage({ text })
     setInput('')
   }
@@ -64,8 +111,20 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
     <div className="flex flex-col flex-1 min-h-0">
       <div className="flex-1 overflow-y-auto space-y-4 pb-4">
         {error && (
-          <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg p-3">
-            {error.message}
+          <div className="text-sm bg-red-50 border border-red-200 rounded-lg p-3">
+            {countdown !== null && countdown > 0 ? (
+              <div className="flex items-center gap-2 text-amber-700">
+                <Clock className="h-4 w-4 shrink-0" />
+                <span>Le modèle est surchargé — réessai automatique dans <strong>{countdown}s</strong></span>
+              </div>
+            ) : countdown === 0 ? (
+              <div className="flex items-center gap-2 text-amber-700">
+                <Loader2 className="h-4 w-4 animate-spin shrink-0" />
+                <span>Réessai en cours…</span>
+              </div>
+            ) : (
+              <span className="text-red-600">{error.message}</span>
+            )}
           </div>
         )}
         {messages.length === 0 && (exerciseContext || initialPrompt) && (
