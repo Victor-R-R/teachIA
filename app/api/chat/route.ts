@@ -495,11 +495,14 @@ export async function POST(req: NextRequest) {
   let messages: unknown
   let conversationId: string | undefined
   let exerciseContext: string | undefined
+  let capesExerciseId: string | undefined
   try {
     const body = await req.json()
     messages = body?.messages
     conversationId = typeof body?.conversationId === 'string' ? body.conversationId : undefined
     exerciseContext = typeof body?.exerciseContext === 'string' ? body.exerciseContext : undefined
+    capesExerciseId = typeof body?.capesExerciseId === 'string' ? body.capesExerciseId : undefined
+    console.log('[chat] capesExerciseId:', capesExerciseId, 'conversationId:', conversationId)
   } catch {
     return new Response(JSON.stringify({ error: 'Invalid JSON' }), {
       status: 400,
@@ -538,7 +541,7 @@ export async function POST(req: NextRequest) {
         if (!conversationId || isInit) return
         after(async () => {
           try {
-            await createConversation(userId, conversationId!)
+            await createConversation(userId, conversationId!, capesExerciseId)
             await saveMessage(conversationId!, 'user', userText)
             await saveMessage(conversationId!, 'assistant', text)
             const count = await getMessageCount(conversationId!)

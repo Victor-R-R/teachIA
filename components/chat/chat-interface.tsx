@@ -20,10 +20,11 @@ type Props = {
   initialMessages?: UIMessage[]
   initialPrompt?: string
   exerciseContext?: string
+  capesExerciseId?: string
   redirectBase?: string
 }
 
-export function ChatInterface({ conversationId: initialId, initialMessages = [], initialPrompt, exerciseContext, redirectBase = '/chat' }: Props) {
+export function ChatInterface({ conversationId: initialId, initialMessages = [], initialPrompt, exerciseContext, capesExerciseId, redirectBase = '/chat' }: Props) {
   const router = useRouter()
   const bottomRef = useRef<HTMLDivElement>(null)
   const [input, setInput] = useState('')
@@ -32,7 +33,7 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
   const { messages, sendMessage, status, error } = useChat({
     transport: new DefaultChatTransport({
       api: '/api/chat',
-      body: { conversationId: convId.current, exerciseContext },
+      body: { conversationId: convId.current, exerciseContext, capesExerciseId },
     }),
     messages: initialMessages,
   })
