@@ -255,8 +255,8 @@ export async function getConversations(userId: string): Promise<ConversationSumm
   // pour éviter les problèmes de sérialisation React Server→Client
   return (rows as ConversationSummary[]).map(r => ({
     ...r,
-    updated_at: r.updated_at instanceof Date ? (r.updated_at as Date).toISOString() : r.updated_at,
-    created_at: r.created_at instanceof Date ? (r.created_at as Date).toISOString() : r.created_at,
+    updated_at: (r.updated_at as unknown) instanceof Date ? (r.updated_at as unknown as Date).toISOString() : r.updated_at,
+    created_at: (r.created_at as unknown) instanceof Date ? (r.created_at as unknown as Date).toISOString() : r.created_at,
   }))
 }
 
