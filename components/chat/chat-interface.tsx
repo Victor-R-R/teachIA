@@ -15,26 +15,24 @@ import {
 } from '@/components/ai-elements/message'
 import type { UIMessage } from 'ai'
 
-const INIT_MARKER = '[[INIT]]'
-
 type Props = {
   conversationId?: string
   initialMessages?: UIMessage[]
   initialPrompt?: string
+  exerciseContext?: string
   redirectBase?: string
 }
 
-export function ChatInterface({ conversationId: initialId, initialMessages = [], initialPrompt, redirectBase = '/chat' }: Props) {
+export function ChatInterface({ conversationId: initialId, initialMessages = [], initialPrompt, exerciseContext, redirectBase = '/chat' }: Props) {
   const router = useRouter()
   const bottomRef = useRef<HTMLDivElement>(null)
   const [input, setInput] = useState('')
   const convId = useRef<string>(initialId ?? nanoid())
-  const initSent = useRef(!!initialId)
 
   const { messages, sendMessage, status, error } = useChat({
     transport: new DefaultChatTransport({
       api: '/api/chat',
-      body: { conversationId: convId.current },
+      body: { conversationId: convId.current, exerciseContext },
     }),
     messages: initialMessages,
   })
@@ -46,13 +44,6 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
   }, [initialId, redirectBase, router])
 
   useEffect(() => {
-    if (!initSent.current) {
-      initSent.current = true
-      sendMessage({ text: initialPrompt ?? INIT_MARKER }).catch(console.error)
-    }
-  }, [sendMessage, initialPrompt])
-
-  useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
@@ -61,15 +52,12 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!input.trim() || isStreaming) return
-    sendMessage({ text: input })
+    const text = messages.length === 0 && initialPrompt
+      ? `${initialPrompt}\n\n---\n\nMa réponse : ${input}`
+      : input
+    sendMessage({ text })
     setInput('')
   }
-
-  const visibleMessages = messages.filter(m => {
-    if (m.role !== 'user') return true
-    const text = m.parts?.find(p => p.type === 'text')?.text
-    return text !== INIT_MARKER
-  })
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
@@ -79,7 +67,14 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
             {error.message}
           </div>
         )}
-        {visibleMessages.map(message => (
+        {messages.length === 0 && (exerciseContext || initialPrompt) && (
+          <div className="flex items-center justify-center h-full py-8">
+            <p className="text-sm text-slate-400 text-center">
+              ✍️ Écris ta réponse ci-dessous pour commencer l&apos;exercice
+            </p>
+          </div>
+        )}
+        {messages.map(message => (
           <Message key={message.id} from={message.role}>
             <MessageContent>
               {message.parts?.map((part, index) =>
