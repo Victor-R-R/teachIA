@@ -2,9 +2,11 @@ export const dynamic = 'force-dynamic'
 
 import { notFound } from 'next/navigation'
 import { getExerciseById } from '@/lib/exercises'
+import { getConversationMessages } from '@/lib/db'
 import { ChatInterface } from '@/components/chat/chat-interface'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import type { UIMessage } from 'ai'
 
 const TYPE_CONFIG: Record<string, { icon: string; label: string; bg: string; border: string; text: string; accent: string }> = {
   composition: { icon: '✍️', label: 'Composition',         bg: 'bg-violet-50',  border: 'border-violet-200', text: 'text-violet-900', accent: 'bg-violet-600' },
@@ -25,10 +27,12 @@ const LEVEL_CONFIG: Record<string, { emoji: string; label: string; badge: string
 
 export default async function CapesExercisePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>
+  searchParams: Promise<{ id?: string }>
 }) {
-  const { id } = await params
+  const [{ id }, { id: convId }] = await Promise.all([params, searchParams])
   const exercise = getExerciseById(id)
 
   if (!exercise) notFound()
@@ -42,6 +46,20 @@ export default async function CapesExercisePage({
 L'élève va envoyer sa réponse. Corrige-la avec ✅/❌/💡 et guide-le étape par étape.`
 
   const initialPrompt = exerciseContext
+
+  let initialMessages: UIMessage[] = []
+  if (convId) {
+    try {
+      const msgs = await getConversationMessages(convId)
+      initialMessages = msgs.map(m => ({
+        id: String(m.id),
+        role: m.role as 'user' | 'assistant',
+        parts: [{ type: 'text' as const, text: m.content }],
+      }))
+    } catch {
+      // Conversation introuvable — on repart de zéro
+    }
+  }
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
@@ -97,9 +115,12 @@ L'élève va envoyer sa réponse. Corrige-la avec ✅/❌/💡 et guide-le étap
       </div>
 
       <ChatInterface
+        conversationId={convId}
+        initialMessages={initialMessages}
         initialPrompt={initialPrompt}
         exerciseContext={exerciseContext}
-        redirectBase="/chat"
+        capesExerciseId={id}
+        redirectBase={`/exercices/capes/${id}`}
       />
     </div>
   )

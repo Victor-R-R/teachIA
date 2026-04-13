@@ -63,7 +63,11 @@ export function ConversationsList({ conversations }: Props) {
         <Card
           key={conv.id}
           className="p-4 flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors cursor-pointer"
-          onClick={() => router.push(`/chat?id=${conv.id}`)}
+          onClick={() => router.push(
+            conv.capes_exercise_id
+              ? `/exercices/capes/${conv.capes_exercise_id}?id=${conv.id}`
+              : `/chat?id=${conv.id}`
+          )}
         >
           <div className="flex items-start gap-3 min-w-0">
             <MessageCircle className="h-5 w-5 text-violet-500 shrink-0 mt-0.5" />

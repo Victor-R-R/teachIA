@@ -198,6 +198,7 @@ export type ConversationSummary = {
   created_at: string
   updated_at: string
   message_count: string
+  capes_exercise_id: string | null
 }
 
 export type ConversationMessage = {
@@ -208,10 +209,12 @@ export type ConversationMessage = {
   created_at: string
 }
 
-export async function createConversation(userId: string, id: string): Promise<void> {
+export async function createConversation(userId: string, id: string, capesExerciseId?: string): Promise<void> {
   await sql.query(
-    'INSERT INTO conversations (id, user_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
-    [id, userId]
+    `INSERT INTO conversations (id, user_id, capes_exercise_id) VALUES ($1, $2, $3)
+     ON CONFLICT (id) DO UPDATE SET
+       capes_exercise_id = COALESCE(conversations.capes_exercise_id, EXCLUDED.capes_exercise_id)`,
+    [id, userId, capesExerciseId ?? null]
   )
 }
 
@@ -239,7 +242,7 @@ export async function updateConversationTitle(id: string, title: string): Promis
 
 export async function getConversations(userId: string): Promise<ConversationSummary[]> {
   const rows = await sql.query(
-    `SELECT c.id, c.title, c.created_at, c.updated_at,
+    `SELECT c.id, c.title, c.created_at, c.updated_at, c.capes_exercise_id,
             COUNT(m.id)::text AS message_count
      FROM conversations c
      LEFT JOIN conversation_messages m ON m.conversation_id = c.id
