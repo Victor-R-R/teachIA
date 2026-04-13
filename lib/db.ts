@@ -199,6 +199,7 @@ export type ConversationSummary = {
   updated_at: string
   message_count: string
   capes_exercise_id: string | null
+  first_user_message: string | null
 }
 
 export type ConversationMessage = {
@@ -243,7 +244,10 @@ export async function updateConversationTitle(id: string, title: string): Promis
 export async function getConversations(userId: string): Promise<ConversationSummary[]> {
   const rows = await sql.query(
     `SELECT c.id, c.title, c.created_at, c.updated_at, c.capes_exercise_id,
-            COUNT(m.id)::text AS message_count
+            COUNT(m.id)::text AS message_count,
+            (SELECT content FROM conversation_messages
+             WHERE conversation_id = c.id AND role = 'user'
+             ORDER BY id ASC LIMIT 1) AS first_user_message
      FROM conversations c
      LEFT JOIN conversation_messages m ON m.conversation_id = c.id
      WHERE c.user_id = $1

@@ -546,7 +546,7 @@ export async function POST(req: NextRequest) {
             await saveMessage(conversationId!, 'user', userText)
             await saveMessage(conversationId!, 'assistant', text)
             const count = await getMessageCount(conversationId!)
-            if (count >= 6 && !(await hasTitle(conversationId!))) {
+            if (count >= 2 && !(await hasTitle(conversationId!))) {
               const { text: title } = await generateText({
                 model: google('gemini-2.5-flash'),
                 prompt: `En 5 mots maximum en français, donne un titre court et précis à cette conversation de préparation CAPES d'espagnol. Réponds uniquement avec le titre, sans ponctuation ni guillemets:\n\n"${text.slice(0, 400)}"`,
