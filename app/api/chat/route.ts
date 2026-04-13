@@ -494,10 +494,12 @@ const INIT_MARKER = '[[INIT]]'
 export async function POST(req: NextRequest) {
   let messages: unknown
   let conversationId: string | undefined
+  let exerciseContext: string | undefined
   try {
     const body = await req.json()
     messages = body?.messages
     conversationId = typeof body?.conversationId === 'string' ? body.conversationId : undefined
+    exerciseContext = typeof body?.exerciseContext === 'string' ? body.exerciseContext : undefined
   } catch {
     return new Response(JSON.stringify({ error: 'Invalid JSON' }), {
       status: 400,
@@ -522,10 +524,14 @@ export async function POST(req: NextRequest) {
   })()
   const isInit = userText === INIT_MARKER
 
+  const systemPrompt = exerciseContext
+    ? `${SYSTEM_PROMPT}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nCONTEXTE EXERCICE EN COURS\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n${exerciseContext}`
+    : SYSTEM_PROMPT
+
   try {
     const result = streamText({
       model: google('gemini-2.5-flash'),
-      system: SYSTEM_PROMPT,
+      system: systemPrompt,
       messages: await convertToModelMessages(messages),
       maxOutputTokens: 1024,
       async onFinish({ text }) {

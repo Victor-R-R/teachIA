@@ -36,12 +36,12 @@ export default async function CapesExercisePage({
   const typeConf  = TYPE_CONFIG[exercise.type]  ?? TYPE_CONFIG.composition
   const levelConf = LEVEL_CONFIG[exercise.niveau] ?? LEVEL_CONFIG.A
 
-  const initialPrompt = `Je veux faire l'exercice "${exercise.titre}" (${exercise.id}, niveau ${exercise.niveau}).
+  const exerciseContext = `Exercice en cours : "${exercise.titre}" (${exercise.id}, niveau ${exercise.niveau}).
+Énoncé : ${exercise.enonce}${exercise.indications ? `\nIndications : ${exercise.indications}` : ''}
 
-Énoncé : ${exercise.enonce}
-${exercise.indications ? `\nIndications : ${exercise.indications}` : ''}
+L'élève va envoyer sa réponse. Corrige-la avec ✅/❌/💡 et guide-le étape par étape.`
 
-Lance cet exercice maintenant : commence par rappeler brièvement l'objectif avec l'emoji de domaine approprié et le badge de niveau (🟢 A / 🟡 B / 🔴 C), puis présente la consigne de façon claire et structurée (markdown, emojis), et guide-moi étape par étape.`
+  const initialPrompt = exerciseContext
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
@@ -98,7 +98,8 @@ Lance cet exercice maintenant : commence par rappeler brièvement l'objectif ave
 
       <ChatInterface
         initialPrompt={initialPrompt}
-        redirectBase={`/exercices/capes/${id}`}
+        exerciseContext={exerciseContext}
+        redirectBase="/chat"
       />
     </div>
   )
