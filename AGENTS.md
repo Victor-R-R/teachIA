@@ -119,3 +119,47 @@ GOOGLE_CLIENT_ID      # OAuth Google
 GOOGLE_CLIENT_SECRET  # OAuth Google
 SUPERADMIN_EMAIL      # Email du compte superadmin
 ```
+
+## Prompts IA — règles de formatage
+
+Tous les system prompts utilisent du **markdown riche** et des **emojis thématiques**. Toujours respecter ces conventions quand tu modifies ou crées un prompt.
+
+### Emojis par domaine
+
+| Emoji | Domaine |
+|-------|---------|
+| 🇪🇸 | Civilisation espagnole |
+| 🌎 | Civilisation latino-américaine |
+| 📝 | Langue / Grammaire / Traduction |
+| 🎓 | Didactique / Pédagogie |
+| 📖 | Œuvres au programme |
+| ⚠️ | Piège du jury / Erreur fréquente |
+| ✅ | Bonne pratique / Élément valorisé |
+| ❌ | Erreur à éviter |
+| 💡 | Astuce / Conseil |
+| 🎯 | Objectif / Point clé |
+| 📊 | Statistiques / Données du jury |
+| 🟢🟡🔴 | Niveaux A / B / C |
+
+### Structure par type de réponse
+
+- **Exercices** : `🎯 **Objectif** + niveau (🟢/🟡/🔴)` → consigne → `💡 **Conseil**`
+- **Corrections** : `✅` points réussis · `❌` erreur + POURQUOI · `💡` conseil prioritaire
+- **Notions** : `🏗️` analogie → `📏` règle → `📝` exemple → `⚠️` piège
+- **Accueil** : bloc stats jury + tableau markdown des épreuves disponibles
+
+### Règle de position des instructions de formatage
+
+Les règles de formatage doivent être placées **en tête du system prompt** (avant toute autre section) pour être correctement suivies par les modèles llama/Groq. Les instructions de formatage enfouies en milieu de prompt sont ignorées.
+
+### Fichiers de prompts
+
+| Fichier | Modèle | Rôle |
+|---------|--------|------|
+| `app/api/chat/route.ts` | Groq llama-3.3-70b | Chat principal (Professeur IA) |
+| `app/api/exercises/generate/route.ts` | anthropic/claude-sonnet-4.6 | Génération d'exercices QCM/vrai-faux/lacunaire |
+| `app/api/exercises/correct/route.ts` | anthropic/claude-sonnet-4.6 | Correction avec ❌/✅/💡 |
+| `app/api/flashcards/generate/route.ts` | anthropic/claude-sonnet-4.6 | Flashcards avec emojis de domaine |
+| `app/api/simulacros/generate/route.ts` | anthropic/claude-sonnet-4.6 | Génération de sujets d'examen |
+| `app/api/simulacros/submit/route.ts` | anthropic/claude-sonnet-4.6 | Évaluation des copies |
+| `app/api/plan/generate/route.ts` | anthropic/claude-sonnet-4.6 | Plan de révision personnalisé |
