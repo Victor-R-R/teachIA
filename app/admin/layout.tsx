@@ -25,11 +25,19 @@ export default async function AdminLayout({ children }: { children: ReactNode })
         <div className="px-4 py-3 md:px-6 md:py-4">
           <div className="flex items-center justify-between">
             <h1 className="text-xl font-bold text-slate-900 md:text-2xl">Administration</h1>
-            <div className="text-right text-sm text-slate-600">
-              {session.user.name && <p className="font-medium">{session.user.name}</p>}
-              {session.user.email && (
-                <p className="hidden text-xs text-slate-500 sm:block">{session.user.email}</p>
-              )}
+            <div className="flex items-center gap-4">
+              <Link
+                href="/"
+                className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+              >
+                ← Retour à l&apos;app
+              </Link>
+              <div className="text-right text-sm text-slate-600">
+                {session.user.name && <p className="font-medium">{session.user.name}</p>}
+                {session.user.email && (
+                  <p className="hidden text-xs text-slate-500 sm:block">{session.user.email}</p>
+                )}
+              </div>
             </div>
           </div>
         </div>
