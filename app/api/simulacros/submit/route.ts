@@ -1,6 +1,7 @@
 import { generateText, Output } from 'ai'
 import { NextRequest, NextResponse } from 'next/server'
-import { getSimulacroById, saveSimulacroResponse, saveSimulacroFeedback } from '@/lib/db'
+import { getSimulacroById, saveSimulacroResponse, saveSimulacroFeedback, logStudyActivity } from '@/lib/db'
+import { getEffectiveUserId } from '@/lib/session'
 import { z } from 'zod'
 
 const FeedbackSchema = z.object({
@@ -137,6 +138,9 @@ export async function POST(req: NextRequest) {
     // Serialize feedback as JSON string for storage
     const feedbackJson = JSON.stringify(output)
     await saveSimulacroFeedback(id, feedbackJson, output.score)
+
+    const userId = await getEffectiveUserId()
+    await logStudyActivity(userId, 'simulacro', 5)
 
     return NextResponse.json({ feedback: output, score: output.score })
   } catch (err) {

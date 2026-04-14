@@ -3,7 +3,7 @@ import { createGoogleGenerativeAI } from '@ai-sdk/google'
 
 const google = createGoogleGenerativeAI({ apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY })
 import { NextRequest, after } from 'next/server'
-import { createConversation, saveMessage, updateConversationTitle, getMessageCount, hasTitle } from '@/lib/db'
+import { createConversation, saveMessage, updateConversationTitle, getMessageCount, hasTitle, logStudyActivity } from '@/lib/db'
 import { getEffectiveUserId } from '@/lib/session'
 
 const SYSTEM_PROMPT = `Tu es le professeur IA intégré à TeachIA, une plateforme de préparation au CAPES d'espagnol. Tu incarnes un professeur passionné, exigeant et bienveillant, expert en langue espagnole ET en civilisation hispanique.
@@ -545,6 +545,7 @@ export async function POST(req: NextRequest) {
             await createConversation(userId, conversationId!, capesExerciseId)
             await saveMessage(conversationId!, 'user', userText)
             await saveMessage(conversationId!, 'assistant', text)
+            await logStudyActivity(userId, capesExerciseId ? 'capes' : 'chat', 1)
             const count = await getMessageCount(conversationId!)
             if (count >= 2 && !(await hasTitle(conversationId!))) {
               const { text: title } = await generateText({
