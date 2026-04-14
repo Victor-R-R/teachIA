@@ -105,11 +105,26 @@ export function ChatInterface({ conversationId: initialId, initialMessages = [],
 
   const isStreaming = status === 'streaming' || status === 'submitted'
 
-  const displayMessages = messages.filter(m => {
-    if (m.role !== 'user') return true
-    const text = m.parts?.find((p): p is { type: 'text'; text: string } => p.type === 'text')?.text
-    return text !== '[[INIT]]'
-  })
+  const RESPONSE_SEPARATOR = '\n\n---\n\nMa réponse : '
+
+  const displayMessages = messages
+    .filter(m => {
+      if (m.role !== 'user') return true
+      const text = m.parts?.find((p): p is { type: 'text'; text: string } => p.type === 'text')?.text
+      return text !== '[[INIT]]'
+    })
+    .map(m => {
+      if (m.role !== 'user') return m
+      const textPart = m.parts?.find((p): p is { type: 'text'; text: string } => p.type === 'text')
+      if (!textPart) return m
+      // Strip injected initialPrompt prefix — show only the user's actual answer
+      const idx = textPart.text.indexOf(RESPONSE_SEPARATOR)
+      if (idx !== -1) {
+        const visibleText = textPart.text.slice(idx + RESPONSE_SEPARATOR.length)
+        return { ...m, parts: m.parts?.map(p => p === textPart ? { ...p, text: visibleText } : p) }
+      }
+      return m
+    })
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
