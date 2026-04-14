@@ -63,7 +63,7 @@ L'élève va envoyer sa réponse. Corrige-la avec ✅/❌/💡 et guide-le étap
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
-      <div className="mb-3 shrink-0 space-y-2.5">
+      <div className="mb-3 shrink-0 space-y-2.5 max-h-[45vh] overflow-y-auto md:max-h-none md:overflow-visible">
 
         {/* Breadcrumb */}
         <Link
