@@ -536,7 +536,7 @@ export async function POST(req: NextRequest) {
       model: google('gemini-2.5-flash'),
       system: systemPrompt,
       messages: await convertToModelMessages(messages),
-      maxOutputTokens: 1024,
+      maxOutputTokens: 4096,
       maxRetries: 0,
       async onFinish({ text }) {
         if (!conversationId || isInit) return
