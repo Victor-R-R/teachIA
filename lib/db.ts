@@ -339,6 +339,16 @@ export async function getUserProfile(userId: string): Promise<UserProfile | null
   return (rows[0] as UserProfile) ?? null
 }
 
+export async function logStudyActivity(userId: string, domain: string, durationMin: number): Promise<void> {
+  await sql.query(
+    `INSERT INTO study_sessions (date, domain, user_id, duration_min, exercises_done, correct_count)
+     VALUES (CURRENT_DATE, $1, $2, $3, 0, 0)
+     ON CONFLICT (date, domain, user_id) DO UPDATE SET
+       duration_min = study_sessions.duration_min + EXCLUDED.duration_min`,
+    [domain, userId, durationMin]
+  )
+}
+
 export async function getTodayMinutes(userId: string): Promise<number> {
   const rows = await sql.query(
     `SELECT COALESCE(SUM(duration_min), 0)::int AS total_min

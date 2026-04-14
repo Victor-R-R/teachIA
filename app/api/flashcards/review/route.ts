@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { saveFlashcardReview } from '@/lib/db'
+import { saveFlashcardReview, logStudyActivity } from '@/lib/db'
 import { getEffectiveUserId } from '@/lib/session'
 import { z } from 'zod'
 
@@ -24,6 +24,7 @@ export async function POST(req: NextRequest) {
   try {
     const userId = await getEffectiveUserId()
     await saveFlashcardReview(userId, parsed.data.flashcard_id, parsed.data.known)
+    await logStudyActivity(userId, 'flashcards', 1)
     return NextResponse.json({ ok: true })
   } catch {
     return NextResponse.json({ error: 'Failed to save review' }, { status: 500 })
