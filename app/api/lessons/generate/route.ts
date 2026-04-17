@@ -1,15 +1,10 @@
-import { generateText, Output } from 'ai'
+import { generateText } from 'ai'
 import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/session'
 import { z } from 'zod'
 
 const google = createGoogleGenerativeAI({ apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY })
-
-const LessonSchema = z.object({
-  title: z.string(),
-  content: z.string(),
-})
 
 const DOMAIN_LABELS: Record<string, string> = {
   langue: 'Langue espagnole (grammaire, lexique, phonologie)',
@@ -51,9 +46,9 @@ export async function POST(req: NextRequest) {
   const { domain, level, title } = parsed.data
 
   try {
-    const { output } = await generateText({
+    const { text } = await generateText({
       model: google('gemini-2.5-flash'),
-      output: Output.object({ schema: LessonSchema }),
+      maxOutputTokens: 4096,
       system: `Tu es un expert du CAPES d'espagnol et un pédagogue expérimenté. Tu rédiges des leçons claires, structurées et didactiques pour des candidats au CAPES d'espagnol.
 
 Utilise les emojis thématiques dans tes leçons pour les rendre plus visuelles et mémorables.
@@ -62,7 +57,12 @@ Inclus toujours : une introduction, les règles essentielles avec exemples en es
 
 Emojis par domaine :
 🇪🇸 Civilisation espagnole | 🌎 Amér. latine | 📝 Langue/Grammaire | 🎓 Didactique
-⚠️ Piège | ✅ Bonne pratique | ❌ Erreur | 💡 Astuce | 🎯 Point clé`,
+⚠️ Piège | ✅ Bonne pratique | ❌ Erreur | 💡 Astuce | 🎯 Point clé
+
+Réponds UNIQUEMENT avec ce format exact, sans rien d'autre :
+TITRE: <titre de la leçon>
+---
+<contenu markdown de la leçon>`,
       prompt: `Génère une leçon pédagogique sur le domaine "${DOMAIN_LABELS[domain]}" pour un apprenant de niveau ${LEVEL_LABELS[level]}.${title ? ` Le titre proposé est : "${title}".` : ''}
 
 La leçon doit :
@@ -77,7 +77,15 @@ La leçon doit :
 Format markdown uniquement. Utilise ## pour les sections principales.`,
     })
 
-    return NextResponse.json(output)
+    const separatorIndex = text.indexOf('\n---\n')
+    if (separatorIndex === -1) {
+      return NextResponse.json({ error: 'Unexpected model response format' }, { status: 500 })
+    }
+
+    const titleLine = text.slice(0, separatorIndex).replace(/^TITRE:\s*/i, '').trim()
+    const content = text.slice(separatorIndex + 5).trim()
+
+    return NextResponse.json({ title: titleLine, content })
   } catch {
     return NextResponse.json({ error: 'Failed to generate lesson' }, { status: 500 })
   }

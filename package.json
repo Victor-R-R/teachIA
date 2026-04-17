@@ -16,7 +16,8 @@
     "db:migrate-multitenant": "npx tsx scripts/migrate-multitenant.ts",
     "db:migrate-lessons": "npx dotenv -e .env.local -- npx tsx scripts/migrate-lessons.ts",
     "db:migrate-lessons-userid": "npx dotenv -e .env.local -- npx tsx scripts/migrate-lessons-userid.ts",
-    "db:seed-lessons": "npx dotenv -e .env.local -- npx tsx scripts/seed-lessons.ts"
+    "db:seed-lessons": "npx dotenv -e .env.local -- npx tsx scripts/seed-lessons.ts",
+    "db:regen-lessons": "npx dotenv -e .env.local -- npx tsx scripts/regen-lessons.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.69",

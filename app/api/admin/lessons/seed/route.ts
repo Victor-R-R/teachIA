@@ -1,18 +1,12 @@
-import { generateText, Output } from 'ai'
+import { generateText } from 'ai'
 import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { NextResponse } from 'next/server'
 import { getSession } from '@/lib/session'
 import { neon } from '@neondatabase/serverless'
-import { z } from 'zod'
 
 const google = createGoogleGenerativeAI({ apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY })
 
 const sql = neon(process.env.DATABASE_URL!)
-
-const LessonSchema = z.object({
-  title: z.string(),
-  content: z.string(),
-})
 
 const DOMAIN_LABELS: Record<string, string> = {
   langue:       'Langue espagnole (grammaire, lexique, phonologie)',
@@ -28,13 +22,18 @@ const LEVEL_LABELS: Record<string, string> = {
 }
 
 async function generateLesson(exerciseTitle: string, domain: string, level: string) {
-  const { output } = await generateText({
+  const { text } = await generateText({
     model: google('gemini-2.5-flash'),
-    output: Output.object({ schema: LessonSchema }),
+    maxOutputTokens: 4096,
     system: `Tu es un expert du CAPES d'espagnol et un pédagogue expérimenté. Tu rédiges des leçons claires, structurées et didactiques pour des candidats au CAPES d'espagnol.
 
 Structure la leçon avec des sections en markdown (## pour les titres principaux, ### pour les sous-titres, - pour les listes).
-Utilise les emojis : 🇪🇸 Espagne | 🌎 Latam | 📝 Langue | 🎓 Didactique | ⚠️ Piège | ✅ Bonne pratique | 💡 Astuce | *italique pour les exemples en espagnol*`,
+Utilise les emojis : 🇪🇸 Espagne | 🌎 Latam | 📝 Langue | 🎓 Didactique | ⚠️ Piège | ✅ Bonne pratique | 💡 Astuce | *italique pour les exemples en espagnol*
+
+Réponds UNIQUEMENT avec ce format exact, sans rien d'autre :
+TITRE: <titre de la leçon>
+---
+<contenu markdown de la leçon>`,
     prompt: `Génère une leçon pédagogique sur le thème "${exerciseTitle}" dans le domaine "${DOMAIN_LABELS[domain]}" pour un apprenant de niveau ${LEVEL_LABELS[level]}.
 
 La leçon doit :
@@ -44,7 +43,14 @@ La leçon doit :
 - Terminer par un résumé (✅)
 - Faire entre 400 et 600 mots. Format markdown uniquement.`,
   })
-  return output
+
+  const separatorIndex = text.indexOf('\n---\n')
+  if (separatorIndex === -1) throw new Error('Unexpected model response format')
+
+  const title = text.slice(0, separatorIndex).replace(/^TITRE:\s*/i, '').trim()
+  const content = text.slice(separatorIndex + 5).trim()
+
+  return { title, content }
 }
 
 export async function POST() {
@@ -53,7 +59,6 @@ export async function POST() {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
-  // Récupérer les exercices catalogue groupés par titre
   const exercises = await sql.query(`
     SELECT DISTINCT title, domain, level, array_agg(id) AS ids
     FROM exercises
@@ -65,7 +70,6 @@ export async function POST() {
   const results: { title: string; status: 'created' | 'skipped' | 'error'; error?: string }[] = []
 
   for (const ex of exercises) {
-    // Vérifier si la leçon existe déjà
     const existing = await sql.query(
       'SELECT id FROM lessons WHERE title = $1 AND user_id IS NULL',
       [ex.title]
