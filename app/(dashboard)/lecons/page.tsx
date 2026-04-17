@@ -14,10 +14,10 @@ const DOMAIN_ORDER = ['langue', 'civi_espagne', 'civi_latam', 'didactique'] as c
 
 function LessonCard({ lesson, href }: { lesson: { id: number; title: string; level: string; exercise_count?: number }; href: string }) {
   return (
-    <Link href={href}>
-      <Card className="bg-white border-slate-200 hover:border-violet-300 hover:shadow-sm transition-all cursor-pointer">
+    <Link href={href} className="block w-full">
+      <Card className="bg-white border-slate-200 hover:border-violet-300 hover:shadow-sm transition-all cursor-pointer overflow-hidden">
         <CardContent className="p-4">
-          <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center justify-between gap-2 min-w-0">
             <div className="flex items-center gap-3 min-w-0">
               <div className="flex items-center justify-center h-9 w-9 rounded-lg bg-violet-50 border border-violet-100 shrink-0">
                 <BookMarked className="h-4 w-4 text-violet-600" />
@@ -60,7 +60,7 @@ export default async function LeconsPage() {
   const totalCatalog = catalogLessons.length
 
   return (
-    <div>
+    <div className="w-full overflow-x-hidden">
       <div className="mb-6">
         <h1 className="text-2xl font-semibold text-slate-900 mb-1">Leçons</h1>
         <p className="text-slate-500 text-sm">
