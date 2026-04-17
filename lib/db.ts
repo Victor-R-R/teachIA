@@ -24,6 +24,7 @@ export type Exercise = {
   level: 'A' | 'B' | 'C'
   source: string
   questions: QuestionItem[] | null
+  lesson_id: number | null
   created_at: string
 }
 
@@ -799,4 +800,109 @@ export async function deleteUser(userId: string): Promise<void> {
   await sql.query('DELETE FROM sessions WHERE "userId" = $1', [userId])
   // Enregistrement utilisateur en dernier
   await sql.query('DELETE FROM users WHERE id = $1', [userId])
+}
+
+// ─── Leçons ───────────────────────────────────────────────────────────────────
+
+export type Lesson = {
+  id: number
+  title: string
+  content: string
+  domain: string
+  level: 'A' | 'B' | 'C'
+  user_id: string | null
+  created_at: string
+  exercise_count?: number
+}
+
+export type LessonWithExercises = Lesson & {
+  exercises: Exercise[]
+}
+
+export async function getLessons(): Promise<Lesson[]> {
+  const rows = await sql.query(`
+    SELECT l.*, COUNT(e.id)::int AS exercise_count
+    FROM lessons l
+    LEFT JOIN exercises e ON e.lesson_id = l.id
+    WHERE l.user_id IS NULL
+    GROUP BY l.id
+    ORDER BY l.domain, l.level, l.title
+  `)
+  return rows as Lesson[]
+}
+
+export async function getUserLessons(userId: string): Promise<Lesson[]> {
+  const rows = await sql.query(`
+    SELECT l.*, COUNT(e.id)::int AS exercise_count
+    FROM lessons l
+    LEFT JOIN exercises e ON e.lesson_id = l.id
+    WHERE l.user_id = $1
+    GROUP BY l.id
+    ORDER BY l.created_at DESC
+  `, [userId])
+  return rows as Lesson[]
+}
+
+export async function getLessonById(id: number): Promise<LessonWithExercises | null> {
+  const lessons = await sql.query('SELECT * FROM lessons WHERE id = $1', [id])
+  if (!lessons[0]) return null
+  const exercises = await sql.query(
+    'SELECT * FROM exercises WHERE lesson_id = $1 ORDER BY level, created_at',
+    [id]
+  )
+  return { ...(lessons[0] as Lesson), exercises: exercises as Exercise[] }
+}
+
+export async function getLessonByExerciseId(exerciseId: number): Promise<Lesson | null> {
+  const rows = await sql.query(
+    `SELECT l.* FROM lessons l
+     JOIN exercises e ON e.lesson_id = l.id
+     WHERE e.id = $1`,
+    [exerciseId]
+  )
+  return (rows[0] as Lesson) ?? null
+}
+
+export async function createLesson(data: {
+  title: string
+  content: string
+  domain: string
+  level: 'A' | 'B' | 'C'
+  userId?: string | null
+}): Promise<Lesson> {
+  const rows = await sql.query(
+    'INSERT INTO lessons (title, content, domain, level, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+    [data.title, data.content, data.domain, data.level, data.userId ?? null]
+  )
+  return rows[0] as Lesson
+}
+
+export async function getLessonOwner(id: number): Promise<string | null> {
+  const rows = await sql.query('SELECT user_id FROM lessons WHERE id = $1', [id])
+  return (rows[0] as { user_id: string | null } | undefined)?.user_id ?? null
+}
+
+export async function updateLesson(id: number, data: { title?: string; content?: string }): Promise<void> {
+  const fields: string[] = []
+  const params: unknown[] = []
+  let i = 1
+  if (data.title !== undefined) { fields.push(`title = $${i++}`); params.push(data.title) }
+  if (data.content !== undefined) { fields.push(`content = $${i++}`); params.push(data.content) }
+  if (fields.length === 0) return
+  params.push(id)
+  await sql.query(`UPDATE lessons SET ${fields.join(', ')} WHERE id = $${i}`, params)
+}
+
+export async function deleteLesson(id: number): Promise<void> {
+  await sql.query('DELETE FROM lessons WHERE id = $1', [id])
+}
+
+export async function setLessonExercises(lessonId: number, exerciseIds: number[]): Promise<void> {
+  await sql.query('UPDATE exercises SET lesson_id = NULL WHERE lesson_id = $1', [lessonId])
+  if (exerciseIds.length > 0) {
+    await sql.query(
+      'UPDATE exercises SET lesson_id = $1 WHERE id = ANY($2::int[])',
+      [lessonId, exerciseIds]
+    )
+  }
 }

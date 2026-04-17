@@ -1,8 +1,11 @@
 import { generateText, Output } from 'ai'
+import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { NextRequest, NextResponse } from 'next/server'
 import { createSimulacro } from '@/lib/db'
 import { getEffectiveUserId } from '@/lib/session'
 import { z } from 'zod'
+
+const google = createGoogleGenerativeAI({ apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY })
 
 const SIMULACRO_TYPES = ['composition', 'theme', 'version'] as const
 type SimulacroType = typeof SIMULACRO_TYPES[number]
@@ -98,7 +101,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const { output } = await generateText({
-      model: 'anthropic/claude-sonnet-4.6',
+      model: google('gemini-2.5-flash'),
       output: Output.object({ schema: SubjectSchema }),
       system: SYSTEM_PROMPT,
       prompt: getPrompt(type),

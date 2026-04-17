@@ -14,6 +14,7 @@
 | 💬 | **Conversations persistantes** | Sessions sauvegardées en DB, restaurables via `/chat?id=xxx` |
 | 📋 | **Historique `/conversations`** | Titres intelligents : titre de l'exercice CAPES (avec icône de type) pour les sessions exercice, titre généré par IA (dès le 1er échange) pour les sessions Professeur IA, ou 1er message utilisateur en fallback |
 | 🏆 | **Dashboard gamifié** | XP (Débutant → Professeur), niveaux A/B/C par domaine, objectif quotidien configurable |
+| 📖 | **Leçons pédagogiques** | Leçons catalogue générées par IA (Gemini) liées aux exercices — CRUD admin, génération utilisateur, seed bulk via `/admin/lecons` |
 | 🃏 | **Flashcards CAPES** | 53 cartes curées + génération IA par thème, flip 3D, tracking Connu/À revoir, filtres domaine/niveau |
 | 🎯 | **Simulacros CAPES** | Sujets IA conformes au jury 2025 — chronométré, correction structurée avec score /20 |
 | 📊 | **Statistiques `/stats`** | KPIs globaux, graphique 7 jours, performance par domaine, flashcards et simulacros |
@@ -40,8 +41,8 @@
 | UI | shadcn/ui + Tailwind CSS (light mode violet) |
 | Base de données | Neon Postgres (`@neondatabase/serverless`) |
 | Auth | Auth.js v5 (`next-auth@^5`) + `@auth/pg-adapter` + Google OAuth |
-| IA | Vercel AI SDK v6 + AI Gateway OIDC |
-| Modèle | `anthropic/claude-sonnet-4-6` |
+| IA | Vercel AI SDK v6 + `@ai-sdk/google` |
+| Modèle | `gemini-2.5-flash` (chat + génération) |
 | Chat UI | AI Elements |
 | Déploiement | Vercel |
 
@@ -71,8 +72,7 @@ Ouvrir [http://localhost:3000](http://localhost:3000)
 | `GOOGLE_CLIENT_ID` | Client ID OAuth Google Cloud Console |
 | `GOOGLE_CLIENT_SECRET` | Client Secret OAuth Google Cloud Console |
 | `SUPERADMIN_EMAIL` | Email qui reçoit le rôle `superadmin` à la première connexion |
-
-> L'AI Gateway est auto-provisionné via OIDC sur Vercel — aucune clé API à gérer.
+| `GOOGLE_GENERATIVE_AI_API_KEY` | Clé API Google AI Studio (Gemini) — génération d'exercices, leçons, flashcards, simulacros |
 
 ---
 
@@ -87,6 +87,13 @@ npx tsx scripts/seed-exercises.ts
 
 # Migration multi-tenant (Auth.js + user_id sur toutes les tables)
 npm run db:migrate-multitenant
+
+# Migration leçons (table lessons + lesson_id sur exercises)
+npm run db:migrate-lessons
+npm run db:migrate-lessons-userid
+
+# Seed des leçons catalogue (via UI admin)
+# → Aller sur /admin/lecons → "Seed leçons catalogue"
 ```
 
 ---
@@ -100,6 +107,7 @@ teachIA/
 │   ├── (dashboard)/
 │   │   ├── page.tsx           # Dashboard principal
 │   │   ├── exercices/         # Liste + exercice individuel
+│   │   ├── lecons/            # Leçons catalogue + leçons utilisateur
 │   │   ├── flashcards/        # Révision par cartes
 │   │   ├── simulacro/         # Sujets CAPES chronométrés
 │   │   ├── stats/             # Statistiques globales
@@ -107,6 +115,7 @@ teachIA/
 │   ├── admin/
 │   │   ├── page.tsx           # Stats superadmin
 │   │   ├── users/             # Gestion + impersonation
+│   │   ├── lecons/            # CRUD leçons catalogue + seed IA
 │   │   ├── catalog/           # Catalogue partagé
 │   │   └── settings/          # Réglages globaux (XP, objectif)
 │   └── api/

@@ -1,8 +1,11 @@
 import { generateText, Output } from 'ai'
+import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { NextRequest, NextResponse } from 'next/server'
 import { saveFlashcard } from '@/lib/db'
 import { getEffectiveUserId } from '@/lib/session'
 import { z } from 'zod'
+
+const google = createGoogleGenerativeAI({ apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY })
 
 const FlashcardSchema = z.object({
   front: z.string(),
@@ -46,7 +49,7 @@ export async function POST(req: NextRequest) {
   try {
     const userId = await getEffectiveUserId()
     const { output } = await generateText({
-      model: 'anthropic/claude-sonnet-4.6',
+      model: google('gemini-2.5-flash'),
       output: Output.object({ schema: BatchSchema }),
       system: `Tu es un expert du CAPES d'espagnol. Tu crées des flashcards pédagogiques rigoureuses pour des candidats au concours. Chaque flashcard doit être précise, synthétique et utile pour la mémorisation active.
 

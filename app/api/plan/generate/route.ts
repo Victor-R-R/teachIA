@@ -1,8 +1,11 @@
 import { generateText, Output } from 'ai'
+import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { createUserProfile, saveStudyPlan } from '@/lib/db'
 import { getEffectiveUserId } from '@/lib/session'
+
+const google = createGoogleGenerativeAI({ apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY })
 
 const PlanWeekSchema = z.object({
   week_number: z.number().int().positive(),
@@ -52,7 +55,7 @@ export async function POST(req: NextRequest) {
     const userId = await getEffectiveUserId()
 
     const { output } = await generateText({
-      model: 'anthropic/claude-sonnet-4.6',
+      model: google('gemini-2.5-flash'),
       output: Output.object({ schema: PlanSchema }),
       system: `Tu es un expert en préparation du CAPES d'espagnol. Tu génères des plans de révision personnalisés, réalistes et progressifs.`,
       prompt: `Génère un plan de révision pour le CAPES d'espagnol avec les paramètres suivants :

@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
-import { Menu, LayoutDashboard, MessageCircle, BookOpen, CreditCard, Target, BarChart2, History, Shield, User } from 'lucide-react'
+import { Menu, LayoutDashboard, MessageCircle, BookOpen, BookMarked, CreditCard, Target, BarChart2, History, Shield, User } from 'lucide-react'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { cn } from '@/lib/utils'
 
@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/chat', label: 'Professeur IA', icon: MessageCircle },
   { href: '/conversations', label: 'Conversations', icon: History },
+  { href: '/lecons', label: 'Leçons', icon: BookMarked },
   { href: '/exercices', label: 'Exercices', icon: BookOpen },
   { href: '/flashcards', label: 'Flashcards', icon: CreditCard },
   { href: '/simulacros', label: 'Simulacros', icon: Target },
@@ -86,7 +87,8 @@ export function MobileHeader({ userRole = 'student', userName, userEmail, userIm
                     'flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors cursor-pointer',
                     pathname === href ||
                     (href === '/chat' && pathname.startsWith('/chat')) ||
-                    (href === '/exercices' && pathname.startsWith('/exercices'))
+                    (href === '/exercices' && pathname.startsWith('/exercices')) ||
+                    (href === '/lecons' && pathname.startsWith('/lecons'))
                       ? 'bg-violet-50 text-violet-700 font-medium'
                       : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
                   )}
