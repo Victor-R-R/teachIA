@@ -5,7 +5,7 @@ import { getLessons, getUserLessons } from '@/lib/db'
 import { getEffectiveUserId } from '@/lib/session'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { BookMarked, ArrowRight } from 'lucide-react'
+import { BookMarked } from 'lucide-react'
 import { DOMAIN_LABELS, DOMAIN_COLORS, LEVEL_COLORS } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 import { GenerateLessonButton } from '@/components/lessons/generate-lesson-button'
@@ -14,29 +14,24 @@ const DOMAIN_ORDER = ['langue', 'civi_espagne', 'civi_latam', 'didactique'] as c
 
 function LessonCard({ lesson, href }: { lesson: { id: number; title: string; level: string; exercise_count?: number }; href: string }) {
   return (
-    <Link href={href} className="block w-full">
-      <Card className="bg-white border-slate-200 hover:border-violet-300 hover:shadow-sm transition-all cursor-pointer overflow-hidden">
+    <Link href={href}>
+      <Card className="bg-white border-slate-200 hover:border-violet-300 hover:shadow-sm transition-all cursor-pointer">
         <CardContent className="p-4">
-          <div className="flex items-center justify-between gap-2 min-w-0">
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="flex items-center justify-center h-9 w-9 rounded-lg bg-violet-50 border border-violet-100 shrink-0">
-                <BookMarked className="h-4 w-4 text-violet-600" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-slate-900 text-sm font-medium truncate">{lesson.title}</p>
-                {lesson.exercise_count ? (
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    {lesson.exercise_count} exercice{lesson.exercise_count > 1 ? 's' : ''} liés
-                  </p>
-                ) : null}
-              </div>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center h-9 w-9 rounded-lg bg-violet-50 border border-violet-100 shrink-0">
+              <BookMarked className="h-4 w-4 text-violet-600" />
             </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <Badge className={cn('text-xs', LEVEL_COLORS[lesson.level])}>
-                {lesson.level}
-              </Badge>
-              <ArrowRight className="h-4 w-4 text-slate-400" />
+            <div className="flex-1 min-w-0">
+              <p className="text-slate-900 text-sm font-medium line-clamp-2">{lesson.title}</p>
+              {lesson.exercise_count ? (
+                <p className="text-xs text-slate-400 mt-0.5">
+                  {lesson.exercise_count} exercice{lesson.exercise_count > 1 ? 's' : ''} liés
+                </p>
+              ) : null}
             </div>
+            <Badge className={cn('text-xs shrink-0', LEVEL_COLORS[lesson.level])}>
+              {lesson.level}
+            </Badge>
           </div>
         </CardContent>
       </Card>
