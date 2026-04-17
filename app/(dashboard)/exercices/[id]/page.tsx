@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import { notFound } from 'next/navigation'
-import { getExerciseById, saveAttempt, getAttemptStatsByExercises, getExerciseStatus } from '@/lib/db'
+import { getExerciseById, saveAttempt, getAttemptStatsByExercises, getExerciseStatus, getLessonByExerciseId } from '@/lib/db'
 import { getEffectiveUserId } from '@/lib/session'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -10,7 +10,7 @@ import { ExerciseQCM } from '@/components/exercises/exercise-qcm'
 import { ExerciseVraiFaux } from '@/components/exercises/exercise-vrai-faux'
 import { ExerciseLacunaire } from '@/components/exercises/exercise-lacunaire'
 import { ExerciseQuizRunner } from '@/components/exercises/exercise-quiz-runner'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, BookMarked } from 'lucide-react'
 import Link from 'next/link'
 import { DOMAIN_LABELS } from '@/lib/constants'
 
@@ -26,6 +26,7 @@ export default async function ExercisePage({
     getAttemptStatsByExercises(userId, [Number(id)]),
   ])
   if (!exercise) notFound()
+  const lesson = exercise.lesson_id ? await getLessonByExerciseId(exercise.id) : null
   const status = getExerciseStatus(statsRows[0])
   const attemptCount = statsRows[0]?.attempt_count ?? 0
 
@@ -54,6 +55,19 @@ export default async function ExercisePage({
       >
         <ArrowLeft className="h-4 w-4" /> Retour aux exercices
       </Link>
+
+      {lesson && (
+        <Link href={`/lecons/${lesson.id}`} className="block mb-4">
+          <div className="flex items-center gap-3 rounded-lg border border-violet-200 bg-violet-50 px-4 py-3 hover:bg-violet-100 transition-colors">
+            <BookMarked className="h-4 w-4 text-violet-600 shrink-0" />
+            <div className="min-w-0">
+              <p className="text-xs text-violet-500 font-medium">Leçon associée</p>
+              <p className="text-sm text-violet-800 font-semibold truncate">{lesson.title}</p>
+            </div>
+            <span className="ml-auto text-xs text-violet-500 shrink-0">Voir →</span>
+          </div>
+        </Link>
+      )}
 
       <Card className="bg-white border-slate-200 shadow-sm">
         <CardHeader className="pb-3">

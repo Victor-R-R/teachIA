@@ -1,6 +1,9 @@
 import { generateText } from 'ai'
+import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { NextRequest, NextResponse } from 'next/server'
 import { getExerciseById } from '@/lib/db'
+
+const google = createGoogleGenerativeAI({ apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY })
 
 export async function POST(req: NextRequest) {
   let body: unknown
@@ -25,7 +28,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const { text } = await generateText({
-      model: 'anthropic/claude-sonnet-4.6',
+      model: google('gemini-2.5-flash'),
       system: `Tu es un professeur expert du CAPES d'espagnol. Tu donnes des explications pédagogiques claires et bienveillantes en français.
 
 Formate ta réponse ainsi :

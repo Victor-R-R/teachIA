@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   MessageCircle,
   BookOpen,
+  BookMarked,
   CreditCard,
   Target,
   BarChart2,
@@ -19,6 +20,7 @@ const NAV_ITEMS = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/chat', label: 'Professeur IA', icon: MessageCircle },
   { href: '/conversations', label: 'Conversations', icon: History },
+  { href: '/lecons', label: 'Leçons', icon: BookMarked },
   { href: '/exercices', label: 'Exercices', icon: BookOpen },
   { href: '/flashcards', label: 'Flashcards', icon: CreditCard },
   { href: '/simulacros', label: 'Simulacros', icon: Target },
@@ -68,6 +70,7 @@ export function Sidebar({ userRole = 'student', userName, userEmail, userImage }
               pathname === href ||
               (href === '/chat' && pathname.startsWith('/chat')) ||
               (href === '/exercices' && pathname.startsWith('/exercices')) ||
+              (href === '/lecons' && pathname.startsWith('/lecons')) ||
               (href === '/simulacros' && pathname.startsWith('/simulacros'))
                 ? 'bg-violet-50 text-violet-700 font-medium'
                 : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'

@@ -1,8 +1,11 @@
 import { generateText, Output } from 'ai'
+import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { NextRequest, NextResponse } from 'next/server'
 import { getSimulacroById, saveSimulacroResponse, saveSimulacroFeedback, logStudyActivity } from '@/lib/db'
 import { getEffectiveUserId } from '@/lib/session'
 import { z } from 'zod'
+
+const google = createGoogleGenerativeAI({ apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY })
 
 const FeedbackSchema = z.object({
   score: z.number().min(0).max(20),
@@ -129,7 +132,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const { output } = await generateText({
-      model: 'anthropic/claude-sonnet-4.6',
+      model: google('gemini-2.5-flash'),
       output: Output.object({ schema: FeedbackSchema }),
       system: EVAL_SYSTEM,
       prompt: getEvalPrompt(session.type, session.subject, content),
