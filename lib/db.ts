@@ -24,7 +24,7 @@ export type Exercise = {
   level: 'A' | 'B' | 'C'
   source: string
   questions: QuestionItem[] | null
-  lesson_id: number | null
+  lesson_id?: number | null
   created_at: string
 }
 
