@@ -16,24 +16,42 @@ export function XPLevelCard({ profile, xpLost = 0 }: { profile: UserProfile; xpL
 
   return (
     <Card className="bg-white border-slate-200">
-      <CardContent className="p-4 space-y-3">
-        <div className="flex items-center gap-2">
-          <Icon className="h-4 w-4 text-violet-500 shrink-0" />
-          <span className="text-sm font-medium text-slate-900">
-            Niveau {level_xp} — {getLevelTitle(level_xp)}
+      <CardContent className="p-5 space-y-4">
+        {/* Header row */}
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-violet-100 flex items-center justify-center shrink-0">
+              <Icon className="h-4.5 w-4.5 text-violet-600" />
+            </div>
+            <div>
+              <p className="text-xs text-slate-500 leading-none mb-0.5">Progression</p>
+              <p className="text-sm font-semibold text-slate-900">{getLevelTitle(level_xp)}</p>
+            </div>
+          </div>
+          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-violet-600 text-white shrink-0">
+            Niv.&nbsp;{level_xp}
           </span>
         </div>
+
         {xpLost > 0 && <XpDecayBanner xpLost={xpLost} />}
+
+        {/* XP bar */}
         <div>
-          <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden mb-1.5">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-semibold text-slate-800">
+              {xp.toLocaleString('fr-FR')} XP
+            </span>
+            <span className="text-xs text-slate-400">
+              +{(nextThreshold - xp).toLocaleString('fr-FR')} pour niveau {level_xp + 1}
+            </span>
+          </div>
+          <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
             <div
-              className="h-full bg-violet-500 rounded-full transition-all"
+              className="h-full bg-violet-500 rounded-full transition-all duration-500"
               style={{ width: `${pct}%` }}
             />
           </div>
-          <p className="text-xs text-slate-500 text-right">
-            {xp} / {nextThreshold} XP · +{nextThreshold - xp} pour le niveau {level_xp + 1}
-          </p>
+          <p className="text-xs text-slate-400 mt-1.5 text-right">{pct}% complété</p>
         </div>
       </CardContent>
     </Card>
