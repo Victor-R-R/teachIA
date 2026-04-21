@@ -18,7 +18,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
       <div className="flex flex-col lg:flex-row h-screen h-[100dvh] overflow-hidden">
         <MobileHeader userRole={userRole} userName={userName} userEmail={userEmail} userImage={userImage} />
         <Sidebar userRole={userRole} userName={userName} userEmail={userEmail} userImage={userImage} />
-        <main id="main-content" className="flex-1 overflow-y-auto bg-white p-4 lg:p-6 flex flex-col">
+        <main id="main-content" className="flex-1 overflow-y-auto bg-slate-50 p-4 lg:p-6 flex flex-col">
           <ScrollRestorer />
           {children}
         </main>
